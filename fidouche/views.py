@@ -155,7 +155,7 @@ def gigs_by_year(request, year=current_year, template='fidouche/gigs_by_year.htm
 @login_required
 def gigs_year_over_year(request, template='fidouche/gigs_year_over_year.html'):
     d = {}
-    from apps.common.utils import years_with_gigs
+    from common.utils import years_with_gigs
     years_with_gigs = years_with_gigs()
     gigs = Show.objects.all()
     years = {}

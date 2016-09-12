@@ -7,8 +7,8 @@
   {{ block.super }}
   <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
   {{ media }}
-  <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/jquery.js"></script>
-  <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/select2/select2.min.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}/js/lib/jquery.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}/js/lib/select2/select2.min.js"></script>
   <script>
       var select2Fields = "#id_venue, .field-payee select, .field-category select";
       $(function(){
@@ -22,8 +22,8 @@
 {% block extrastyle %}
   {{ block.super }}
   <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />
-  <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}global/js/lib/select2/select2.css">
-  <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}global/js/lib/select2/select2-django-admin.css">
+  <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}/js/lib/select2/select2.css">
+  <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}/js/lib/select2/select2-django-admin.css">
 {% endblock %}
 
 {% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}

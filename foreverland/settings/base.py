@@ -10,13 +10,13 @@ ADMINS = (
     ('Alerts', 'adam@foreverland.com'),
 )
 TIME_ZONE = 'UTC'
-USE_TZ = True
+USE_TZ = False
 LANGUAGE_CODE = 'en-us'
 USE_I18N = True
 USE_L10N = True
 SECRET_KEY = 'awozw7pth$35zwy%*yx3!2uuna-1(^rr9u(iha0-0ruvy^i@)z'
 DEFAULT_CHARSET = 'utf-8'
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'foreverland.urls'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/home/adamlord/webapps/foreverland_static_v2/'
@@ -32,28 +32,15 @@ ENV = os.getenv('ENV')
 if not ENV:
     raise Exception('Environment variable ENV is required!')
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+ROOT_URLCONF = 'foreverland.urls'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '%s' % PROJECT_NAME,
+        'NAME': 'foreverland_db',
         'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': '',
+        'USER': 'adamlord_fl',
+        'PASSWORD': 'IiT77j58tR7yUoKO',
         'OPTIONS': {
             'init_command': 'SET storage_engine=INNODB',
         }
@@ -65,31 +52,30 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.transaction.TransactionMiddleware',
 ]
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
-                'django.core.context_processors.csrf',
-                'django.core.context_processors.debug',
-                'django.core.context_processors.media',
-                'django.core.context_processors.request',
+                'django.template.context_processors.csrf',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.static',
+                'django.template.context_processors.media',
+                'django.template.context_processors.request',
+
                 'django.contrib.messages.context_processors.messages',
-                'django.core.context_processors.static',
 
                 'django_common.context_processors.common_settings',
 
-                'apps.common.context_processors.random_quote',
-                'apps.common.context_processors.list_years_with_gigs',
+                'common.context_processors.random_quote',
+                'common.context_processors.list_years_with_gigs',
             ],
-        },
+        }
     },
 ]
 
@@ -105,7 +91,7 @@ INSTALLED_APPS = [
     'django_extensions',
 
     'registration',
-    'compressor',
+    # 'compressor',
     'django_common',
     'sorl.thumbnail',
 
@@ -153,7 +139,20 @@ COMPRESS_JS_FILTERS = [
     'compressor.filters.jsmin.JSMinFilter'
 ]
 
-
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
 # helper function to extend all the common lists
 def extend_list_avoid_repeats(list_to_extend, extend_with):
     """Extends the first list with the elements in the second one, making sure its elements are not already there in the

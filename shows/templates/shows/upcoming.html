@@ -37,7 +37,7 @@
 {% block require_js %}
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYqyvZ70GOiWyTw5bXexwSppcu6urgbdQ&sensor=false"></script>
 	<script type="text/javascript">
-		require(['{{ STATIC_URL }}global/js/common.js'], function () {
+		require(['{{ STATIC_URL }}/js/common.js'], function () {
 			require(['shows']);
 		});
 	</script>

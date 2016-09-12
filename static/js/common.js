@@ -1,6 +1,6 @@
 require.config({
     // All subsequent Urls are relative to baseUrl
-    baseUrl: '/static/global/js',
+    baseUrl: '/static/js',
 
     // Set paths here for any script not located in baseUrl
     // so that we can reference modules directly in all

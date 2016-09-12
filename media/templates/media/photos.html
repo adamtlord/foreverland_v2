@@ -25,13 +25,13 @@
     <div class="row album album-with-captions">
         <div class="col-md-3">
             <a href="{{ MEDIA_URL }}images/Foreverland_Logo.jpg" target="_blank" class="thumb">
-                <img border="0" alt="" src="{{ STATIC_URL }}global/images/Foreverland_Logo-thumb.jpg" />
+                <img border="0" alt="" src="{{ STATIC_URL }}/images/Foreverland_Logo-thumb.jpg" />
                 High-quality JPG version
             </a>
         </div>
         <div class="col-md-3">
             <a href="{{ MEDIA_URL }}dl/Foreverland_Logo.pdf" target="_blank" class="thumb">
-                <img border="0" alt="" src="{{ STATIC_URL }}global/images/Foreverland_Logo-thumb.jpg" />
+                <img border="0" alt="" src="{{ STATIC_URL }}/images/Foreverland_Logo-thumb.jpg" />
                 PDF version (13 MB)
             </a>
         </div>
@@ -40,7 +40,7 @@
 {% endblock %}
 {% block require_js %}
      <script type="text/javascript">
-        require(['{{ STATIC_URL }}global/js/common.js'], function () {
+        require(['{{ STATIC_URL }}/js/common.js'], function () {
             require(['photos']);
         });
     </script>

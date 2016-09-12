@@ -2,8 +2,8 @@
 {% block body %}
 
     <div class="container interior">
-        <h3>{{ album.title }}</h3>        
-            View: 
+        <h3>{{ album.title }}</h3>
+            View:
             <div class="btn-group">
                 <a href="{% url 'album' album.pk 'thumbnails' %}" class="btn btn-default{% if view == 'thumbnails' %} active{% endif %}">thumbnails</a>
                 <a href="{% url 'album' album.pk 'full' %}" class="btn btn-default{% if view == 'full' %} active{% endif %}">full</a>
@@ -72,7 +72,7 @@
 {% endblock %}
 {% block require_js %}
      <script type="text/javascript">
-        require(['{{ STATIC_URL }}global/js/common.js'], function () {
+        require(['{{ STATIC_URL }}/js/common.js'], function () {
             require(['media']);
         });
     </script>

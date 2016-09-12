@@ -103,7 +103,7 @@ class Download(models.Model):
     title = models.CharField(max_length=60, blank=True, null=True)
     downloadable = models.FileField(upload_to="dl/")
     tags = models.ManyToManyField(Tag, blank=True)
-    updated = models.DateTimeField(auto_now_add=True, auto_now=True)
+    updated = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return self.title
@@ -111,4 +111,3 @@ class Download(models.Model):
     def extension(self):
         name, extension = os.path.splitext(self.downloadable.name)
         return extension
-

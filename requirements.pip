@@ -1,6 +1,7 @@
 Django
 Fabric
 mysql-python
+Pillow
 
 django_compressor
 django-extensions
