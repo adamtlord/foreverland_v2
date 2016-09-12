@@ -1,4 +1,5 @@
 build/
+uploads/
 *.pyc
 *.swp
 .DS_Store
