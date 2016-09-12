@@ -1,0 +1,52 @@
+{% extends 'base_fidouche.html' %}
+{% load custom_tags %}
+
+{% block content %}
+<div class="page-header">
+    <h2>File Other Income</h2>
+</div>
+<form method="post" action="{{ request.path }}" role="form" enctype="multipart/form-data">{% csrf_token %}
+	<div class="row">
+		<div class="col-md-6 col-sm-6">
+			<fieldset>
+				<div class="form-group">
+					<label for="id_date">Date</label>
+					<div id="income_date_picker" class="input-group">
+						{{ form.date }}
+						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="id_payee">Payer</label>
+					{{ form.payer }}
+				</div>
+				<div class="form-group">
+					<label for="id_amount">Amount</label>
+					<div class="input-group">
+						<span class="input-group-addon">$</span>
+						{{ form.amount }}
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="id_category">Check #</label>
+					{{ form.check_no }}
+				</div>
+				<div class="form-group">
+					<label for="id_category">Notes</label>
+					{{ form.notes }}
+				</div>
+    		</fieldset>
+    	</div>
+     	<button type="submit" class="btn btn-block btn-lg btn-primary">Save</button>
+	</div>
+</form>
+{% endblock %}
+{% block js %}
+<script>
+	$(function(){
+		$('#income_date_picker').datetimepicker({
+			pickTime: false
+		});
+	});
+</script>
+{% endblock %}

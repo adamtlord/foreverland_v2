@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block bodyclass %}home{% endblock %}
+{% block topnav %}
+<div id="next_show">
+	<h4><span>Next Show:</span> <a href="{% url 'upcoming_shows' %}">{% if tonight %}{{ tonight|upper }}{% else %}{{ next_show.date|date:"M. j" }}{% endif %} at {{ next_show.venue }}</a></h4>
+</div>
+
+<div id="top_brand">
+  <h1>Foreverland</h1>
+  <h2>The Electrifying 14-Piece Tribute to Michael Jackson</h2>
+</div>
+{% endblock %}
+{% block body %}
+
+<div id="nav_push"></div>
+<div id="home_nav">
+  <div class="container">
+	 {% include 'fragments/navbar.html' %}
+  </div>
+</div>
+
+<div class="container">
+  <div id="video_wrap" class="video-wrap">
+    <div id="video_player"></div>
+  </div>
+</div>
+
+
+<div class="container">
+  <div id="quote">
+    <p>&ldquo;{{ random_quote }}&rdquo;</p>
+  </div>
+</div>
+
+<div id="bio" class="container">
+  <div class="row">
+    <div class="col-md-4">
+        <section>
+          <p>Since 2009, Foreverland has been mesmerizing audiences around the country with their larger-than-life tribute to the one and only Michael Jackson.</p>
+          <p>Featuring four dynamic vocalists, a powerhouse rhythm section, and the hardest working horn section in the biz, Foreverland recreates hits from the Jackson 5 era through the end of Michael’s incredible career in a way that honors the King of Pop’s musical genius and legendary showmanship like no other tribute band has ever done.</p>
+        </section>
+    </div>
+    <div class="col-md-8">
+      <div class="flexslider">
+        <ul class="slides">
+          <li>
+            <img src="{{ STATIC_URL }}global/images/hero/Foreverland-2015.jpg" alt="...">
+          </li>
+          <li>
+            <img src="{{ STATIC_URL }}global/images/hero/hero1.jpg" alt="...">
+          </li>
+          <li>
+            <img src="{{ STATIC_URL }}global/images/hero/hero2.jpg" alt="...">
+          </li>
+          <li>
+            <img src="{{ STATIC_URL }}global/images/hero/hero3.jpg" alt="...">
+          </li>
+          <li>
+            <img src="{{ STATIC_URL }}global/images/hero/hero9.jpg" alt="...">
+          </li>
+          <li>
+            <img src="{{ STATIC_URL }}global/images/hero/hero10.jpg" alt="...">
+          </li>
+          <li>
+            <img src="{{ STATIC_URL }}global/images/hero/hero11.jpg" alt="...">
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="follow" class="container">
+  <h3>Follow Us</h3>
+  <div class="row hidden-xs">
+    <div class="col-md-6 col-sm-6">
+      <div class="fb-page" data-href="https://www.facebook.com/ForeverlandSF" data-width="500" data-height="480" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true" data-show-posts="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/ForeverlandSF"><a href="https://www.facebook.com/ForeverlandSF">Foreverland...A 14 Piece tribute to Michael Jackson</a></blockquote></div></div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+      <a class="twitter-timeline" href="https://twitter.com/ForeverlandBand" data-widget-id="385831208401137664">Tweets by @ForeverlandBand</a>
+    </div>
+  </div>
+  <div class="row visible-xs">
+    <div class="col-xs-12">
+      <button href="http://facebook.com/ForeverlandSF" class="btn-block btn btn-facebook"><i class="fa fa-facebook fa-lg fa-fw"></i> Foreverland on Facebook</button>
+      <button href="http://twitter.com/ForeverlandBand" class="btn-block btn btn-twitter"><i class="fa fa-twitter fa-lg fa-fw"></i> Foreverland on Twitter</button>
+    </div>
+  </div>
+</div>
+
+<div id="members" class="container">
+  <h3>Members</h3>
+  <div class="row">
+    <div class="col-md-4 col-sm-4">
+      <h4>Vocals</h4>
+      <ul>
+      {% for v in vocals %}
+        <li><strong>{{ v.display_first }} {{ v.display_last }}</strong></li>
+      {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-4 col-sm-4">
+      <h4>Horns</h4>
+      <ul>
+      {% for h in horns %}
+        <li><strong>{{ h.display_first }} {{ h.display_last }}</strong> <span>{{ h.instrument }}</span></li>
+      {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-4 col-sm-4">
+      <h4>Rhythm</h4>
+      <ul>
+      {% for r in rhythm %}
+        <li><strong>{{ r.display_first }} {{ r.display_last }}</strong> <span>{{ r.instrument }}</span></li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block require_js %}
+	 <script type="text/javascript">
+	    require(['{{ STATIC_URL }}global/js/common.js'], function () {
+	        require(['homepage']);
+	    });
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('video_player', {
+          title: 'Foreverland',
+          height: '100%',
+          width: '100%',
+          videoId: '1MbDSSEUCZg',
+          playerVars: {
+            modestbranding: 1,
+            rel: 0,
+            showinfo: 0,
+            theme: 'dark'
+          }
+        });
+      }
+	</script>
+{% endblock %}

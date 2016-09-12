@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block body %}
+
+    <div class="content">
+        <div class="row">
+            <div class="span12">
+
+                <a href="{{ backurl }}" class="btn"><i class="icon-arrow-left"></i> back</a>
+                <!-- Image -->
+                {% if image.title %}
+                    <h4>{{ image.title }}</h4>
+                {% endif %}
+                <img border="0" alt="" src="{{ MEDIA_URL }}{{ image.image.name }}" />
+                
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

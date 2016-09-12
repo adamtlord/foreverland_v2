@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container interior">
+    <!-- Albums  -->
+    {% for album in albums.object_list %}
+        <h4><a href="{% url 'album' album.pk 'thumbnails' %}">{{ album.title }}</a> <small>{{ album.image_set.count }} images</small></h4>
+        <div class="album">
+            {% for img in album.images %}
+                <a href="{{ MEDIA_URL }}{{ img.image.name }}" class="thumb" data-toggle="lightbox" data-gallery="{{ album.title|slugify }}">
+                    <img border="0" alt="" src="{{ MEDIA_URL }}{{ img.thumbnail2.name }}" />
+                </a>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    <!-- Next/Prev page links  -->
+    {% if albums.object_list and albums.paginator.num_pages > 1 %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if albums.has_previous %}
+                <a href= "?page={{ albums.previous_page_number }}">previous &lt;&lt; </a>
+            {% endif %}
+
+            <span class="current">
+                &nbsp;Page {{ albums.number }} of {{ albums.paginator.num_pages }}
+            </span>
+
+            {% if albums.has_next %}
+                <a href="?page={{ albums.next_page_number }}"> &gt;&gt; next</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+{% block require_js %}
+     <script type="text/javascript">
+        require(['{{ STATIC_URL }}global/js/common.js'], function () {
+            require(['media']);
+        });
+    </script>
+{% endblock %}

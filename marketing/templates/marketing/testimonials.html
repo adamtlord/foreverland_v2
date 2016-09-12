@@ -1,0 +1,11 @@
+{% extends 'interior.html' %}
+{% load custom_tags %}
+
+{% block content %}
+<h2>Testimonials</h2>
+<ul class="testimonials">
+    {% for quote in quotes %}
+        <li>{{ quote.quote }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

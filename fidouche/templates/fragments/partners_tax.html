@@ -1,0 +1,53 @@
+{% load humanize %}
+<h3>Partners
+    <i class="fa fa-question-circle popover-trigger"
+        data-toggle="popover"
+        data-content="The records below show payments made to band members who were partners during the specified date range.
+        If a member became a partner or left the partnership during the specified date range, those payments will appear under 'Non-partners.'
+        Note: this report is not affected by the 'Partner' checkbox, only by the dates a member joined/left the partnership.">
+    </i>
+</h3>
+<table class="table table-bordered table-striped datatable">
+    <thead>
+        <tr>
+            <th>
+                Partner
+            </th>
+            <th>
+                Total Paid
+            </th>
+            <th>
+                Payments
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for partner, payments in partner_payments.items %}
+            <tr>
+                <td>{{ partner.first_name }} {{ partner.middle_name }} {{ partner.last_name }} <i class="fa fa-home address-toggle" data-toggle="collapse" data-target="#partner{{ partner.id }}_address"></i>
+                    <div id="partner{{ partner.id }}_address" class="collapse">
+                        {% if partner.address %}
+                            {{ partner.address }}<br>
+                            {{ partner.city }}, {{ partner.state }} {{ partner.zip_code }}
+                        {% else %}
+                            <em>No address entered</em>
+                        {% endif %}
+                    </div>
+                </td>
+                <td>${{ payments.total|intcomma }}</td>
+                <td>{{ payments.payments|length }}
+                    {% if payments %}
+                        <i class="fa fa-list-ul payment-detail-toggle" data-toggle="modal" data-target="#partner{{ partner.id }}_payments"></i>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td>${{ all_partners_total|intcomma }}</td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>

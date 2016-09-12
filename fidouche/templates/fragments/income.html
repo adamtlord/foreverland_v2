@@ -1,0 +1,161 @@
+{% load humanize %}
+<h3>Paid by Client</h3>
+<table class="table table-bordered table-striped datatable">
+    <thead>
+        <tr>
+            <th>
+                Date
+            </th>
+            <th>
+                Show
+            </th>
+            <th>
+                Gross
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for show in paid_by_client %}
+        <tr>
+            <td>{{ show.date|date:"n/j/y" }}</td>
+            <td><a href="{% url 'gig_finances' show.id %}">{{ show.venue }}</a></td>
+            <td>
+                {% if show.gross %}
+                ${{ show.gross|intcomma }}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="2"></td>
+            <td>${{ paid_by_client_total_gross|intcomma }}</td>
+        </tr>
+    </tfoot>
+</table>
+<h3>Paid by Agent
+    <i class="fa fa-question-circle popover-trigger"
+    data-toggle="popover"
+    data-html="true"
+    data-content="The records below show payments made by agents during the specified date range.
+    If the agent withheld commission, the adjusted gross equals the gross minus the commission, and is show in <strong>bold</strong>.
+    Otherwise, adjusted gross is equal to gross.">
+</i>
+</h3>
+<table class="table table-bordered table-striped datatable-agent-income">
+    <thead>
+        <tr>
+            <th>
+                Date
+            </th>
+            <th>
+                Show
+            </th>
+            <th>
+                Comm. WH Sort
+            </th>
+            <th>
+                Commission Withheld
+            </th>
+            <th>
+                Gross
+            </th>
+            <th>
+                Commission
+            </th>
+            <th>
+                Adjusted Gross
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for show in paid_by_agent %}
+        <tr>
+            <td>{{ show.date|date:"n/j/y" }}</td>
+            <td><a href="{% url 'gig_finances' show.id %}">{{ show.venue }}</a></td>
+            <td>
+                {% if show.commission_withheld %}
+                1
+                {% else %}
+                0
+                {% endif %}
+            </td>
+            <td>
+                {% if show.commission_withheld %}
+                <i class="fa fa-check text-success"></i>
+                {% endif %}
+            </td>
+            <td>{% if show.gross %}
+                ${{ show.gross|intcomma }}
+                {% endif %}
+            </td>
+            <td>{% if show.commission %}
+                ${{ show.commission|intcomma }}
+                {% endif %}
+            </td>
+            <td>{% if show.adjusted_gross %}
+                <strong>${{ show.adjusted_gross|intcomma }}</strong>
+                {% else %}
+                {% if show.gross %}
+                ${{ show.gross|intcomma }}
+                {% endif %}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="6"></td>
+            <td>${{ paid_by_agent_total_gross|intcomma }}</td>
+        </tr>
+    </tfoot>
+</table>
+
+{% if other_income %}
+    <h3>Other Income</h3>
+    <table class="table table-bordered table-striped datatable-other-income">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Payer</th>
+                <th>Notes</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for income in other_income %}
+            <tr>
+                <td>{{ income.date|date:"n/j/y" }}</td>
+                <td>{% if income.payer %}{{ income.payer }}{% endif %}</td>
+                <td>{% if income.notes %}{{ income.notes }}{% endif %}</td>
+                <td>{% if income.amount %}${{ income.amount|intcomma }}{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+
+<h3>Total Income</h3>
+<table class="table table-bordered table-striped">
+    <tbody>
+        <tr>
+            <th>Paid by Client</th>
+            <td>${{ paid_by_client_total_gross|intcomma }}</td>
+        </tr>
+        <tr>
+            <th>Paid by Agent</th>
+            <td>${{ paid_by_agent_total_gross|intcomma }}</td>
+        </tr>
+        <tr>
+            <th>Other Income</th>
+            <td>${{ total_other_income|intcomma }}</td>
+        </tr>
+        <tr>
+            <th></th>
+            <td><strong>${{ total_income|intcomma }}</strong></td>
+        </tr>
+    </tbody>
+</table>

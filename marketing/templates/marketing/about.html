@@ -1,0 +1,28 @@
+{% extends 'interior.html' %}
+{% load custom_tags %}
+{% block title %} | About{% endblock %}
+{% block bodyclass %}interior about{% endblock %}
+{% block content %}
+<h2>About Foreverland</h2>
+<div class="bg">
+	<p>When Foreverland took the stage for the first time one San Francisco night in June 2009, no one could have predicted that just two weeks later, Michael Jackson would pass away. But since that moment, Foreverland: The Electrifying 14-piece Tribute to Michael Jackson, has been leading a larger-than-life celebration of his musical legacy from coast to coast.</p>
+	<p>A different kind of tribute band, you won’t see any impersonations here. Instead, Foreverland simply aims to honor and do justice to the music and spirit of the King of Pop. Throughout this truly unforgettable performance, die-hard fans will relive their favorite MJ moments, and younger crowds will rediscover the amazing music that remains timeless.</p>
+	<p>The band has mesmerized audiences around the country with their one-of-a-kind performances of the music of Michael Jackson, and they continue to play to bigger and bigger crowds. Foreverland’s four dynamic vocalists, powerhouse rhythm section, and slamming horn section recreate hits like “I Want You Back,” “Don’t Stop Till You Get Enough,” “Smooth Criminal,” and “Thriller” from the Jackson 5 era through the end of Michael’s incredible career with energy, groove, and force.</p>
+	<p>Michael Jackson lives forever with Foreverland, as they carry out his mission to move audiences' hearts and dancing feet with music night after night.</p>
+</div>
+<h2>Testimonials</h2>
+<div class="bg">
+	<ul id="testimonials" class="quotes">
+	    {% for quote in quotes %}
+	        <li>{{ quote.quote }}</li>
+	    {% endfor %}
+	</ul>
+</div>
+{% endblock %}
+{% block require_js %}
+	 <script type="text/javascript">
+	    require(['{{ STATIC_URL }}global/js/common.js'], function () {
+	        require(['about']);
+	    });
+	</script>
+{% endblock %}

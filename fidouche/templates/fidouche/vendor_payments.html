@@ -1,0 +1,59 @@
+{% extends 'base_fidouche.html' %}
+{% load custom_tags %}
+{% load humanize %}
+{% block bodyclass %}tax-report{% endblock %}
+{% block content %}
+<h2>{{ payee }} - ${{ total|intcomma }}<br />
+{% if not no_dates %}<small>{{ start_date }} - {{ end_date }}</small>{% endif %}
+</h2>
+{% if no_dates %}
+	<p>Choose a date range</p>
+{% else %}
+	<table class="table table-bordered table-striped datatable">
+		<thead>
+			<tr>
+				<th>
+					Vendor
+				</th>
+				<th>
+					Show
+				</th>
+				<th>
+					Category
+				</th>
+				<th>
+					Amount
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for payment in payments %}
+				<tr>
+					<td>{{ payment.payee }}
+					<td>
+						{% if payment.show %}<a href="{% url 'gig_finances' payment.show.id %}">{{ payment.show }}</a>{% endif %}</td>
+					<td>{{ payment.new_category.tax_category.name }}</td>
+					<td>${{ payment.amount|intcomma }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endif %}
+{% endblock %}
+
+{% block js %}
+<script>
+	$(function(){
+		$('.datatable').dataTable({
+			"aaSorting": [ ],
+			"bLengthChange": false,
+			"bInfo": false,
+			"bPaginate": false,
+			"bFilter": false,
+			"aoColumnDefs": [
+				{"sType": "currency", "aTargets": [1]}
+			],
+		});
+	});
+</script>
+{% endblock %}

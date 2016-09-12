@@ -1,0 +1,22 @@
+{% extends 'accounts/base_edit.html' %}
+{% load custom_tags %}
+
+{% block sub_content %}
+<form  enctype="multipart/form-data" action="{% url 'profile_edit' %}" method="POST">{% csrf_token %}
+    {% for field in form %}
+        {% render_form_field field %}
+    {% endfor %}
+    <input type="submit" class="btn btn-primary" value="Save" />
+    <a class="btn" href="{% url 'profile_page' request.user.username  %}">Cancel</a>
+</form>
+
+<script>
+    $(function() {
+        $('#id_birthday').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: '1901:{% now "Y" %}'
+        });
+    });
+</script>
+{% endblock %}

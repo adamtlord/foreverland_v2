@@ -1,0 +1,33 @@
+.select2-container .select2-choice {
+    border-radius:0;
+    border-color:#ccc;
+    background-image:none;
+    margin:2px 0;
+    padding:2px 3px;
+    font-size:11px;
+    height:auto;
+    line-height:normal;
+}
+.select2-container .select2-choice .select2-arrow {
+    border-radius:0;
+    background-image:none;
+    background-color:#dedede;
+    border-left-color:#ccc;
+}
+.select2-container .select2-choice .select2-arrow b {
+    background-position:0 -3px;
+}
+.select2-drop {
+    border-radius:0px;
+    margin-top:-2px;
+    padding-top:4px;
+}
+.select2-drop.select2-drop-active {
+    border-color:#7CA0C7
+}
+.select2-results .select2-result-label {
+    padding:2px 3px 3px;
+}
+.select2-results .select2-highlighted {
+    background:#7CA0C7;
+}

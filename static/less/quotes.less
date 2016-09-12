@@ -1,0 +1,30 @@
+ul.quotes {
+	.list-unstyled;
+	li {
+		margin-bottom:32px;
+		&:before, &:after {
+			font-size:24px;
+			font-style:normal;
+			font-family:@font-family-serif;
+			color:@gray-light;
+			line-height:12px;
+			position:relative;
+			top:6px;
+		}
+		&:before {
+			content: '“';
+			left:-4px;
+		}
+		&:after {
+			content: '”';
+			right:-4px;
+		}
+	}
+}
+@media (max-width: 767px) {
+	ul.quotes {
+		li {
+			margin-bottom:18px;
+		}
+	}
+}

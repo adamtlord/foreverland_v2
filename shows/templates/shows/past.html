@@ -1,0 +1,51 @@
+{% extends 'interior.html' %}
+{% load custom_tags %}
+{% block title %} | Past Shows{% endblock %}
+{% block content %}
+	<div class="row">
+        <div class="col-sm-8">
+            <h2>Past Shows</h2>
+        </div>
+        <div class="col-sm-4">
+            <p class="prev-next-show"><a href="{% url 'upcoming_shows' %}"><i class="fa fa-calendar"></i> View upcoming shows</a></p>
+        </div>
+    </div>
+    <ul class="nav nav-pills" role="menu">
+        {% for year in show_years reversed %}
+            <li{% if forloop.first %} class="active"{% endif %}><a href="#showyear_{{ year }}" data-toggle="tab">{{ year }}</a></li>
+        {% endfor %}
+    </ul>
+    <div class="tab-content">
+    {% for year, shows in shows_by_year.items %}
+        <div id="showyear_{{ year }}" class="tab-pane fade{% if forloop.last %} active in{% endif %}">
+            <h3>{{ year }}</h3>
+            <ul class="shows">
+                {% for show in shows %}
+                    <li>
+                        <a href="{% url 'show' show.id %}" class="tl"><img src="{{ MEDIA_URL }}{% if show.venue.venue_image != 'venues/' %}{{show.venue.venue_image}}{% else %}venues/blank-venue.jpg{% endif %}"></a>
+                        <div class="show">
+                            <h4>
+                                <span class="title">
+                                    <a href="{% url 'show' show.id %}">
+                                        {{ show.date|date:"M. j" }} at {{ show.venue }}
+                                    </a>
+                                    <small class="city">{{ show.venue.city }}, {{ show.venue.state }}</small>
+                                </span>
+                            </h4>
+                            {% if show.opener %}Opener: {{ show.opener }}<br>{% endif %}
+                            {% if show.notes %}<small>{{ show.notes|safe }}</small>{% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
+{% block require_js %}
+    <script type="text/javascript">
+        require(['{{ STATIC_URL }}global/js/common.js'], function () {
+            require(['bootstrap']);
+        });
+    </script>
+{% endblock %}

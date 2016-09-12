@@ -1,0 +1,30 @@
+dl.faq {
+	margin-top:0;
+	dt {
+		font-size:@font-size-large;
+		padding-left: 20px;
+		span {
+			margin-left:-20px;
+		}
+	}
+	dt, dd {
+		span {
+			color:@gray-light;
+			font-weight:bold;
+		}
+	}
+	dt + dd {
+		margin:12px 0 20px 20px;
+		text-align:justify;
+	}
+}
+@media (max-width: 767px) {
+	dl.faq {
+		dt {
+			font-size:@font-size-base;
+		}
+		dt + dd {
+			text-align:left;
+		}
+	}
+}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% block title %} | Downloads{% endblock %}
+{% block body %}
+<div class="container interior">
+	<h2>Downloads</h2>
+	<table class="table table-striped table-responsive table-va-middle table-responsive">
+		<tr>
+			<th>File</th>
+			<th>Size</th>
+			<th>Updated</th>
+			<th></th>
+		</tr>
+	{% for dl in downloads %}
+		<tr>
+			<td><i class="fa {{ dl.icon_class }}"></i> {{ dl.title }}</td>
+			<td>{{ dl.downloadable.size|filesizeformat }}</td>
+			<td>{{ dl.updated|date:"n/j/Y" }}</td>
+			<td><a href="{{ dl.downloadable.url }}" class="btn btn-large btn-primary">Download <i class="fa fa-download"></i></a></td>
+		</tr>
+	{% endfor %}
+	</table>
+</div>
+
+{% endblock %}

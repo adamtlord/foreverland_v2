@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% load thumbnail %}
+
+{% block body %}
+<div class="container interior">
+	<h2>Behind the Music</h2>
+	<div class="row">
+		<div class="col-md-8 btm-photos">
+			<h3>Photos</h3>
+		    <div class="album">
+		    {% for img in album.images %}
+		    	{% thumbnail img.image "230x230" crop="center" as im %}
+		    		<a href="{{ MEDIA_URL }}{{ img.image.name }}" class="thumb">
+		    			<img src="{{ MEDIA_URL }}{{ im }}" width="{{ im.width }}" height="{{ im.height }}">
+		        	</a>
+		        {% endthumbnail %}
+		    {% endfor %}
+		    </div>
+		</div>
+		<div class="col-md-4">
+		    <h3>Videos</h3>
+			{% for video in album.videos %}
+				<div class="video-wrap">
+					{% include "media/fragments/video_embed.html" with type=video.embed_type id=video.vid_id %}
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block require_js %}
+     <script type="text/javascript">
+        require(['{{ STATIC_URL }}global/js/common.js'], function () {
+            require(['media']);
+        });
+    </script>
+{% endblock %}

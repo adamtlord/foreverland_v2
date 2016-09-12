@@ -1,0 +1,48 @@
+{% extends 'interior.html' %}
+{% load custom_tags %}
+{% block title %} | Upcoming Shows{% endblock %}
+{% block content %}
+	<div class="row">
+        <div class="col-sm-8">
+            <h2>Upcoming Shows</h2>
+        </div>
+        <div class="col-sm-4">
+            <p class="prev-next-show"><a href="{% url 'past_shows' %}"><i class="fa fa-calendar"></i> View past shows</a></p>
+        </div>
+    </div>
+    <ul class="shows">
+    {% for show in shows %}
+        <li>
+        	{% if show.venue.website %}<a href="{{ show.venue.website }}" target="_blank" class="tl">{% else %}<span class="tl">{% endif %}<img src="{{ MEDIA_URL }}{% if show.venue.venue_image and show.venue.venue_image != 'venues/' %}{{show.venue.venue_image}}{% else %}venues/blank-venue.jpg{% endif %}">{% if show.venue.website %}</a>{% else %}</span>{% endif %}
+        	<div class="show">
+        		<h4>
+                    <span class="title">
+    					{{ show.date|date:"M. j" }} at {% if show.venue.website %}<a href="{{ show.venue.website }}" target="_blank">{% endif %}{{ show.venue }}{% if show.venue.website %}</a>{% endif %}
+        				<small class="city">{{ show.venue.city }}, {{ show.venue.state }}</small>
+                        <small class="pull-right">{{ show.date|date:"g:i a"}}</small>
+                    </span>
+                </h4>
+    			{% if show.ticket_url %}<div><a href="{{ show.ticket_url }}" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-shopping-cart"></span> Buy Tickets</a></div>{% endif %}
+    			{% if show.ages %}<div>{{ show.ages }}</div>{% endif %}
+    			{% if show.doors_time %}<div>Doors at {{ show.doors_time }}</div>{% endif %}
+    			{% if show.opener %}<div>Opener: {{ show.opener }}</div>{% endif %}
+    			{% if show.notes %}<div><small>{{ show.notes }}</small></div>{% endif %}
+        		<a href="#" class="detail-launch" data-target="#show_detail_modal" data-toggle="modal" data-showurl="{% url 'show_modal' show.id %}">Details <span class="glyphicon glyphicon-new-window"></span></a>
+                {% if show.fb_event %}<div><a href="{{ show.fb_event }}" class="btn btn-sm btn-facebook"><i class="fa fa-facebook-square"></i> RSVP</a></div>{% endif %}
+        	</div>
+        </li>
+    {% endfor %}
+	</ul>
+{% endblock %}
+{% block require_js %}
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYqyvZ70GOiWyTw5bXexwSppcu6urgbdQ&sensor=false"></script>
+	<script type="text/javascript">
+		require(['{{ STATIC_URL }}global/js/common.js'], function () {
+			require(['shows']);
+		});
+	</script>
+{% endblock %}
+{% block modals %}
+<!-- Detail Modal -->
+<div id="show_detail_modal" class="modal fade"></div>
+{% endblock %}

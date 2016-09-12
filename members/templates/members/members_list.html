@@ -1,0 +1,15 @@
+{% extends 'interior.html' %}
+{% load custom_tags %}
+
+{% block content %}
+        <h2>List of Members</h2>
+        {% for member in members %}
+        	<h3>{{ member.display_name }} <small>{{ member.first_name }} {{ member.middle_name }} {{ member.last_name }}</small></h3>
+        	<p><strong>{{ member.instrument }}</strong><br>
+        	Born: {{ member.dob }} | Joined {{ member.join_date }}</p>
+        	<p>{{ member.bio }}</p>
+        	{% if not forloop.last %}
+        		<hr>
+        	{% endif %}
+        {% endfor %}
+{% endblock %}

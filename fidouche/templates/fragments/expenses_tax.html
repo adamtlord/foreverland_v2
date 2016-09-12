@@ -1,0 +1,95 @@
+{% load humanize %}
+<h3>Expenses
+    <i class="fa fa-question-circle popover-trigger" data-toggle="popover"
+    data-content="The records below show payments made for expenses during the specified date range, organized by Tax Category."></i>
+</h3>
+{% for category, payments in expense_payments.items %}
+    <h4>{{ category|title }}</h4>
+    <table class="table table-bordered table-striped datatable-expense" rel="{{ category|title }}">
+        <thead>
+            <tr>
+                <th>Date Sort</th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Amount
+                </th>
+                <th>
+                    Payee
+                </th>
+                <th>
+                    Show
+                </th>
+                <th>
+                    Notes
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in payments.payments %}
+                <tr>
+                    <td>{{ payment.date|date:"Ymd" }}</td>
+                    <td><a href="{% url 'expense_details' payment.id %}">{{ payment.date|date:"n/j/y" }}</a></td>
+                    <td>${{ payment.amount|intcomma }}</td>
+                    <td>{{ payment.payee }}</td>
+                    <td>
+                        {% if payment.show %}
+                            <a href="{% url 'gig_finances' payment.show.id %}">{{ payment.show }}</a>
+                        {% elif payment.tour %}
+                            <a href="{% url 'tour_detail' payment.tour.id %}"><i class="fa fa-road"></i> {{ payment.tour }}</a>
+                        {% endif %}
+                    </td>
+                    <td>{{ payment.notes }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2"></td>
+                <td>${{ payments.total|intcomma }}</td>
+                <td colspan="3"></td>
+            </tr>
+        </tfoot>
+    </table>
+{% endfor %}
+<h4>Production</h4>
+<table class="table table-bordered table-striped datatable-production" rel="Production">
+    <thead>
+        <tr>
+            <th>
+                Company
+            </th>
+            <th>
+                Amount
+            </th>
+            <th>
+                Category
+            </th>
+            <th>
+                Show
+            </th>
+            <th>
+                Check #
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for payment in production_payments %}
+            <tr>
+                <td>{{ payment.company }}</td>
+                <td>${{ payment.amount|intcomma }}</td>
+                <td>{{ payment.category.tax_category }}</td>
+                <td><a href="{% url 'gig_finances' payment.show.id %}">{{ payment.show }}</a></td>
+                <td>{% if payment.check_no %}{{ payment.check_no }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td>${{ total_production_payments|intcomma }}</td>
+            <td colspan="3"></td>
+        </tr>
+    </tfoot>
+</table>

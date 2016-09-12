@@ -1,0 +1,13 @@
+Django
+Fabric
+mysql-python
+
+django_compressor
+django-extensions
+django-common-helpers
+django-ical
+django-localflavor
+
+sorl-thumbnail
+simplejson
+

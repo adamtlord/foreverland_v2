@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>{% block title %}Foreverland Setlist Maker{% endblock %}</title>
+
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="{{ STATIC_URL }}global/images/ico/favicon.ico">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ STATIC_URL }}global/images/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ STATIC_URL }}global/images/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ STATIC_URL }}global/images/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="{{ STATIC_URL }}global/images/ico/apple-touch-icon-57-precomposed.png">
+
+        <link href="{{ STATIC_URL }}global/css/setter.css" rel="stylesheet">
+
+        <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/modernizr.js"></script>
+        
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        {% block header_includes %}{% endblock %}
+
+    </head>
+
+    <body class="{% block bodyclass %}{% endblock %}">
+        {% block navbar %}
+            <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="{% url 'setter_dashboard' %}">Setter</a>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <!-- <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Gigs By Year <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    {% for year in active_years %}
+                                        <li><a href="{% url 'gigs_by_year' year %}">{{ year }}</a></li>
+                                    {% endfor %}
+                                    <li><a href="{% url 'gigs_year_over_year' %}">All years</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{% url 'expenses_list' %}">Expenses</a>
+                            </li>
+                        </ul> -->
+                        <ul class="nav navbar-nav navbar-right">
+                            {% if request.user.is_staff %}<li><a href="/admin">DB Admin</a></li>{% endif %}
+                            <li><a href="{% url 'homepage' %}">Foreverland.com</a></li>
+                            <li><a href="{% url 'auth_logout' %}">Log out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+        {% include 'fragments/messages.html' %}
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+        <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/underscore.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/jquery.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/bootstrap.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}global/js/apps/setter.js"></script>
+        <!--
+            <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/moment.min.js"></script>
+            <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/jquery.dataTables.min.js"></script>
+            <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/datatables_plugins.js"></script>
+            <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/highcharts.js"></script>
+            <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/highcharts_theme.js"></script>
+            <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/bootstrap-datetimepicker.min.js"></script>
+            <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/bootstrap-switch.min.js"></script>
+            <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/magnific-popup.min.js"></script>
+        -->
+        {% block js %}{% endblock %}    
+    </body>
+</html>

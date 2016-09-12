@@ -1,0 +1,13 @@
+{% extends 'interior.html' %}
+{% load custom_tags %}
+{% block title %} | Songs{% endblock %}
+{% block content %}
+<h2>Songs We Play</h2>
+<div class="bg">
+	<ul class="song-list"> 
+		{% for song in songs %}
+		<li>{{ song.name }} <span>({{ song.release_year }}, <em>{{ song.original_album }}</em>)</span></li>
+		{% endfor %}
+	</ul>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base_fidouche.html' %}
+{% load custom_tags %}
+{% load humanize %}
+{% block content %}
+	<h2>Tours</h2>
+	<p><em>There are {{ tours.count }} tours in the database.</em></p>
+	<table class="table table-striped table-bordered datatable">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Shows</th>
+				<th>Cities</th>
+				<th>Dates</th>
+				<th>Expenses</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for tour in tours %}
+				<tr>
+					<td><a href="{% url 'tour_detail' tour.id %}">{{ tour.name }}</a> <span class="badge">{{ tour.shows.count }}</span></td>
+					<td class="no-pad">
+						{% if tour.shows %}
+							<table class="table table-condensed">
+								<tbody>
+									{% for show in tour.shows %}
+										<tr>
+											<td>
+												<a href="{% url 'gig_finances' show.id %}">{{ show }}</a>
+											</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						{% endif %}
+					</td>
+					<td>
+						{{ tour.cities|join:', ' }}
+					</td>
+					<td>
+						{% if tour.date_range %}
+							{{ tour.date_range }}
+						{% endif %}
+					</td>
+					<td>${{ tour.expenses|intcomma }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}
+{% block js %}
+<script>
+	$(function(){
+	});
+</script>
+{% endblock %}

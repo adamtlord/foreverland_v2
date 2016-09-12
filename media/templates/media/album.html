@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block body %}
+
+    <div class="container interior">
+        <h3>{{ album.title }}</h3>        
+            View: 
+            <div class="btn-group">
+                <a href="{% url 'album' album.pk 'thumbnails' %}" class="btn btn-default{% if view == 'thumbnails' %} active{% endif %}">thumbnails</a>
+                <a href="{% url 'album' album.pk 'full' %}" class="btn btn-default{% if view == 'full' %} active{% endif %}">full</a>
+                {% if user.is_authenticated %}<a href="{% url 'album' album.pk 'edit' %}" class="btn btn-default{% if view == 'edit' %} active{% endif %}">edit</a>{% endif %}
+            </div>
+        {% if view == "edit" %}
+            <form action="{% url 'update' %}" method="POST" class="img-edit form-horizontal">{% csrf_token %}
+        {% endif %}
+        <!-- THUMBNAILS VIEW -->
+        {% if view == "thumbnails" %}
+            <ul class="images">
+                {% for img in images.object_list %}
+                    <li>
+                        <a href="{% url 'image' img.pk %}"><img border="0" alt="" src="{{ MEDIA_URL }}{{ img.thumbnail2.name }}" /></a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <!-- FULL VIEW -->
+        {% if view == "full" %}
+        <ul class="images">
+            {% for img in images.object_list %}
+                <li>
+                    <a href="{% url 'image' img.pk %}">
+                        <img border="0" alt="" src="{{ MEDIA_URL }}{{ img.image.name }}"/>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <!-- EDIT VIEW -->
+        {% if view == 'edit' %}
+            <table class="table">
+                {% for img in images.object_list %}
+                <tr>
+                    <td>
+                        <a href="{% url 'image' img.pk %}">
+                            <img border="0" alt="" src="{{ MEDIA_URL }}{{ img.thumbnail2.name }}" />
+                        </a>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <label>Title:</label>
+                            <input type="text" name="title-{{ img.pk }}" value="{{ img.title }}" />
+                        </div>
+                        <div class="form-group">
+                            <label>Tags:</label>
+                            <input type="text" name="tags-{{ img.pk }}" value="{{ img.tag_lst }}" />
+                        </div>
+                        <div class="checkbox">
+                        {% for album in albums %}
+                            <label>
+                                {{ album.title }}
+                                <input type="checkbox" name="album-{{ img.pk }}" value="{{ album.pk }}"
+                                {% if album.title in img.album_lst %}checked{% endif %} />
+                            </label>
+                        {% endfor %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            <input type="submit" class="btn btn-primary" value="Update"></form>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block require_js %}
+     <script type="text/javascript">
+        require(['{{ STATIC_URL }}global/js/common.js'], function () {
+            require(['media']);
+        });
+    </script>
+{% endblock %}

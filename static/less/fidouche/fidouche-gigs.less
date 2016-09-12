@@ -1,0 +1,138 @@
+#gig_finances {
+    button[type="submit"] {
+        margin-top:25px;
+    }
+    .form-inline.factor {
+        margin-bottom:10px;
+    }
+    p.file-upload {
+        font-size:11px;
+        line-height:12px;
+        margin-bottom:5px;
+        .clearable-file-input {
+            label {
+                font-weight:normal;
+            }
+        }
+    }
+    fieldset {
+        margin-bottom:12px;
+        legend {
+            font-weight:300;
+            padding-bottom:5px;
+        }
+    }
+    fieldset#production {
+        legend{
+            margin-bottom:0;
+        }
+        table#gig_production {
+            margin-bottom:0;
+            > tbody > tr:first-child > td {
+                border-top:none;
+            }
+            > tbody > tr:last-child {
+                border-bottom:1px solid @gray-lighter;
+            }
+            > tbody > tr > td {
+                padding-bottom:3px;
+            }
+            .form-group {
+                margin-bottom:5px;
+            }
+            .checkbox.delete {
+                padding-top:0;
+            }
+        }
+    }
+}
+fieldset.expenses {
+    margin-top:15px;
+}
+fieldset#itemize {
+    padding-bottom:15px;
+    border-bottom:1px solid @legend-border-color;
+}
+#expenses_formset {
+    textarea.form-control {
+        height:36px;
+        line-height:1.2em;
+        padding:5px;
+    }
+    td:last-child {
+        text-align:center;
+        vertical-align: middle;
+    }
+    .payee select {
+        width:auto;
+    }
+    p.file-upload {
+        font-size:11px;
+        line-height:12px;
+        .clearable-file-input {
+            display:block;
+            label {
+                font-weight:normal;
+            }
+        }
+        br {
+            display:none;
+        }
+    }
+}
+#payment_formset, #sub_payment_formset {
+    margin-bottom:10px;
+    th:last-child {
+        text-align:center;
+    }
+    td {
+        vertical-align:middle;
+    }
+    .paid, .delete {
+        text-align:center;
+    }
+}
+#commission_other,  #payment_check_no{
+    margin-top:10px;
+}
+legend .btn, #subs_toggle{
+    .pull-right;
+    &:focus, &.active:focus {
+        outline:none;
+    }
+}
+i.expense-detail-toggle, i.address-toggle, i.payout-notes-toggle {
+    color:@gray-light;
+    cursor:pointer;
+    float:right;
+    margin-top:3px;
+    &:hover {
+        color:@gray;
+    }
+}
+table.table.expense-details {
+    margin-top:6px;
+}
+.payout-notes {
+    font-size:85%;
+    background: #FFFACD;
+    padding:4px;
+    line-height:1.1em;
+    margin: 6px -8px 0 -8px;
+}
+.gig-meta {
+    table {
+        margin-bottom:0;
+        > tbody > tr:first-child {
+            th, td {
+                border-top:none;
+            }
+        }
+    }
+}
+#payout_notes {
+    textarea {
+        .input-sm;
+        height:80px;
+    }
+}

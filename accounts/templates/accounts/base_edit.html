@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+
+{% block body %}
+{% url 'profile_edit' as profile_edit_url %}
+{% url 'auth_password_change' as auth_password_change_url %}
+
+<div class="page-header">
+    <h1>Edit profile details</h1>
+</div>
+
+<div class="row">
+
+    <div class="span3">
+        <ul class="nav nav-pills nav-stacked">
+            <li class="{% active_starts request profile_edit_url %}">
+                <a href="{% url 'profile_edit' %}"><i class="icon-user"></i> Account details</a></li>
+            <li class="{% active_starts request auth_password_change_url %}">
+                <a href="{% url 'auth_password_change' %}"><i class="icon-exclamation-sign"></i> Change password</a>
+            </li>
+            <li>
+                <a href="{% url 'profile_page' request.user.username %}">&laquo; Back</a>
+            </li>
+        </ul>
+    </div> <!-- /span3 -->
+
+    <div class="span9">
+
+        {% block sub_content %}{% endblock %}
+
+    </div><!-- /span9 -->
+
+</div> <!-- /row -->
+
+{% endblock %}

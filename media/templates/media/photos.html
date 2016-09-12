@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% load thumbnail %}
+{% block title %} | Photos{% endblock %}
+
+{% block body %}
+<div class="container interior">
+    <h3><i class="fa fa-instagram"></i> Instagram Feed <small id="instafeed_spinner">Loading <i class="fa fa-spinner fa-spin"></i></small></h3>
+    <p>Follow us at <a href="https://instagram.com/foreverland/">instagram.com/foreverland</a>
+    <div id="instafeed" class="album album-with-captions album-popup"></div>
+	<h3>Promotional Photos</h3>
+    <div class="row album album-with-captions">
+        {% for photo in promo_photos %}
+            <div class="col-md-3">
+                <a href="{{ photo.image.url }}" class="thumb">
+                    {% thumbnail photo.image "264" as im %}
+                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                    {% endthumbnail %}
+                    {{ photo.title }}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    <h3>Official Logo</h3>
+    <div class="row album album-with-captions">
+        <div class="col-md-3">
+            <a href="{{ MEDIA_URL }}images/Foreverland_Logo.jpg" target="_blank" class="thumb">
+                <img border="0" alt="" src="{{ STATIC_URL }}global/images/Foreverland_Logo-thumb.jpg" />
+                High-quality JPG version
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ MEDIA_URL }}dl/Foreverland_Logo.pdf" target="_blank" class="thumb">
+                <img border="0" alt="" src="{{ STATIC_URL }}global/images/Foreverland_Logo-thumb.jpg" />
+                PDF version (13 MB)
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block require_js %}
+     <script type="text/javascript">
+        require(['{{ STATIC_URL }}global/js/common.js'], function () {
+            require(['photos']);
+        });
+    </script>
+{% endblock %}

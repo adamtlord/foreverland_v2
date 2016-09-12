@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Foreverland | Map</title>
+
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="{{ STATIC_URL }}global/images/ico/favicon.ico">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ STATIC_URL }}global/images/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ STATIC_URL }}global/images/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ STATIC_URL }}global/images/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="{{ STATIC_URL }}global/images/ico/apple-touch-icon-57-precomposed.png">
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/jquery.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <style>
+            html, body, #venue_map {
+                height: 100%;
+                margin: 0px;
+                padding: 0px
+            }
+            #panel {
+                position: absolute;
+                width:180px;
+                bottom:0;
+                right:0;
+                z-index: 5;
+                background-color: rgba(255,255,255,.8);
+                padding: 10px;
+                box-shadow:-2px -2px 5px rgba(0,0,0,.2);
+                font-family:'Open Sans'
+            }
+            #year {
+                margin-left:15px;
+            }
+        </style>
+
+    </head>
+    <body>
+        <div id="panel">
+            <button type="button" class="btn btn-default btn-sm" onClick="dropMarkers(150, true)"><span class="glyphicon glyphicon-map-marker"></span> Drop Pins</button><span id="year"></span>
+            <div class="checkbox">
+                <label for="markers">
+                    <input id="markers" type="checkbox"> Show Pins
+                </label>
+            </div>
+            <div class="checkbox">
+                <label for="heatmap">
+                    <input id="heatmap" type="checkbox"> Show Heatmap
+                </label>
+                <div class="heatmap-params collapse">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="param" class="param-input" id="net" value="net" checked> $ net
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="param" class="param-input" id="average" value="average"> $ average
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="param" class="param-input" id="num_shows" value="num_shows"> # shows
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="venue_map" data-url="{% url 'venue_map_data' %}"></div>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ maps_key }}&libraries=visualization&sensor=false"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}global/js/apps/map.js"></script>
+
+    </body>
+</html>

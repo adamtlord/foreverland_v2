@@ -1,0 +1,46 @@
+{% extends 'base_setter.html' %}
+{% load custom_tags %}
+{% load humanize %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Woof Woof</h2>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Songs</h3>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    {% for song in songs %}
+                        <li>{{ song }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Setlists</h3>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    {% for setlist in setlists %}
+                        <li><a href="{% url 'view_setlist' setlist.show.id %}">{{ setlist }}</a> <small>{{ setlist.songs.all|length }} songs</small></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+    $(function(){
+        
+    });
+</script>
+{% endblock %}

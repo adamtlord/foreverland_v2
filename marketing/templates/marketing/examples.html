@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+
+{% block body %}
+<div class="container">
+    <div class="content">
+        <!-- Main hero unit for a primary marketing message or call to action -->
+        <div class="hero-unit">
+            <h1>Examples
+            </h1>
+
+            <p>Todo: Make examples</p>
+        </div>
+        <h1>Example form</h1>
+        {% for field in form %}
+            {% render_form_field field %}
+            <hr />
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

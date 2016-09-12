@@ -1,0 +1,135 @@
+.albums, .images {
+	.list-unstyled;
+	margin:20px 0;
+	li {
+		display:inline-block;
+		img {
+			padding:2px;
+			background:fadeout(@gray-lighter, 10%);
+			margin:0 5px 5px 0;
+			max-width:100%;
+		}
+	}
+}
+form.img-edit {
+	margin-top:20px;
+	table {
+		background:@black;
+	}
+}
+.album {
+	.thumb {
+		display:inline-block;
+		margin:0 5px 10px 0;
+		img {
+			padding:2px;
+			background:fadeout(@gray-lighter, 10%);
+			width:109px;
+			height:auto;
+		}
+	}
+	&.album-with-captions {
+		padding-bottom:20px;
+		.thumb {
+			.bg-texture;
+			display:block;
+			text-align:center;
+			padding:25px 20px 20px 20px;
+			img {
+				display:block;
+				margin:auto;
+				margin-bottom:5px;
+			}
+			&:hover {
+				background:@black;
+				color:@white;
+			}
+		}
+	}
+}
+#instafeed {
+	#instafeed_spinner {
+		.bg-texture;
+		padding:20px;
+		margin:15px auto;
+	}
+	.thumb {
+		.bg-texture;
+		display:inline-block;
+		text-align:center;
+		padding:15px;
+		margin:0 15px 10px 0;
+		img {
+			display:block;
+			margin:auto;
+		}
+		&:hover {
+			background:@black;
+			color:@white;
+		}
+	}
+}
+@media (max-width: 767px) {
+	#instafeed {
+		.thumb {
+			padding:5px;
+			img {
+				width:120px;
+			}
+		}
+	}
+}
+.modal.lightbox {
+	.solo-close {
+		position:absolute;
+		right:10px;
+		top:10px;
+		padding:0;
+		background:fadeout(@black, 25%);
+		height:32px;
+		width:32px;
+		line-height:32px;
+		font-size:28px;
+		border:none;
+		border-radius:50px;
+		.box-shadow(0 0 3px fadeout(@gray-light, 15%));
+		color:@gray-light;
+		z-index:1;
+		&:hover {
+			color:@white;
+			.box-shadow(0 0 5px @white);
+			.transition(all .15s ease);
+		}
+
+	}
+	.modal-body {
+		padding:0;
+		.box-shadow(0 0 20px @white);
+	}
+}
+.mfp-bottom-bar {
+	margin-top:-40px;
+	padding:5px;
+	.bg-texture;
+}
+.mfp-title {
+	font-size:13px;
+	line-height:16px;
+}
+.btm-photos .album {
+	@media (max-width: 767px) {
+		.thumb:nth-child(3n){
+			margin-right:0;
+		}
+	}
+	img {
+		@media (min-width: 768px) and (max-width: 1199px) {
+			width: 115px;
+		}
+		@media (min-width: 1201px) {
+			width: 117px;
+		}
+	}
+}
+
+

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block body %}
+
+    <div class="content">
+        <div class="row">
+            <div class="span12">
+                <h2>Search Photos</h2>
+                <form action="{% url 'search' %}" method="POST">{% csrf_token %}
+                    <label>Title</label>
+                    <input type="text" name="title" value="{{ prm.title }}" />
+        
+                    <label>Filename</label>
+                    <input type="text" name="filename" value="{{ prm.filename }}" />
+
+                    <label>Tags</label>
+                    <input type="text" name="tags" value="{{ prm.tags }}" />
+
+                    <label>Rating</label>
+                    <div class="form-inline">
+                        <input size="3" class="input-small" type="text" name="rating_from" value="{{ prm.rating_from }}" /> to
+                        <input size="3" class="input-small" type="text" name="rating_to" value="{{ prm.rating_to }}" />
+                    </div>
+
+                    <label>Width</label>
+                    <div class="form-inline">
+                        <input size="3" class="input-small" type="text" name="width_from" value="{{ prm.width_from }}" /> to
+                        <input size="3" class="input-small" type="text" name="width_to" value="{{ prm.width_to }}" />
+                    </div>
+
+                    <label>Height</label>
+                    <div class="form-inline">
+                        <input size="3" class="input-small" type="text" name="height_from" value="{{ prm.height_from }}" /> to
+                        <input size="3" class="input-small" type="text" name="height_to" value="{{ prm.height_to }}" />
+                    </div>
+
+                    {% for album in albums %}
+                        <label class="checkbox">
+                            <input type="checkbox" name="album" value="{{ album.pk }}" {% if album.pk in prm.album %}checked{% endif %} />
+                            {{ album.title }}
+                        </label>
+                    {% endfor %}
+
+                    <label>Mode</label>
+                    <select name="view">
+                        <option value="view" {% if prm.view == "view" %}selected{% endif %}>view</option>
+                        <option value="edit" {% if prm.view == "edit" %}selected{% endif %}>edit</option>
+                    </select>
+                    <div>
+                        <input type="submit" class="btn btn-primary" value="Apply" />
+                    </div>
+
+                    <h3>Results</h3>
+                    {% for img in results.object_list %}
+                        {% if prm.view == "edit" %}
+                            <table class="table">>
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'image' img.pk %}"><img border="0" alt="" src="{{ MEDIA_URL }}{{ img.thumbnail2.name }}" /></a>
+                                    </td>
+                                    <td>
+                                        <div class="form-inline">
+                                            <label>Title: <input type="text" name="title-{{ img.pk }}" value="{{ img.title }}" /></label>
+                                            <label>Tags: <input type="text" name="tags-{{ img.pk }}" value="{{ img.tag_lst }}" /></label>
+                                            {% for album in albums %}
+                                                <input type="checkbox" name="album-{{ img.pk }}" value="{{ album.pk }}" {% if album.title in img.album_lst %}checked{% endif %} />
+                                                <label class="checkbox">{{ album.title }}
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        {% endif %}
+                        {% if prm.view == "view" %}
+                            <a href="{% url 'image' img.pk %}"><img border="0" alt="" src="{{ MEDIA_URL }}{{ img.thumbnail2.name }}" /></a>
+                        {% endif %}
+                    {% endfor %}
+                </form>
+                {% if results.object_list and results.paginator.num_pages > 1 %}
+                    <div class="pagination">
+                        <ul>
+                            {% if results.has_previous %}
+                                <li><a href= "?page={{ results.previous_page_number }}">prev</a></li>
+                            {% endif %}
+
+                                <li class="active">
+                                    {{ results.number }} of {{ results.paginator.num_pages }}
+                                </li>
+
+                            {% if results.has_next %}
+                                <li><a href="?page={{ results.next_page_number }}">next</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

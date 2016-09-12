@@ -1,0 +1,33 @@
+.heading-text-shadow {
+	text-shadow:1px 1px 1px fadeout(@black, 25%);
+}
+.text-shadow{
+	text-shadow:0 1px 0 fadeout(@black, 25%);
+}
+.bg-texture {
+	background:url('../images/vidpattern.png') fadeout(@gray-darker, 20%);
+	background-size:1px;
+}
+.hover-state {
+	.transition(color .25s ease);
+	color:@blue-light;
+	text-shadow: 0 0 5px @black;
+}
+.h2-height {
+	line-height:floor(@font-size-h2 * @headings-line-height);
+	margin-top:@line-height-computed;
+	margin-bottom:@line-height-computed / 2;
+}
+.video-wrap {
+	position: relative;
+	padding-bottom: 56.25%;
+	padding-top: 30px; height: 0; overflow: hidden;
+	margin-bottom:8px;
+	iframe, object, embed {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+}

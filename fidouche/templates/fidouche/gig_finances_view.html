@@ -1,0 +1,176 @@
+{% extends 'base_fidouche.html' %}
+{% load custom_tags %}
+{% load humanize %}
+{% load thumbnail %}
+
+{% block content %}
+<div class="page-header">
+	<h4>Gig Financials</h4>
+	<h2>{{ gig }}</h2>
+</div>
+<div class="row">
+	<div class="col-sm-6">
+		<h3>Payment</h3>
+		<table class="table">
+			<tbody>
+				<tr>
+					<th>Gross</th><td>${{ gig.gross|intcomma }}</td>
+				</tr>
+				<tr>
+					<th>Payment method</th><td>{{ gig.gross_method }}</td>
+				</tr>
+				<tr>
+					<th>Paid by</th><td>{{ gig.payer }} {% if gig.commission_withheld %}(commission withheld){% endif %}</td>
+				</tr>
+				<tr>
+					<th>Commission</th><td>${{ gig.commission }} ({{ gig.commission_percentage }}%)</td>
+				</tr>
+				<tr>
+					<th>Sound/Production costs</th><td>{% if gig.sound_cost %}${{ gig.sound_cost }}{% else %}--{% endif %}</td>
+				</tr>
+				<tr>
+					<th>IEM cost</th><td>{% if gig.in_ears_cost %}${{ gig.in_ears_cost }}{% else %}--{% endif %}</td>
+				</tr>
+			</tbody>
+		</table>
+		{% if buyouts %}
+			<table class="table">
+				<tbody>
+					<tr>
+						<th>Fee</th><td>${{ form.fee }}</td>
+					</tr>
+					<tr>
+						<th>Food Buyout</th><td>${{ form.food_buyout }}</td>
+					</tr>
+					<tr>
+						<th>Travel Buyout</th><td>${{ form.travel_buyout }}</td>
+					</tr>
+					<tr>
+						<th>Lodging Buyout</th><td>${{ form.lodging_buyout }}</td>
+					</tr>
+					<tr>
+						<th>Other Buyout</th><td>${{ form.other_buyout }}</td>
+					</tr>
+				</tbody>
+			</table>
+		{% endif %}
+		<h3>Expenses</h3>
+		<table class="table">
+			<tbody>
+				<tr>
+					<th>Printing/shipping costs</th><td>{% if gig.print_ship_cost %}${{ gig.print_ship_cost|intcomma }}{% else %}--{% endif %}</td>
+				</tr>
+				<tr>
+					<th>Ads costs</th><td>{% if gig.ads_cost %}${{ gig.ads_cost|intcomma }}{% else %}--{% endif %}</td>
+				</tr>
+				<tr>
+					<th>Other costs</th><td>{% if gig.other_cost %}${{ gig.other_cost|intcomma }}{% else %}--{% endif %}</td>
+				</tr>
+			</tbody>
+		</table>
+		{% if expenses %}
+			<h3>Itemized Expenses</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Payee</th>
+						<th>Category</th>
+						<th>Amount</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for expense in expenses %}
+					<tr>
+						<td>{{ expense.payee }}</td>
+						<td>{{ expense.new_category }}</td>
+						<td>${{ expense.amount|intcomma }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+	</div>
+	<div class="col-sm-6">
+		<div class="well well-sm gig-meta">
+			<table class="table">
+				<tbody>
+					{% if gig.attendance %}
+						<tr>
+							<th>Attendance</th><td>{{ gig.attendance }} {% if gig.venue.capacity %}(capacity: {{ gig.venue.capacity }}){% endif %}</td>
+						</tr>
+					{% endif %}
+					<tr>
+						<th>Net</th><td>${{ gig.net|intcomma }}</td>
+					</tr>
+					<tr>
+						<th>Payout</th><td>${{ gig.payout|intcomma }}</td>
+					</tr>
+					<tr>
+						<th>To account</th><td>${{ gig.to_account|intcomma }}</td>
+					</tr>
+					{% if gig.settlement_sheet %}
+						<tr>
+							<th>Settlement sheet</th>
+							<td>
+								<a href="{{ gig.settlement_sheet.url }}" class="thumb">
+								{% thumbnail gig.settlement_sheet "100" as im %}
+									<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+								{% endthumbnail %}
+								</a>
+							</td>
+						</tr>
+					{% endif %}
+				</tbody>
+			</table>
+		</div>
+		{% if payments %}
+			<h3>Payout</h3>
+			{% if payments.0.member %}
+				<table class="table">
+					<tbody>
+						{% for payment in payments %}
+							{% if payment.member %}
+								<tr>
+									<td>{% if payment.paid %}<i class="fa fa-check-circle text-success"></i>{% endif %}</td>
+									<th>{{ payment.member }}</th>
+									<td>${{ payment.amount|intcomma }}</td>
+								</tr>
+							{% endif %}
+						{% endfor %}
+					</tbody>
+				</table>
+			{% else %}
+				<p><em>Standard payout - ${{ gig.payout|intcomma }} paid per member</em></p>
+			{% endif %}
+		{% endif %}
+		<h3>Subs</h3>
+		{% if gig.subs %}
+			<table class="table">
+				<tbody>
+					{% for payment in sub_payments %}
+						<tr>
+							<td>{% if payment.paid %}<i class="fa fa-check-circle text-success"></i>{% endif %}</td>
+							<th>{{ payment.sub }}</th>
+							<td>${{ payment.amount }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<p><em>No subs on the gig</em></p>
+		{% endif %}
+	</div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+	$(function(){
+		$('.thumb').magnificPopup({
+			type:'image',
+			zoom: {
+				enabled: true
+			}
+		});
+	});
+</script>
+{% endblock %}

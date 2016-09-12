@@ -1,0 +1,61 @@
+{% extends 'base_fidouche.html' %}
+{% load custom_tags %}
+
+{% block content %}
+<div class="page-header">
+	<h4>Expense Details</h4>
+    <h2>{{ expense.date|date:"n/j/y" }}, ${{ expense.amount }} to {{ expense.payee }}</h2>
+</div>
+<form method="post" action="{{ request.path }}" role="form" enctype="multipart/form-data">{% csrf_token %}
+	<div class="row">
+		<div class="col-md-6 col-sm-6">
+			<fieldset>
+				<div class="form-group">
+					<label for="id_date">Date</label>
+					<div id="expense_date_picker" class="input-group">
+						{{ form.date }}
+						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="id_payee">Payee</label>
+					{{ form.payee }}
+				</div>
+				<div class="form-group">
+					<label for="id_category">Category</label>
+					{{ form.new_category }}
+				</div>
+				<div class="form-group">
+					<label for="id_category">Amount</label>
+					<div class="input-group">
+						<span class="input-group-addon">$</span>
+						{{ form.amount }}
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="id_category">Check #</label>
+						{{ form.check_no }}
+				</div>
+				<div class="form-group">
+					<label for="id_category">Notes</label>
+					{{ form.notes }}
+				</div>
+				<div class="form-group">
+					<label for="id_receipt_img"><i class="fa fa-camera"></i> Upload Receipt</label>
+					{{ form.receipt_img }}
+				</div>
+    		</fieldset>
+    	</div>
+     	<button type="submit" class="btn btn-block btn-lg btn-primary">Save</button>
+	</div>
+</form>
+{% endblock %}
+{% block js %}
+<script>
+	$(function(){
+		$('#expense_date_picker').datetimepicker({
+			pickTime: false
+		});
+	});
+</script>
+{% endblock %}

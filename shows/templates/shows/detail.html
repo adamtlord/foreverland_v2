@@ -1,0 +1,13 @@
+{% extends 'interior.html' %}
+{% load custom_tags %}
+{% block title %} at {{ show.venue }}{% endblock %}
+{% block content %}    
+    <h2>{{ show.date|date:"M. j" }} at {{ show.venue }}</h2>
+    <div class="show-detail">
+	    {% if show.ticket_url %}<div><a href="{{ show.ticket_url }}" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-shopping-cart"></span> Buy Tickets</a></div>{% endif %}
+		{% if show.ages %}<div>{{ show.ages }}</div>{% endif %}
+		{% if show.doors_time %}<div>Doors at {{ show.doors_time }}</div>{% endif %}
+		{% if show.opener %}<div>Opener: {{ show.opener }}</div>{% endif %}
+		{% if show.notes %}<div><small>{{ show.notes }}</small></div>{% endif %}	
+	</div>
+{% endblock %}

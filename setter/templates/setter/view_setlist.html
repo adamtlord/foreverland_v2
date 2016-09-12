@@ -1,0 +1,20 @@
+{% extends 'base_setter.html' %}
+{% load custom_tags %}
+
+{% block content %}
+<div class="page-header">
+    <h4>Setlist for</h4>
+    <h2>{{ gig }}</h2>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <ol>
+            {% for song in setsongs %}
+                <li{% if not song.song.display %} class="text-muted"{% endif %}>{{ song }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+{% endblock %}

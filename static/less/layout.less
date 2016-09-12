@@ -1,0 +1,241 @@
+html, body {
+	height: 100%;
+	min-height:100%;
+}
+body {
+	background: url(../images/starfield.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-color:@gray;
+	&.interior {
+		padding-top:70px;
+	}
+}
+#ow {
+	position: relative;
+	overflow-y: auto;
+	width: 100%;
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -60px; /* the bottom margin is the negative value of the footer's height */
+}
+#iw {
+	position: relative;
+	width: 100%;
+	margin-bottom:20px;
+}
+.navbar {
+	padding-left:15px;
+	padding-right:15px;
+}
+.navbar-inverse {
+	.bg-texture;
+	border:none;
+}
+.navbar-inverse .navbar-brand {
+	font-family:@optimus-font-family;
+	color:@white;
+	font-size:28px;
+	padding:17px 0 0 0;
+	display:inline-block;
+	margin:0;
+}
+.navbar-nav {
+	text-transform: uppercase;
+	font-weight:700;
+	float:right;
+	> li > a {
+		.transition(font-size .25s ease);
+		.transition(color .25s ease);
+		.transition(float .25s ease);
+		&:hover {
+		.hover-state;
+		}
+	}
+	> li.social > a {
+		padding:15px 5px;
+		display:inline-block;
+	}
+}
+footer {
+	height:60px;
+	text-align:center;
+	color:@gray-light;
+	position:relative;
+	z-index:1;
+	p {
+		margin-bottom:0;
+		font-size:@font-size-small;
+	}
+	#gradient.vertical(transparent, @black);
+}
+.push {
+	height:60px;
+}
+.space {
+	margin-top:40px;
+	margin-bottom:40px;
+}
+.interior .bg {
+	.bg-texture;
+	padding:20px 28px;
+}
+.container.interior {
+	margin-top:70px;
+}
+.init-hide {
+	opacity: 0;
+	.transition(opacity .15s);
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+	.navbar-nav {
+		> li > a {
+			font-size:14px;
+			padding-left:8px;
+			padding-right:8px;
+		}
+	}
+}
+@media (max-width: 767px) {
+	body {
+		font-size:13px;
+		line-height:1.34em;
+		background: url(../images/dark_dotted_@2X.png);
+		background-size:5px;
+	}
+	body.interior {
+		padding-top:50px;
+	}
+	.container.interior {
+		margin-top:0;
+	}
+	#ow {
+		overflow-x:hidden;
+	}
+	#iw {
+		background: url(../images/starfield-m2.jpg);
+		background-size:240px;
+		min-height:568px;
+	}
+	#nav_close_btn {
+		position:absolute;
+		top:-100%;
+	}
+	.js-ready body {
+		padding-top:0;
+	}
+	#mainnav {
+		display:none;
+	}
+	.js-ready #iw {
+		left: 0;
+		.navbar-inverse.navbar-fixed-top {
+			margin-bottom:0;
+			position:static;
+		}
+		#mainnav {
+			display:block;
+			position: absolute;
+			top:50px;
+			height: 100%;
+			width: 70%;
+			left:-70%;
+			.box-shadow(inset -1.5em 0 1.5em -0.75em rgba(0, 0, 0, 0.25));
+			.navbar-nav {
+				border-top:1px solid fadeout(#333, 50%);
+				float:none;
+				margin:0;
+				> li {
+					text-align:left;
+					display:block;
+					> a {
+						display:block;
+						border-bottom:1px solid fadeout(#333, 50%);
+					}
+					&.social {
+						border-bottom:1px solid fadeout(#333, 50%);
+						 > a {
+						 	border-bottom:none;
+						 	font-size:20px;
+							display:inline-block;
+							padding:10px 15px;
+						}
+					}
+				}
+			}
+			#nav_close_btn {
+				top:-38px;
+				left:15px;
+				font-size:25px;
+				text-shadow:none;
+			}
+		}
+	}
+	.js-ready.js-nav #iw {
+		left: 70%;
+	}
+	.csstransforms3d.csstransitions.js-ready #iw {
+		left: 0 !important;
+		-webkit-transform: translate3d(0, 0, 0);
+		-moz-transform: translate3d(0, 0, 0);
+		-ms-transform: translate3d(0, 0, 0);
+		-o-transform: translate3d(0, 0, 0);
+		transform: translate3d(0, 0, 0);
+		-webkit-transition: -webkit-transform 500ms ease;
+		-moz-transition: -moz-transform 500ms ease;
+		-o-transition: -o-transform 500ms ease;
+		transition: transform 500ms ease;
+		-webkit-backface-visibility: hidden;
+		-moz-backface-visibility: hidden;
+		-ms-backface-visibility: hidden;
+		-o-backface-visibility: hidden;
+		backface-visibility: hidden;
+	}
+	.csstransforms3d.csstransitions.js-ready.js-nav #iw {
+		-webkit-transform: translate3d(70%, 0, 0) scale3d(1, 1, 1);
+		-moz-transform: translate3d(70%, 0, 0) scale3d(1, 1, 1);
+		-ms-transform: translate3d(70%, 0, 0) scale3d(1, 1, 1);
+		-o-transform: translate3d(70%, 0, 0) scale3d(1, 1, 1);
+		transform: translate3d(70%, 0, 0) scale3d(1, 1, 1);
+	}
+	.js-nav #navbar_toggle {
+		color:@link-hover-color;
+	}
+	.navbar {
+		.navbar-header {
+			text-align:center;
+			height:50px;
+		}
+		.navbar-brand {
+			float:none;
+			display:inline-block;
+		}
+	}
+	.js-ready #nav {
+		left: -70%;
+	}
+	.navbar-nav {
+		text-align:center;
+		float:none;
+		> li {
+			float:none;
+			display:inline;
+			> a {
+				display:inline-block;
+				padding:8px 15px;
+			}
+		}
+	}
+	h2 {
+		font-size:32px;
+	}
+	h4 {
+		font-size:16px;
+	}
+}
+@media (max-width: 480px) {
+}

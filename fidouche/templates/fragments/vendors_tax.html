@@ -1,0 +1,47 @@
+{% load humanize %}
+<h3>Vendors</h3>
+<table class="table table-bordered table-striped datatable">
+    <thead>
+        <tr>
+            <th>
+                Vendor
+            </th>
+            <th>
+                Total Paid
+            </th>
+            <th>
+                Payments
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for vendor, data in vendor_payments.items %}
+            <tr>
+                <td>{{ vendor.name }}</td>
+                <td><strong>${{ data.total|intcomma }}</strong> <i class="fa fa-list-ul expense-detail-toggle" data-toggle="collapse" data-target="#vendor{{ forloop.counter }}_expenses"></i>
+                    <div id="vendor{{ forloop.counter }}_expenses" class="collapse">
+                        <table class="table table-condensed">
+                            <tbody class="text-small">
+                                {% for category, amount in data.categories.items %}
+                                    <tr><td>{{ category }}:</td><td>${{ amount }}</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td>{{ data.payments|length }}
+                    {% if data.payments %}
+                        <i class="fa fa-list-alt payment-detail-toggle" data-toggle="modal" data-target="#vendor{{ forloop.counter }}_payments"></i>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td>${{ all_vendors_total|intcomma }}</td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>

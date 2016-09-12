@@ -1,0 +1,222 @@
+body {
+  padding-top: 70px;
+  padding-bottom:40px;
+  &.login {
+  	padding:40px 0;
+  	background-color:#222;
+  }
+}
+.form-signin {
+	max-width: 330px;
+	padding: 15px;
+	margin: 0 auto;
+	input {
+		margin-bottom:15px;
+	}
+	h2 {
+		font-size:36px;
+		color:white;
+		text-shadow:1px 2px 1px #000;
+	}
+}
+.page-header {
+	margin-top:0;
+	h2, .btn {
+		margin-top:10px;
+	}
+	.btn {
+		float:right;
+	}
+}
+form {
+	margin-bottom:40px;
+	input[type="submit"], button[type="submit"] {
+		margin-top:15px;
+	}
+	span.req {
+		color:#a94442;
+	}
+	.errorlist {
+		list-style-type:none;
+		margin:0;
+		padding:0;
+		font-size:90%;
+		color:#a94442;
+	}
+	.has-error p.help-block {
+		margin:-8px 0 0 0;
+	}
+	&.add-control {
+		select,
+		textarea,
+		input[type="text"],
+		input[type="password"],
+		input[type="datetime"],
+		input[type="datetime-local"],
+		input[type="date"],
+		input[type="month"],
+		input[type="time"],
+		input[type="week"],
+		input[type="number"],
+		input[type="email"],
+		input[type="url"],
+		input[type="search"],
+		input[type="tel"],
+		input[type="color"] {
+			.form-control;
+		}
+	}
+}
+.form-inline {
+	.form-control, .form-group {
+		width:auto;
+		vertical-align:middle;
+		.input-group {
+			width:auto;
+			max-width:80px;
+		}
+	}
+	.form-group:first-child {
+		margin-right:15px;
+	}
+}
+.checkbox input[type="checkbox"] {
+	height:auto;
+	border:none;
+	.box-shadow(none);
+	border-radius:0;
+	vertical-align: baseline;
+}
+#gig_finances {
+	button[type="submit"] {
+		margin-top:25px;
+	}
+	.form-inline.factor {
+		margin-bottom:10px;
+	}
+	p.file-upload {
+		font-size:11px;
+		line-height:12px;
+		margin-bottom:5px;
+		.clearable-file-input {
+			label {
+				font-weight:normal;
+			}
+		}
+	}
+}
+.panel-body.panel-no-pad {
+	padding:0;
+	table {
+		margin-bottom:0;
+	}
+	table.table > tbody > tr:first-child > td{
+		border-top:none;
+	}
+}
+fieldset legend {
+	margin-bottom:10px;
+}
+fieldset.expenses {
+	margin-top:15px;
+}
+fieldset#itemize {
+	padding-bottom:15px;
+	border-bottom:1px solid @legend-border-color;
+}
+#expenses_formset {
+	textarea.form-control {
+		height:36px;
+		line-height:1.2em;
+	}
+	td:last-child {
+		text-align:center;
+		vertical-align: middle;
+	}
+	.payee select {
+		width:auto;
+	}
+	p.file-upload {
+		font-size:11px;
+		line-height:12px;
+		.clearable-file-input {
+			display:block;
+			label {
+				font-weight:normal;
+			}
+		}
+		br {
+			display:none;
+		}
+	}
+}
+#payment_formset, #sub_payment_formset {
+	margin-bottom:10px;
+	th:last-child {
+		text-align:center;
+	}
+	td {
+		vertical-align:middle;
+	}
+	.paid {
+		text-align:center;
+	}
+}
+#commission_other,  #payment_check_no{
+	margin-top:10px;
+}
+legend.with-btn {
+	padding-bottom:5px;
+}
+legend .btn, #subs_toggle{
+	.pull-right;
+	&:focus, &.active:focus {
+		outline:none;
+	}
+}
+i.expense-detail-toggle {
+	color:@gray-light;
+	cursor:pointer;
+	float:right;
+	margin-top:3px;
+	&:hover {
+		color:@gray;
+	}
+}
+table.table.expense-details {
+	font-size:85%;
+	margin-top:6px;
+}
+table.table-valign-middle {
+	> thead > tr > th,
+	> tbody > tr > th,
+	> tfoot > tr > th,
+	> thead > tr > td,
+	> tbody > tr > td,
+	> tfoot > tr > td {
+		vertical-align:middle;
+	}
+}
+.mfp-image-holder .mfp-close, .mfp-iframe-holder .mfp-close {
+	text-shadow:0px 0px 10px black;
+	opacity:1;
+}
+.alert.alert-error {
+	.alert-danger;
+}
+input[type="file"] {
+	font-size:11px;
+	line-height:12px;
+	color:@gray-light;
+}
+/* RESPONSIVE */
+@media (min-width: 768px) {
+	.form-horizontal .control-label {
+		text-align:left;
+	}
+}
+@media (max-width: 768px) {
+	.page-header .btn {
+		float:left;
+	}
+}

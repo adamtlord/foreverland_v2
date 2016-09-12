@@ -1,0 +1,66 @@
+{% extends 'base_fidouche.html' %}
+{% load custom_tags %}
+{% load humanize %}
+{% load thumbnail %}
+
+{% block content %}
+<div class="page-header">
+	<div class="row">
+		<div class="col-md-6 col-sm-6">
+    		<h2>Other Income</h2>
+    	</div>
+    	<div class="col-md-6 col-sm-6">
+		{% if request.user.is_staff %}
+			<a href="{% url 'income_create' %}" class="btn btn-success"><i class="fa fa-plus"></i> Add Income</a>
+		{% endif %}
+		</div>
+	</div>
+</div>
+<p>This page only lists income not related to a particular show (tips, donations, gambling, prostitution, etc.).</p>
+<table class="table table-striped table-bordered table-valign-middle datatable">
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Amount</th>
+				<th>Payer</th>
+				<th>Check #</th>
+				<th>Notes</th>
+			{% if request.user.is_staff %}
+				<th width="140">Action</th>
+			{% endif %}
+			</tr>
+		</thead>
+		<tbody>
+			{% for income in incomes %}
+			<tr>
+				<td>{{ income.date|date:"n/j/y" }}</td>
+				<td>{% if income.amount %}${{ income.amount|intcomma }}{% endif %}</td>
+				<td>{% if income.payer %}{{ income.payer }}{% endif %}</td>
+				<td>{% if income.check_no %}{{ income.check_no }}{% endif %}</td>
+				<td>{% if income.notes %}{{ income.notes }}{% endif %}</td>
+			{% if request.user.is_staff %}
+				<td>
+					<a href="{% url 'income_details' income.id %}" class="btn btn-sm btn-default">edit</a>
+					<a href="{% url 'income_delete' income.id %}" class="btn btn-sm btn-danger">delete</a>
+				</td>
+			{% endif %}
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}
+{% block js %}
+<script>
+	$(function(){
+		$('.datatable').dataTable({
+			"bPaginate": false,
+			"bInfo": false,
+			"bLengthChange": false,
+			"aoColumnDefs": [
+				{"sType": "currency", "aTargets": [1]},
+				{"sType": "date", "aTargets": [0]}
+			]
+		});
+	});
+</script>
+{% endblock %}

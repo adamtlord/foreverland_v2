@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block bodyclass %}interior{% endblock %}
+{% block body %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-8">
+			{% block content %}{% endblock %}
+		</div><!-- / .col-md-8 -->
+		<div id="sidebar" class="col-md-4 hidden-sm hidden-xs">
+			{% include 'fragments/sidebar.html' %}
+		</div><!-- / .col-md-4 -->
+	</div><!-- / .row -->
+</div><!-- / .container -->
+{% endblock %}

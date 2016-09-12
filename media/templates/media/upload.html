@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load common_tags %}
+{% block title %} | Upload{% endblock %}
+{% block header_includes %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}global/css/dropzone/dropzone.css">
+    <script type="text/javascript" src="{{ STATIC_URL }}global/js/lib/dropzone.js"></script>
+{% endblock %}
+
+{% block body %}
+<div class="container interior upload">
+    <h3>Upload Photos</h3>
+    <form action="{% url 'media.views.upload' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <div class="row">
+            <div class="col-sm-4">
+                <h4>Choose Album(s)</h4>
+                {{ form.albums }}
+            </div>
+            <div class="col-sm-8">
+                <h4>Drop Photos</h4>
+                <input type="file" name="image" multiple>
+                <p class="text-center">
+                    <button id="submit-all" class="btn btn-primary btn-lg">
+                        Submit all files
+                    </button>
+                </p>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

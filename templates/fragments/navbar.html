@@ -1,0 +1,39 @@
+{% load custom_tags %}
+
+{% url 'homepage' as homepage_url %}
+{% url 'upcoming_shows' as shows_url %}
+{% url 'video' as video_url %}
+{% url 'photos' as photos_url %}
+{% url 'list_songs' as songs_url %}
+{% url 'faq' as faq_url %}
+{% url 'about' as about_url %}
+{% url 'booking' as booking_url %}
+
+<div class="navbar navbar-inverse {% if fixed %}navbar-fixed-top{% endif %}">
+    <div class="container">
+        <div class="navbar-header">
+            <a href="#" id="navbar_toggle" class="visible-xs">
+                <i class="fa fa-align-justify"></i>
+            </a>
+            <a class="navbar-brand" href="{% url 'homepage' %}">Foreverland</a>
+        </div>
+        <div id="mainnav" class="">
+            <ul class="nav navbar-nav">
+                <li class="visible-xs {% active request homepage_url %}"><a href="{% url 'homepage' %}">Home</a></li>
+                <li class="{% active request about_url %}"><a href="{% url 'about' %}">About</a></li>
+                <li class="{% active request shows_url %}"><a href="{% url 'upcoming_shows' %}">Shows</a></li>
+                <li class="{% active request video_url %}"><a href="{% url 'video' %}">Videos</a></li>
+                <li class="{% active request photos_url %}"><a href="{% url 'photos' %}">Photos</a></li>
+                <li class="{% active request songs_url %}"><a href="{% url 'list_songs' %}">Songs</a></li>
+                <li class="{% active request faq_url %}"><a href="{% url 'faq' %}">FAQ</a></li>
+                <li class="{% active request booking_url %}"><a href="{% url 'booking' %}">Booking</a></li>
+                <li class="social">
+                    <a href="http://facebook.com/ForeverlandSF"><i class="fa fa-facebook-square"></i></a>
+                    <a href="http://twitter.com/foreverlandband"><i class="fa fa-twitter-square"></i></a>
+                    <a href="http://instagram.com/foreverland"><i class="fa fa-instagram"></i></a>
+                </li>
+            </ul>
+            <a href="#" id="nav_close_btn" class="visible-xs"><i class="fa fa-times-circle"></i></a>
+        </div>
+    </div>
+</div>

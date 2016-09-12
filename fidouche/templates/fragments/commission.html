@@ -1,0 +1,43 @@
+{% load humanize %}
+<h3>Commission Payments
+    <i class="fa fa-question-circle popover-trigger"
+        data-toggle="popover"
+        data-content="The records below show payments made to agents during the specified date range.
+        Commission Payments are only made when the commission is not withheld by the agent.">
+    </i>
+</h3>
+<table class="table table-bordered table-striped datatable">
+    <thead>
+        <tr>
+            <th>
+                Agent
+            </th>
+            <th>
+                Show
+            </th>
+            <th>
+                Commission
+            </th>
+            <th>
+                Check #
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for payment in commission_payments %}
+            <tr>
+                <td>{{ payment.agent.name }}</td>
+                <td><a href="{% url 'gig_finances' payment.show.id %}">{{ payment.show }}</a></td>
+                <td>${{ payment.amount|intcomma }} <small>({{ payment.show.commission_percentage }}%)</small></td>
+                <td>{% if payment.check_no %}{{ payment.check_no }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="2"></td>
+            <td>${{ total_commission_payments|intcomma }}</td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>

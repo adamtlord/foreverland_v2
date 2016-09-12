@@ -1,0 +1,272 @@
+{% extends 'base_fidouche.html' %}
+{% load custom_tags %}
+{% load humanize %}
+{% block content %}
+<div class="page-header">
+	<h2>Financial Reports</h2>
+</div>
+<form id="report_dates" role="form" action="">
+	<p><a href="?start_date={% now "Y" %}-01-01&end_date={% now "Y" %}-12-31">Calendar year {% now "Y" %}</a> | <a href="?start_date={{ last_year }}-01-01&end_date={{ last_year }}-12-31">Calendar year {{ last_year }}</a> | Choose a date range:</p>
+	<div class="row">
+		<div class="col-sm-4 col-md-3 col-lg-2">
+			<div class="form-group">
+				<label class="visible-xs" for="startDate">Start Date</label>
+				<div class="input-group startDate">
+					<input class="form-control" data-format="YYYY-MM-DD" id="start_date" name="start_date" type="text" placeholder="YYYY-MM-DD" {% if request.GET.start_date %}value="{{ request.GET.start_date }}"{% endif %}>
+					<span class="input-group-addon">
+						<i class="fa fa-calendar"></i>
+					</span>
+				</div>
+				<span class="help-block">Need this.</span>
+			</div>
+		</div>
+		<div class="col-sm-4 col-md-3 col-lg-2">
+			<div class="form-group">
+				<label class="visible-xs" for="endDate">End Date</label>
+				<div class="input-group endDate">
+					<input class="form-control" data-format="YYYY-MM-DD" id="end_date" name="end_date" type="text" placeholder="YYYY-MM-DD" {% if request.GET.end_date %}value="{{ request.GET.end_date }}"{% endif %}>
+					<span class="input-group-addon">
+						<i class="fa fa-calendar"></i>
+					</span>
+				</div>
+				<span class="help-block">Need this.</span>
+			</div>
+		</div>
+		<div class="col-sm-4 col-md-3 col-lg-2">
+			<button type="submit" class="btn btn-primary">Generate<span class="hidden-xs"> Reports</span></button>
+		</div>
+	</div>
+	<hr />
+</form>
+{% if no_dates %}
+	<p><em>Choose a date range for which to view reports.</em></p>
+{% else %}
+	<ul class="nav nav-tabs">
+		<li role="presentation" class="active"><a href="#members" data-toggle="tab">Members</a></li>
+		<li role="presentation"><a href="#subs" data-toggle="tab">Subs</a></li>
+		<li role="presentation"><a href="#expenses" data-toggle="tab">Expenses</a></li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="members">
+			<h3>Members</h3>
+			<table class="table table-bordered table-striped datatable">
+				<thead>
+					<tr>
+						<th>
+							Member
+						</th>
+						<th>
+							Total Paid
+						</th>
+						<th>
+							Payments
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for member, payments in member_payments.items %}
+						<tr>
+							<td>{{ member }}</td>
+							<td>${{ payments.total|intcomma }}</td>
+							<td>{{ payments.payments|length }} {% if payments %}<i class="fa fa-list-ul payment-detail-toggle" data-toggle="modal" data-target="#member{{ member.id }}_payments"></i>{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div class="tab-pane" id="subs">
+			<h3>Subs</h3>
+			<table class="table table-bordered table-striped datatable">
+				<thead>
+					<tr>
+						<th>
+							Sub
+						</th>
+						<th>
+							Total Paid
+						</th>
+						<th>
+							Payments
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for sub, payments in sub_payments.items %}
+						<tr>
+							<td>{{ sub }}</td>
+							<td>${{ payments.total|intcomma }}</td>
+							<td>{{ payments.payments|length }} {% if payments %}<i class="fa fa-list-ul payment-detail-toggle" data-toggle="modal" data-target="#sub{{ sub.id }}_payments"></i>{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div class="tab-pane" id="expenses">
+			<h3>Expenses</h3>
+			<table class="table table-bordered table-striped datatable">
+				<thead>
+					<tr>
+						<th>
+							Payee
+						</th>
+						<th>
+							Total Paid
+						</th>
+						<th>
+							Payments
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for payee, payments in expense_payments.items %}
+						<tr>
+							<td>{{ payee }}</td>
+							<td>${{ payments.total|intcomma }}</td>
+							<td>{{ payments.payments|length }} {% if payments %}<i class="fa fa-list-ul payment-detail-toggle" data-toggle="modal" data-target="#payee{{ payee.id }}_payments"></i>{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+{% endif %}
+{% endblock %}
+
+{% block modals %}
+	{% for member, payments in member_payments.items %}
+		<div id="member{{ member.id }}_payments" class="modal payment-details fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">
+							{{ member }} - ${{ payments.total|intcomma }}<br>
+							<small>{{ start_date }} - {{ end_date }}</small>
+						</h4>
+					</div>
+					<div class="modal-body">
+						<table class="table table-condensed table-striped payment-details" id="member{{ member.id }}_payments">
+							<tbody>
+								{% for payment in payments.payments %}
+								<tr>
+									<td>{{ payment.show }}</td>
+									<td>${{payment.amount|intcomma }}</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+	{% for sub, payments in sub_payments.items %}
+		<div id="sub{{ sub.id }}_payments" class="modal payment-details fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">
+							{{ sub }} - ${{ payments.total|intcomma }}<br>
+							<small>{{ start_date }} - {{ end_date }}</small>
+						</h4>
+					</div>
+					<div class="modal-body">
+						<table class="table table-condensed table-striped payment-details" id="member{{ member.id }}_payments">
+							<tbody>
+								{% for payment in payments.payments %}
+								<tr>
+									<td>{{ payment.show }}</td>
+									<td>${{payment.amount|intcomma }}</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+	{% for payee, payments in expense_payments.items %}
+		<div id="payee{{ payee.id }}_payments" class="modal payment-details fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">
+							{{ payee }} - ${{ payments.total|intcomma }}<br>
+							<small>{{ start_date }} - {{ end_date }}</small>
+						</h4>
+					</div>
+					<div class="modal-body">
+						<table class="table table-condensed table-striped payment-details" id="member{{ member.id }}_payments">
+							<tbody>
+								{% for payment in payments.payments %}
+								<tr>
+									<td>{{payment.date }}{% if payment.tour %} <a href="{% url 'tour_detail' payment.tour.id %}"><i class="fa fa-road"></i></a>{% endif %}</td>
+									<td>{% if payment.tour %}{{ payment.category }}{% else %}{{payment.new_category }}{% endif %}</td>
+									<td>${{payment.amount|intcomma }}</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+{% endblock %}
+
+{% block js %}
+<script>
+	$(function(){
+		if(window.location.hash){
+			var activeTab = window.location.hash;
+			$('a[href="' + activeTab + '"]').tab('show');
+		}
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+			window.location.hash = $(e.target).attr('href');
+			e.preventDefault()
+		});
+		$('.startDate').datetimepicker({
+			pickTime: false
+		});
+		$('.endDate').datetimepicker({
+			pickTime: false,
+			defaultDate: moment().format('YYYY-MM-DD')
+		});
+		$('#report_dates').submit(function(e){
+			var sd = $('#start_date');
+			var ed = $('#end_date');
+			if(sd.val() == '' || ed.val() == ''){
+				if(sd.val() == ''){
+					sd.parents('.form-group').addClass('has-error');
+				}
+				if(ed.val() == ''){
+					ed.parents('.form-group').addClass('has-error');
+				}
+				return false;
+			}
+		});
+		$('.datatable').dataTable({
+			"aaSorting": [ ],
+			"aoColumnDefs": [
+				{"sType": "currency", "aTargets": [2]}
+			],
+		});
+	});
+</script>
+{% endblock %}

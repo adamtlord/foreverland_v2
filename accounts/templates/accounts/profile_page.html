@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% load imagekit %}
+
+{% block body %}
+<div class="page-header">
+    <h1>
+        {{ this_user }}
+        {% if this_user == request.user %}
+            <small><a class="btn btn-warning" href="{% url 'profile_edit' %}">edit <i class="icon-edit icon-white"></i></a></small>
+        {% endif %}
+    </h1>
+</div>
+
+<div class="row">
+    <div class="span3">
+        <div class="thumbnail">
+            {% if this_user.get_profile.picture %}
+                <img src="{{ this_user.get_profile.picture_thumbnail.url }}" />
+                {% comment %}
+                    <!-- alternative usage -->
+                    {% generateimage 'common:large' source=this_user.get_profile.picture %}
+                {% endcomment %}
+            {% else %}
+                <img src="{{ STATIC_URL }}global/images/no_profile_photo.png" />
+            {% endif %}
+        </div>
+    </div> <!-- /span3 -->
+
+    <div class="span9">
+        <dl class="dl-horizontal">
+            <dt>Username:</dt>
+            <dd>{{ this_user.username }}</dd>
+            <dt>Full name:</dt>
+            <dd>{{ this_user.first_name }} {{ this_user.last_name }}</dd>
+        </dl>
+    </div><!-- /span9 -->
+</div> <!-- /row -->
+{% endblock %}
