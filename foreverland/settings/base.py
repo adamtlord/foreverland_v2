@@ -23,10 +23,20 @@ STATIC_URL = '%s/static/' % WWW_ROOT
 STATIC_ROOT = '/home/adamlord/webapps/foreverland_static_v2/'
 MEDIA_URL = '%s/uploads/' % WWW_ROOT
 MEDIA_ROOT = '/home/adamlord/webapps/foreverland_uploads_v2/'
+
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
 COMPRESS_URL = STATIC_URL
 COMPRESS_ROOT = STATIC_ROOT
+COMPRESS_PRECOMPILERS = (
+    ('text/less', 'lessc {infile} {outfile}'),
+)
+COMPRESS_CSS_FILTERS = [
+    'compressor.filters.cssmin.CSSMinFilter'
+]
+COMPRESS_JS_FILTERS = [
+    'compressor.filters.jsmin.JSMinFilter'
+]
 
 DEBUG = False
 IS_DEV = False
@@ -97,7 +107,7 @@ INSTALLED_APPS = [
     'django_extensions',
 
     'registration',
-    # 'compressor',
+    'compressor',
     'django_common',
     'sorl.thumbnail',
 
@@ -134,17 +144,6 @@ GOOGLE_MAPS_API_KEY = 'AIzaSyDf0TeojAvLH_Xne55O7jcVtTfusoIhkrs'
 if 'test' in sys.argv:
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3', 'PASSWORD': '', 'USER': ''}
 
-COMPRESS_PRECOMPILERS = (
-    ('text/less', 'lessc {infile} {outfile}'),
-)
-
-COMPRESS_CSS_FILTERS = [
-    'compressor.filters.cssmin.CSSMinFilter'
-]
-COMPRESS_JS_FILTERS = [
-    'compressor.filters.jsmin.JSMinFilter'
-]
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -159,6 +158,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
 # helper function to extend all the common lists
 def extend_list_avoid_repeats(list_to_extend, extend_with):
     """Extends the first list with the elements in the second one, making sure its elements are not already there in the
