@@ -1,8 +1,6 @@
 import os
 import sys
 
-DOMAIN_NAME = 'stage.foreverland.com'
-WWW_ROOT = 'http://%s/' % DOMAIN_NAME
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WSGI_APPLICATION = 'foreverland.wsgi.application'
@@ -19,30 +17,10 @@ SECRET_KEY = 'awozw7pth$35zwy%*yx3!2uuna-1(^rr9u(iha0-0ruvy^i@)z'
 DEFAULT_CHARSET = 'utf-8'
 ROOT_URLCONF = 'foreverland.urls'
 
-STATIC_URL = '%s/static/' % WWW_ROOT
-STATIC_ROOT = '/home/adamlord/webapps/foreverland_static_v2/'
-MEDIA_URL = '%s/uploads/' % WWW_ROOT
-MEDIA_ROOT = '/home/adamlord/webapps/foreverland_uploads_v2/'
-
-COMPRESS_ENABLED = True
-COMPRESS_OFFLINE = True
-COMPRESS_URL = STATIC_URL
-COMPRESS_ROOT = STATIC_ROOT
-COMPRESS_PRECOMPILERS = (
-    ('text/less', 'lessc {infile} {outfile}'),
-)
-COMPRESS_CSS_FILTERS = [
-    'compressor.filters.cssmin.CSSMinFilter'
-]
-COMPRESS_JS_FILTERS = [
-    'compressor.filters.jsmin.JSMinFilter'
-]
-
 DEBUG = False
 IS_DEV = False
 IS_STAGING = False
 IS_PROD = False
-
 
 ENV = os.getenv('ENV')
 if not ENV:
@@ -50,6 +28,7 @@ if not ENV:
 
 ROOT_URLCONF = 'foreverland.urls'
 
+DATABASES = {}
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.common.CommonMiddleware',
