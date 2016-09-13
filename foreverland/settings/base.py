@@ -5,9 +5,9 @@ import sys
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WSGI_APPLICATION = 'foreverland.wsgi.application'
 PROJECT_NAME = 'foreverland'
-ADMINS = (
-    ('Alerts', 'adam@foreverland.com'),
-)
+# ADMINS = (
+#     ('Alerts', 'adam@foreverland.com'),
+# )
 TIME_ZONE = 'UTC'
 USE_TZ = False
 LANGUAGE_CODE = 'en-us'
@@ -95,9 +95,9 @@ ACCOUNT_ACTIVATION_DAYS = 7
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_ERROR_URL = '/accounts/login/error/'
-SEND_EMAIL_AFTER_REGISTRATION = False  # default: False
-SEND_EMAIL_AFTER_ACTIVATION = True  # default: True
-AUTOMATIC_ACTIVATION_AFTER_REGISTRATION = True  # default: True
+# SEND_EMAIL_AFTER_REGISTRATION = False  # default: False
+# SEND_EMAIL_AFTER_ACTIVATION = True  # default: True
+# AUTOMATIC_ACTIVATION_AFTER_REGISTRATION = True  # default: True
 
 AUTHENTICATION_BACKENDS = [
     'django_common.auth_backends.EmailBackend',
