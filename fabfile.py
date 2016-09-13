@@ -1,10 +1,12 @@
 import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "foreverland.settings")
+
 from datetime import datetime
 
-from settings import PROJECT_NAME, PROJECT_ROOT as DEV_PROJECT_ROOT
+from foreverland.settings import PROJECT_NAME, PROJECT_ROOT as DEV_PROJECT_ROOT
 from django.conf import settings
 
-from fabric.api import local, run, cd, env, sudo, get
+from fabric.api import local, run, cd, env, get
 from fabric.contrib.console import confirm
 from fabric.decorators import runs_once
 
