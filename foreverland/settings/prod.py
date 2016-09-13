@@ -43,3 +43,10 @@ DATABASES = {
         }
     }
 }
+
+DEFAULT_FROM_EMAIL = 'no-reply@%s' % TLD_NAME
+EMAIL_HOST = 'smtp.webfaction.com'
+EMAIL_HOST_USER = 'foreverland'
+EMAIL_HOST_PASSWORD = 'Bubbles14'
+DEFAULT_FROM_EMAIL = DEFAULT_FROM_EMAIL
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
