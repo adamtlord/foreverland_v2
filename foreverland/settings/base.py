@@ -50,18 +50,6 @@ if not ENV:
 
 ROOT_URLCONF = 'foreverland.urls'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'foreverland_db',
-        'HOST': 'localhost',
-        'USER': 'adamlord_fl',
-        'PASSWORD': 'IiT77j58tR7yUoKO',
-        'OPTIONS': {
-            'init_command': 'SET storage_engine=INNODB',
-        }
-    }
-}
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.common.CommonMiddleware',
