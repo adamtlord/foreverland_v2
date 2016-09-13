@@ -1,4 +1,4 @@
-from settings.common import *
+from .base import *
 
 IS_PROD = True
 
