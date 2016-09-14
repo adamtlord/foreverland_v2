@@ -11,10 +11,10 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <link rel="shortcut icon" href="{{ STATIC_URL }}/images/ico/favicon.ico">
-        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ STATIC_URL }}/images/ico/apple-touch-icon-144-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ STATIC_URL }}/images/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ STATIC_URL }}images/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ STATIC_URL }}images/ico/apple-touch-icon-114-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ STATIC_URL }}/images/ico/apple-touch-icon-72-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" href="{{ STATIC_URL }}/images/ico/apple-touch-icon-57-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="{{ STATIC_URL }}images/ico/apple-touch-icon-57-precomposed.png">
         {% block fb_meta_tags %}
             <meta property="og:title" content="Foreverland" />
             <meta property="og:type" content="website" />
@@ -24,8 +24,8 @@
             <meta property="fb:admins" content="1304571" />
             <meta property="og:description" content="The electrifying 14-piece tribute to Michael Jackson" />
         {% endblock %}
-        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}/css/main.css">
-        <script type="text/javascript" src="{{ STATIC_URL }}/js/lib/modernizr.js"></script>
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/main.css">
+        <script type="text/javascript" src="{{ STATIC_URL }}js/lib/modernizr.js"></script>
         {% block header_includes %}{% endblock %}
     </head>
 
@@ -50,9 +50,9 @@
             js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.4&appId=247646052052822";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));</script>
-        <script type="text/javascript" src="{{ STATIC_URL }}/js/lib/require-jquery.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/lib/require-jquery.js"></script>
         <script>
-            require(['{{ STATIC_URL }}/js/common.js'], function () {
+            require(['{{ STATIC_URL }}js/common.js'], function () {
                 require(['sitewide']);
             });
         </script>

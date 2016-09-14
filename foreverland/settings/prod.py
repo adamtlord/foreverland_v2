@@ -11,10 +11,10 @@ ALLOWED_HOSTS = [
     'www.foreverland.com',
 ]
 
-STATIC_URL = '%s/static/' % WWW_ROOT
-STATIC_ROOT = '/home/adamlord/webapps/foreverland_staticserve/'
-MEDIA_URL = '%s/uploads/' % WWW_ROOT
-MEDIA_ROOT = '/home/adamlord/webapps/foreverland_uploadsserve/'
+STATIC_URL = '%sstatic/' % WWW_ROOT
+STATIC_ROOT = '/home/adamlord/webapps/foreverland_staticserve'
+MEDIA_URL = '%suploads/' % WWW_ROOT
+MEDIA_ROOT = '/home/adamlord/webapps/foreverland_uploadsserve'
 
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
