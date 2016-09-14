@@ -15,6 +15,9 @@ STATIC_URL = '%sstatic/' % WWW_ROOT
 STATIC_ROOT = '/home/adamlord/webapps/foreverland_staticserve'
 MEDIA_URL = '%suploads/' % WWW_ROOT
 MEDIA_ROOT = '/home/adamlord/webapps/foreverland_uploadsserve'
+STATICFILES_DIRS = [
+    '/home/adamlord/webapps/foreverland_django/foreverland/static'
+]
 
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
