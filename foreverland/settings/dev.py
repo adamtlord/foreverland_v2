@@ -12,6 +12,8 @@ DOMAIN_NAME = 'localhost:8000'
 WWW_ROOT = 'http://%s/' % DOMAIN_NAME
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
+SITE_ID = 1
+
 STATIC_URL = '/static/'
 STATIC_ROOT = '{}/staticserve'.format(PROJECT_ROOT)
 STATICFILES_DIRS = [

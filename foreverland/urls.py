@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^setter/', include('setter.urls')),
     url(r'^downloads/', downloads),
     url(r'^behind-the-music/', behind_the_music),
-    url(r'^media/upload/', upload),
+    url(r'^media/upload/', upload, name='media_upload'),
     # Legacy redirects
     url(r'^upcoming-shows/', RedirectView.as_view(url='/shows', permanent=True)),
     url(r'^past-shows/', RedirectView.as_view(url='/shows/past', permanent=True)),

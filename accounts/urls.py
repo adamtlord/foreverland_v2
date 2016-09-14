@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^login/modal/$', auth_views.login, {'template_name': 'registration/fragments/login_modal.html'}, name='auth_login_modal'),
     url(r'^login/error/$', login_error, name='login_error'),
 
+    url(r'^logout/$', auth_views.logout, name='auth_logout'),
+
     url(r'^password/reset/$', auth_views.password_reset, {'password_reset_form': PasswordResetForm}, name='auth_password_reset'),
 
     url(r'^activate/(?P<activation_key>(?!complete)\w+)/$', CustomActivationView.as_view(), name='registration_activate'),

@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load common_tags %}
 {% block title %} | Upload{% endblock %}
 {% block header_includes %}
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/dropzone/dropzone.css">
@@ -9,7 +8,7 @@
 {% block body %}
 <div class="container interior upload">
     <h3>Upload Photos</h3>
-    <form action="{% url 'media.views.upload' %}" method="post" enctype="multipart/form-data">
+    <form action="{% url 'media_upload' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
         <div class="row">
             <div class="col-sm-4">
