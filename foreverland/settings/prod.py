@@ -15,9 +15,7 @@ STATIC_URL = '%s/static/' % WWW_ROOT
 STATIC_ROOT = '/home/adamlord/webapps/foreverland_static_v2/'
 MEDIA_URL = '%s/uploads/' % WWW_ROOT
 MEDIA_ROOT = '/home/adamlord/webapps/foreverland_uploads_v2/'
-STATICFILES_DIRS = (
-    '/home/adamlord/webapps/foreverland_static_v2/',
-)
+
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
 COMPRESS_URL = STATIC_URL
