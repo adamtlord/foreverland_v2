@@ -5,3 +5,5 @@ uploads/
 .DS_Store
 MANIFEST
 dist
+
+/config.codekit
