@@ -13,6 +13,7 @@ WWW_ROOT = 'http://%s/' % DOMAIN_NAME
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '{}/staticserve'.format(PROJECT_ROOT)
 STATICFILES_DIRS = [
     '{}/static'.format(PROJECT_ROOT),
 ]
