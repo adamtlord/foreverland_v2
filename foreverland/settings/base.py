@@ -7,8 +7,8 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(_
 WSGI_APPLICATION = 'foreverland.wsgi.application'
 PROJECT_NAME = 'foreverland'
 
-TIME_ZONE = 'UTC'
-USE_TZ = False
+TIME_ZONE = 'America/Los_Angeles'
+USE_TZ = True
 LANGUAGE_CODE = 'en-us'
 USE_I18N = True
 USE_L10N = True
