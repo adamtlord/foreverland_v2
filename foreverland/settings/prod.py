@@ -45,6 +45,13 @@ DATABASES = {
 
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'unix:/home/adamlord/memcached.sock',
+    }
+}
+
 ADMINS = (
     ('Alerts', 'adam@foreverland.com'),
 )
