@@ -7,3 +7,6 @@ MANIFEST
 dist
 
 /config.codekit
+/foreverland/_settings.py
+/foreverland/settings/base.py
+/foreverland/settings/prod.py
