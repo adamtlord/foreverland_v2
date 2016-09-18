@@ -95,14 +95,6 @@ def bounce():
     with cd(env.CODE_DIR):
         '../apache2/bin/restart'
 
-    # NGINX CONFIG
-    #sudo('service uwsgi stop', pty=False)
-    #sudo('service uwsgi start', pty=False)
-    #sudo('/etc/init.d/nginx restart', pty=False)
-    #sudo('/etc/init.d/nginx start', pty=False)
-
-    # sudo('/etc/init.d/memcached restart', pty=False)
-
 
 def syncdb():
     """Gets a copy of the remote db and puts it into dev environment"""
@@ -158,4 +150,3 @@ def sync_uploads():
     """Reset local media from remote host"""
     local("rsync -rva adamlord@%s:webapps/foreverland_uploadsserve/ uploads" % (
         env.host_string))
-
