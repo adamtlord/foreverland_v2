@@ -1,6 +1,9 @@
 {% extends 'interior.html' %}
 {% load custom_tags %}
 {% block title %} | Upcoming Shows{% endblock %}
+{% block header_includes %}
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYqyvZ70GOiWyTw5bXexwSppcu6urgbdQ&sensor=false"></script>
+{% endblock %}
 {% block content %}
 	<div class="row">
         <div class="col-sm-8">
@@ -35,7 +38,6 @@
 	</ul>
 {% endblock %}
 {% block require_js %}
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYqyvZ70GOiWyTw5bXexwSppcu6urgbdQ&sensor=false"></script>
 	<script type="text/javascript">
 		require(['{{ STATIC_URL }}js/common.js'], function () {
 			require(['shows']);

@@ -83,7 +83,7 @@ def ssh():
 def migrate():
     """Does a syncdb, a dry run of migrate and a real migration if that suceeds."""
     with cd(env.CODE_DIR):
-        run('python manage.py migrate --noinput')
+        run('/usr/local/bin/python2.7 manage.py migrate --noinput')
 
 
 def bounce():
