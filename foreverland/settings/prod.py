@@ -45,7 +45,7 @@ DATABASES = {
         'USER': 'adamlord_fl',
         'PASSWORD': 'IiT77j58tR7yUoKO',
         'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'; SET storage_engine=INNODB",
         }
     }
 
