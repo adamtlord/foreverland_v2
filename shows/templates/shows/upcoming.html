@@ -18,15 +18,15 @@
         		<h4>
                     <span class="title">
     					{{ show.date|date:"M. j" }} at {% if show.venue.website %}<a href="{{ show.venue.website }}" target="_blank">{% endif %}{{ show.venue }}{% if show.venue.website %}</a>{% endif %}
-        				<small class="city">{{ show.venue.city }}, {{ show.venue.state }}</small>
-                        <small class="pull-right">{{ show.date|date:"g:i a"}}</small>
+        				<span class="city">{{ show.venue.city }}, {{ show.venue.state }}</span>
                     </span>
                 </h4>
+                <div>{{ show.date|date:"g:i a"}}</div>
+                {% if show.ages %}<div>{{ show.ages }}</div>{% endif %}
+                {% if show.doors_time %}<div>Doors at {{ show.doors_time }}</div>{% endif %}
+                {% if show.opener %}<div>Opener: {{ show.opener }}</div>{% endif %}
+                {% if show.notes %}<div><small>{{ show.notes }}</small></div>{% endif %}
     			{% if show.ticket_url %}<div><a href="{{ show.ticket_url }}" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-shopping-cart"></span> Buy Tickets</a></div>{% endif %}
-    			{% if show.ages %}<div>{{ show.ages }}</div>{% endif %}
-    			{% if show.doors_time %}<div>Doors at {{ show.doors_time }}</div>{% endif %}
-    			{% if show.opener %}<div>Opener: {{ show.opener }}</div>{% endif %}
-    			{% if show.notes %}<div><small>{{ show.notes }}</small></div>{% endif %}
         		<a href="#" class="detail-launch" data-target="#show_detail_modal" data-toggle="modal" data-showurl="{% url 'show_modal' show.id %}">Details <span class="glyphicon glyphicon-new-window"></span></a>
                 {% if show.fb_event %}<div><a href="{{ show.fb_event }}" class="btn btn-sm btn-facebook"><i class="fa fa-facebook-square"></i> RSVP</a></div>{% endif %}
         	</div>

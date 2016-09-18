@@ -10,7 +10,7 @@ ALLOWED_HOSTS = [
     '.foreverland.com',
     'www.foreverland.com',
 ]
-
+SSH_HOSTS = 'adamlord.webfactional.com'
 STATIC_URL = '%sstatic/' % WWW_ROOT
 STATIC_ROOT = '/home/adamlord/webapps/foreverland_staticserve'
 MEDIA_URL = '%suploads/' % WWW_ROOT
@@ -18,14 +18,17 @@ MEDIA_ROOT = '/home/adamlord/webapps/foreverland_uploadsserve'
 STATICFILES_DIRS = [
     '/home/adamlord/webapps/foreverland_django/foreverland/static'
 ]
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
 COMPRESS_URL = STATIC_URL
 COMPRESS_ROOT = STATIC_ROOT
-COMPRESS_PRECOMPILERS = (
-    ('text/less', 'lessc {infile} {outfile}'),
-)
+
 COMPRESS_CSS_FILTERS = [
     'compressor.filters.cssmin.CSSMinFilter'
 ]
@@ -42,7 +45,7 @@ DATABASES = {
         'USER': 'adamlord_fl',
         'PASSWORD': 'IiT77j58tR7yUoKO',
         'OPTIONS': {
-            'init_command': 'SET storage_engine=INNODB',
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         }
     }
 

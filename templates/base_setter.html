@@ -40,20 +40,6 @@
                         <a class="navbar-brand" href="{% url 'setter_dashboard' %}">Setter</a>
                     </div>
                     <div class="navbar-collapse collapse">
-                        <!-- <ul class="nav navbar-nav">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Gigs By Year <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    {% for year in active_years %}
-                                        <li><a href="{% url 'gigs_by_year' year %}">{{ year }}</a></li>
-                                    {% endfor %}
-                                    <li><a href="{% url 'gigs_year_over_year' %}">All years</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="{% url 'expenses_list' %}">Expenses</a>
-                            </li>
-                        </ul> -->
                         <ul class="nav navbar-nav navbar-right">
                             {% if request.user.is_staff %}<li><a href="/admin">DB Admin</a></li>{% endif %}
                             <li><a href="{% url 'homepage' %}">Foreverland.com</a></li>
@@ -71,16 +57,7 @@
         <script type="text/javascript" src="{{ STATIC_URL }}js/lib/jquery.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/lib/bootstrap.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/apps/setter.js"></script>
-        <!--
-            <script type="text/javascript" src="{{ STATIC_URL }}js/lib/moment.min.js"></script>
-            <script type="text/javascript" src="{{ STATIC_URL }}js/lib/jquery.dataTables.min.js"></script>
-            <script type="text/javascript" src="{{ STATIC_URL }}js/lib/datatables_plugins.js"></script>
-            <script type="text/javascript" src="{{ STATIC_URL }}js/lib/highcharts.js"></script>
-            <script type="text/javascript" src="{{ STATIC_URL }}js/lib/highcharts_theme.js"></script>
-            <script type="text/javascript" src="{{ STATIC_URL }}js/lib/bootstrap-datetimepicker.min.js"></script>
-            <script type="text/javascript" src="{{ STATIC_URL }}js/lib/bootstrap-switch.min.js"></script>
-            <script type="text/javascript" src="{{ STATIC_URL }}js/lib/magnific-popup.min.js"></script>
-        -->
+
         {% block js %}{% endblock %}
     </body>
 </html>

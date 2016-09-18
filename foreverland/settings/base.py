@@ -2,13 +2,13 @@ import os
 import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+PROJECT_NAME = 'foreverland'
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 WSGI_APPLICATION = 'foreverland.wsgi.application'
-PROJECT_NAME = 'foreverland'
 
 TIME_ZONE = 'America/Los_Angeles'
-USE_TZ = True
+USE_TZ = False
 LANGUAGE_CODE = 'en-us'
 USE_I18N = True
 USE_L10N = True
@@ -20,6 +20,8 @@ DEBUG = False
 IS_DEV = False
 IS_STAGING = False
 IS_PROD = False
+
+COMPRESS_ENABLED = False
 
 ENV = os.getenv('ENV')
 if not ENV:
@@ -87,7 +89,6 @@ INSTALLED_APPS = [
     'media',
     'accounts',
     'common',
-    'legacy',
     'fidouche',
     'setter',
 ]
@@ -97,9 +98,9 @@ ACCOUNT_ACTIVATION_DAYS = 7
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_ERROR_URL = '/accounts/login/error/'
-# SEND_EMAIL_AFTER_REGISTRATION = False  # default: False
-# SEND_EMAIL_AFTER_ACTIVATION = True  # default: True
-# AUTOMATIC_ACTIVATION_AFTER_REGISTRATION = True  # default: True
+SEND_EMAIL_AFTER_REGISTRATION = False  # default: False
+SEND_EMAIL_AFTER_ACTIVATION = True  # default: True
+AUTOMATIC_ACTIVATION_AFTER_REGISTRATION = True  # default: True
 
 AUTHENTICATION_BACKENDS = [
     'django_common.auth_backends.EmailBackend',
