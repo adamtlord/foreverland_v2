@@ -36,6 +36,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware'
 ]
 
 
@@ -71,6 +72,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.humanize',
     'django.contrib.contenttypes',
+	'django.contrib.messages',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.sitemaps',
