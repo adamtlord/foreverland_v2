@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 from media.models import *
 from media.forms import ImageUploadForm

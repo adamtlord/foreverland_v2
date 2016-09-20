@@ -90,10 +90,7 @@ def bounce():
     """Bounce apache + memcache"""
     with cd(env.CODE_DIR):
         run('%s manage.py compress' % env.PYTHON_DIR)
-
-    # APACHE CONFIG
-    with cd(env.CODE_DIR):
-        '../apache2/bin/restart'
+        run('../apache2/bin/restart')
 
 
 def syncdb():
