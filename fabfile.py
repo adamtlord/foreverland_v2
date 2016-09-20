@@ -34,7 +34,7 @@ def prod():
     env.hosts = SSH_HOSTS
     env.database = PROD_DATABASES['default']
     env.remote_mysql_pw_arg = get_remote_mysql_pass_arg()
-
+    env.PYTHON_DIR = '/usr/local/bin/python2.7'
     env.CODE_DIR = '/home/adamlord/webapps/foreverland_django/foreverland/'
 
 
@@ -50,7 +50,7 @@ def _launch(full=False):
             run('pip install -r requirements.pip')
             migrate()
 
-        run('/usr/local/bin/python2.7 manage.py collectstatic --noinput')
+        run('%s manage.py collectstatic --noinput' % env.PYTHON_DIR)
         run('find . -name \*.pyc -delete')
 
     bounce()
@@ -83,17 +83,14 @@ def ssh():
 def migrate():
     """Does a syncdb, a dry run of migrate and a real migration if that suceeds."""
     with cd(env.CODE_DIR):
-        run('/usr/local/bin/python2.7 manage.py migrate --noinput')
+        run('%s manage.py migrate --noinput' % env.PYTHON_DIR)
 
 
 def bounce():
     """Bounce apache + memcache"""
     with cd(env.CODE_DIR):
-        run('/usr/local/bin/python2.7 manage.py compress')
-
-    # APACHE CONFIG
-    with cd(env.CODE_DIR):
-        '../apache2/bin/restart'
+        run('%s manage.py compress' % env.PYTHON_DIR)
+        run('../apache2/bin/restart')
 
 
 def syncdb():
