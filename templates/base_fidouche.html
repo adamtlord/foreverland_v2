@@ -89,7 +89,7 @@
                             </li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right hidden-sm hidden-md">
-                            {% if request.user.is_staff %}<li><a href="/admin">DB Admin</a></li>{% endif %}
+                            {% if request.user.is_staff %}<li><a href="/admin" target="_blank">DB Admin</a></li>{% endif %}
                             <li><a href="{% url 'homepage' %}">Foreverland.com</a></li>
                             <li><a href="{% url 'auth_logout' %}">Log out</a></li>
                         </ul>
