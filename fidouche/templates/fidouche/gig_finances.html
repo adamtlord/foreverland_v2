@@ -417,12 +417,12 @@
 							<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 						</div>
 					</td>
-					<td class="payee">{{ form.payee }}{{ form.errors }}</td>
-					<td class="category">{{ form.new_category }}</td>
-					<td class="expense-amount">{{ form.amount }}</td>
+					<td class="payee">{{ form.payee }}{% if form.errors.payee %}{{ form.errors.payee }}{% endif %}</td>
+					<td class="category">{{ form.new_category }}{% if form.errors.category %}{{ form.errors.category }}{% endif %}</td>
+					<td class="expense-amount">{{ form.amount }}{% if form.errors.amount %}{{ form.errors.amount }}{% endif %}</td>
 					<td>{{ form.check_no }}</td>
 					<td>{{ form.notes }}</td>
-					<td>{{ form.receipt_img }}</td>
+					<td>{{ form.receipt_img }}{% if form.errors.receipt_img %}{{ form.errors.receipt_img }}{% endif %}</td>
 					<td>{{ form.DELETE }}</td>
 				</tr>
 			{% endfor %}
