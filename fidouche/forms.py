@@ -101,7 +101,7 @@ class ExpenseForm(forms.ModelForm):
         widgets = {
             'receipt_img': AdminImageWidget()
         }
-        fields = EXPENSE_FIELDS
+        fields = EXPENSE_FIELDS + ('receipt_img',)
 
     def __init__(self, *args, **kwargs):
         super(ExpenseForm, self).__init__(*args, **kwargs)
