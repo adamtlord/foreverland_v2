@@ -7,14 +7,19 @@
 	<div class="video-wrap featured-video">
 		<iframe  src="//www.youtube.com/embed/NwqTW8TPUTA?rel=0" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 	</div>
-	<div class="row">
-	{% for video in featured_videos %}
-		<div class="col-md-6 sub-video">
-			<div class="video-wrap">
-				{% include "media/fragments/video_embed.html" with type=video.embed_type id=video.vid_id %}
-			</div>
-		</div>
-	{% endfor %}
+	<div class="video-wrap featured-video">
+		<iframe  src="//www.youtube.com/embed/nRgn168kjps?rel=0" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 	</div>
+	{% comment %}
+		<div class="row">
+		{% for video in featured_videos %}
+			<div class="col-md-6 sub-video">
+				<div class="video-wrap">
+					{% include "media/fragments/video_embed.html" with type=video.embed_type id=video.vid_id %}
+				</div>
+			</div>
+		{% endfor %}
+		</div>
+	{% endcomment %}
 </div>
 {% endblock %}
