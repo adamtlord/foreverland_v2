@@ -16,12 +16,14 @@ def homepage(request, template='marketing/homepage.html'):
     if feed == 'gigpress-ical':
         return redirect('/shows/ical')
     public_shows = Show.objects.filter(public=True)
-    next_show = public_shows.filter(date__gte=datetime.datetime.now()).order_by('date')[0]
+    next_show = public_shows.filter(date__gte=datetime.datetime.now()).order_by('date').first()
     members = Member.objects.filter(active=True).order_by('display_last')
     vocals = members.filter(active=True, section='v')
     horns = members.filter(active=True, section='h')
     rhythm = members.filter(active=True, section='r')
-    tonight = datetime.datetime.date(next_show.date) == datetime.datetime.today().date()
+    tonight = False
+    if next_show:
+        tonight = datetime.datetime.date(next_show.date) == datetime.datetime.today().date()
     if tonight:
         tonight = 'tonight' if next_show.date.hour >= 17 else 'today'
 
