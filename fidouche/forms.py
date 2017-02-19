@@ -116,7 +116,7 @@ class TourExpenseForm(forms.ModelForm):
         widgets = {
             'receipt_img': AdminImageWidget()
         }
-        fields = TOUR_EXPENSE_FIELDS
+        fields = TOUR_EXPENSE_FIELDS + ('receipt_img',)
 
     def __init__(self, *args, **kwargs):
         super(TourExpenseForm, self).__init__(*args, **kwargs)
