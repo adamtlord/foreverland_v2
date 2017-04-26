@@ -665,7 +665,9 @@ def tax_reports(request, template='fidouche/tax_reports.html'):
         expensePayments = Expense.objects.filter(date__range=(start_date, end_date)).filter(amount__gt=0)
         tourExpensePayments = TourExpense.objects.filter(date__range=(start_date, end_date)).filter(amount__gt=0)
         allExpenses = list(chain(expensePayments, tourExpensePayments))
+        totalExpensePayments = 0
         for payment in allExpenses:
+            totalExpensePayments += payment.amount
             if payment.new_category.tax_category.name in expense_payments:
                 expense_payments[payment.new_category.tax_category.name]['total'].append(payment.amount)
                 expense_payments[payment.new_category.tax_category.name]['payments'].append(payment)
@@ -679,7 +681,8 @@ def tax_reports(request, template='fidouche/tax_reports.html'):
             expense_payments[category]['show'] = True
 
         d.update({
-            'expense_payments': expense_payments
+            'expense_payments': expense_payments,
+            'total_expense_payments': totalExpensePayments
         })
 
         production_payments = ProductionPayment.objects.filter(show__date__range=(start_date, end_date)).filter(paid=True).filter(amount__gt=0).order_by('show__date')
@@ -687,9 +690,12 @@ def tax_reports(request, template='fidouche/tax_reports.html'):
         for payment in production_payments:
             total_production_payments.append(payment.amount)
 
+        total_production_payments = sum(total_production_payments)
+
         d.update({
             'production_payments': production_payments,
-            'total_production_payments': sum(total_production_payments)
+            'total_production_payments': total_production_payments,
+            'expense_and_production_total': totalExpensePayments + total_production_payments
         })
 
         # this is the data structure we're going for here.
@@ -753,11 +759,12 @@ def tax_reports(request, template='fidouche/tax_reports.html'):
         paid_by_agent = shows.exclude(id__in=paid_by_client)
         paid_by_agent_total_gross = []
         for show in paid_by_agent:
-            if show.commission_withheld:
-                show.adjusted_gross = show.gross - show.commission
-                paid_by_agent_total_gross.append(show.adjusted_gross)
-            else:
-                paid_by_agent_total_gross.append(show.gross)
+            if show.gross:
+                if show.commission_withheld:
+                    show.adjusted_gross = show.gross - show.commission
+                    paid_by_agent_total_gross.append(show.adjusted_gross)
+                else:
+                    paid_by_agent_total_gross.append(show.gross)
 
         d['paid_by_agent'] = paid_by_agent
         d['paid_by_agent_total_gross'] = sum(paid_by_agent_total_gross)
@@ -767,6 +774,9 @@ def tax_reports(request, template='fidouche/tax_reports.html'):
         d['total_other_income'] = sum([income.amount for income in other_income])
 
         d['total_income'] = sum(paid_by_agent_total_gross) + sum(paid_by_client_total_gross) + sum([income.amount for income in other_income])
+
+        d['profit_before_partners'] = d['total_income'] - d['expense_and_production_total']
+        d['profit_loss'] = d['profit_before_partners'] - d['all_partners_total']
 
     else:
         d['no_dates'] = True
