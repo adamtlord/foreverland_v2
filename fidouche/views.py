@@ -775,9 +775,9 @@ def tax_reports(request, template='fidouche/tax_reports.html'):
 
         d['total_income'] = sum(paid_by_agent_total_gross) + sum(paid_by_client_total_gross) + sum([income.amount for income in other_income])
 
-        d['profit_before_partners'] = d['total_income'] - d['expense_and_production_total']
-        d['profit_loss'] = d['profit_before_partners'] - d['all_partners_total']
         d['expense_grand_total'] = d['expense_and_production_total'] + d['total_commission_payments'] + d['non_partners_total']
+        d['profit_before_partners'] = d['total_income'] - d['expense_grand_total']
+        d['profit_loss'] = d['profit_before_partners'] - d['all_partners_total']
 
     else:
         d['no_dates'] = True
