@@ -1,6 +1,6 @@
-Django
+Django==1.10.7
 Fabric
-mysql-python
+MySQL-python==1.2.3
 Pillow
 
 django_compressor
@@ -8,6 +8,7 @@ django-extensions
 django-common-helpers
 django-ical
 django-localflavor
+django-registration
 
 sorl-thumbnail
 simplejson
