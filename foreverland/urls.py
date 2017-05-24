@@ -17,7 +17,6 @@ urlpatterns = [
     url(r'^songs/', include('songs.urls')),
     url(r'^photos/', include('media.urls')),
     url(r'^fidouche/', include('fidouche.urls')),
-    url(r'^setter/', include('setter.urls')),
     url(r'^downloads/', downloads),
     url(r'^behind-the-music/', behind_the_music),
     url(r'^media/upload/', upload, name='media_upload'),

@@ -18,18 +18,18 @@ class Song(models.Model):
         return self.name
 
 
-class Setlist(models.Model):
-    show = models.ForeignKey(Show, related_name='setlist')
-    songs = models.ManyToManyField(Song, through='SetlistSong')
+# class Setlist(models.Model):
+#     show = models.ForeignKey(Show, related_name='setlist')
+#     songs = models.ManyToManyField(Song, through='SetlistSong')
 
-    def __unicode__(self):
-        return '%s %s' % (self.show.date.strftime('%d/%m/%y'), self.show.venue)
+#     def __unicode__(self):
+#         return '%s %s' % (self.show.date.strftime('%d/%m/%y'), self.show.venue)
 
 
-class SetlistSong(models.Model):
-    song = models.ForeignKey(Song)
-    setlist = models.ForeignKey(Setlist)
-    order = models.IntegerField(blank=True, null=True)
+# class SetlistSong(models.Model):
+#     song = models.ForeignKey(Song)
+#     setlist = models.ForeignKey(Setlist)
+#     order = models.IntegerField(blank=True, null=True)
 
-    def __unicode__(self):
-        return '%s' % self.song
+#     def __unicode__(self):
+#         return '%s' % self.song
