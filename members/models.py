@@ -32,6 +32,7 @@ class Member(models.Model):
 
     class Meta:
         ordering = ['-active', '-section', 'display_first']
+
     def __unicode__(self):
         return '%s %s' % (self.display_first, self.display_last)
 

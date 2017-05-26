@@ -10,6 +10,9 @@ django-ical
 django-localflavor
 django-registration
 
+djangorestframework==3.6.3
+django-filter
+
 sorl-thumbnail
 simplejson
 
