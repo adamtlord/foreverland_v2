@@ -12,6 +12,7 @@ django-registration
 
 djangorestframework==3.6.3
 django-filter
+django-nested-admin
 
 sorl-thumbnail
 simplejson

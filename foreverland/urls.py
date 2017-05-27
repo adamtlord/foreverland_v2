@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^downloads/', downloads),
     url(r'^behind-the-music/', behind_the_music),
     url(r'^media/upload/', upload, name='media_upload'),
+    url(r'^_nested_admin/', include('nested_admin.urls')),
     # API
     url(r'^api/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),

@@ -1,19 +1,27 @@
 from django.contrib import admin
-from songs.models import Song
+import nested_admin
+from songs.models import Song, Setlist, Set, SetSong
 
 
 class SongAdmin(admin.ModelAdmin):
     pass
 
 
-# class SetlistSongInline(admin.TabularInline):
-#     model = SetlistSong
-#     extra = 1
+class SetSongInline(nested_admin.NestedStackedInline):
+    model = SetSong
+    sortable_field_name = "order"
+    extra = 0
 
 
-# class SetlistAdmin(admin.ModelAdmin):
-#     inlines = (SetlistSongInline,)
+class SetlistSetInline(nested_admin.NestedTabularInline):
+    model = Set
+    sortable_field_name = "order"
+    extra = 0
+    inlines = (SetSongInline,)
 
 
-admin.site.register(Song, SongAdmin)
-# admin.site.register(Setlist, SetlistAdmin)
+class SetlistAdmin(nested_admin.NestedModelAdmin):
+    inlines = (SetlistSetInline,)
+
+
+admin.site.register(Setlist, SetlistAdmin)
