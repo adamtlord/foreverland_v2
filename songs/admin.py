@@ -25,3 +25,4 @@ class SetlistAdmin(nested_admin.NestedModelAdmin):
 
 
 admin.site.register(Setlist, SetlistAdmin)
+admin.site.register(Song)

@@ -51,7 +51,7 @@ def show_modal(request, show_id, template='shows/modal.html'):
 
 class ShowViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows Members to be viewed or edited.
+    API endpoint that allows Shows to be viewed or edited.
     """
     queryset = Show.objects.all()
     serializer_class = ShowSerializer
@@ -60,7 +60,7 @@ class ShowViewSet(viewsets.ModelViewSet):
 
 class VenueViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows Members to be viewed or edited.
+    API endpoint that allows Venues to be viewed or edited.
     """
     queryset = Venue.objects.all()
     serializer_class = VenueSerializer

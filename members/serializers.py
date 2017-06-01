@@ -2,6 +2,19 @@ from members.models import Member, Sub
 from rest_framework import serializers
 
 
+class SingerSerializer(serializers.HyperlinkedModelSerializer):
+    first = serializers.CharField(source='display_first')
+    last = serializers.CharField(source='display_last')
+
+    class Meta:
+        model = Member
+        fields = (
+            'url',
+            'first',
+            'last',
+        )
+
+
 class MemberSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField()
 

@@ -11,11 +11,16 @@ class Song(models.Model):
     release_year = models.CharField(max_length=200, blank=True, null=True)
     display = models.BooleanField(default=True)
     # Foreverland info
-    singer = models.ManyToManyField(Member, related_name='singer', blank=True)
+    singers = models.ManyToManyField(Member, related_name='singer', blank=True)
     foh_notes = models.TextField(verbose_name="Notes for FOH", blank=True, null=True)
+    bpm = models.PositiveSmallIntegerField(blank=True, null=True)
+    solos = models.ManyToManyField(Member, related_name='soloist', blank=True)
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        ordering = ['-display', 'name']
 
 
 class Setlist(models.Model):
@@ -28,16 +33,23 @@ class Setlist(models.Model):
 class Set(models.Model):
     setlist = models.ForeignKey(Setlist, related_name='sets')
     songs = models.ManyToManyField(Song, through='SetSong')
-    order = models.IntegerField(blank=True, null=True)
+    order = models.PositiveSmallIntegerField(blank=True, null=True)
 
     def __unicode__(self):
         return '%s Set %s' % (self.setlist, self.order)
+
+    class Meta:
+        ordering = ['order']
 
 
 class SetSong(models.Model):
     song = models.ForeignKey(Song, blank=True, null=True)
     set = models.ForeignKey(Set, blank=True, null=True)
-    order = models.IntegerField(blank=True, null=True)
+    order = models.PositiveSmallIntegerField(blank=True, null=True)
+    transition = models.BooleanField(default=False)
 
     def __unicode__(self):
         return '%s' % self.song
+
+    class Meta:
+        ordering = ['order']

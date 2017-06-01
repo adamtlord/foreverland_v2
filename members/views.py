@@ -23,7 +23,7 @@ class MemberViewSet(viewsets.ModelViewSet):
 
 class SubViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows Members to be viewed or edited.
+    API endpoint that allows Subs to be viewed or edited.
     """
     queryset = Sub.objects.all().order_by('-last_name')
     serializer_class = SubSerializer

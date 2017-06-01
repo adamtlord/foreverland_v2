@@ -10,13 +10,14 @@ from rest_framework import routers
 
 # API
 from members.views import MemberViewSet, SubViewSet
-from songs.views import SongViewSet
+from songs.views import SongViewSet, SetlistViewSet
 from shows.views import ShowViewSet, VenueViewSet
 
 router = routers.DefaultRouter()
 router.register(r'members', MemberViewSet)
 router.register(r'subs', SubViewSet)
 router.register(r'songs', SongViewSet)
+router.register(r'setlists', SetlistViewSet)
 router.register(r'shows', ShowViewSet)
 router.register(r'venues', VenueViewSet)
 
