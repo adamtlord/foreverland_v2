@@ -9,6 +9,11 @@ django-common-helpers
 django-ical
 django-localflavor
 django-registration
+django-cors-headers
+django-nested-admin
+django-filter
+
+djangorestframework
 
 sorl-thumbnail
 simplejson
