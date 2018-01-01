@@ -1,10 +1,10 @@
-from datetime import date
-from time import strftime
 import random
 import datetime
 import json
+
+from datetime import date
 from itertools import chain
-from collections import defaultdict
+
 from django.forms.models import inlineformset_factory
 from django.db.models import Sum
 from django.shortcuts import render, get_object_or_404, redirect
@@ -30,8 +30,8 @@ current_year = date.today().year
 def financial_dashboard(request, template='fidouche/dashboard.html'):
     """"""
     gigs = Show.objects.filter(date__year=current_year)
-    last_show = Show.objects.filter(date__lte=datetime.datetime.now()).order_by('-date')[0]
-    next_show = gigs.filter(date__gte=datetime.datetime.now()).order_by('date')[0]
+    last_show = Show.objects.filter(date__lte=datetime.datetime.now()).order_by('-date').first()
+    next_show = Show.objects.filter(date__gte=datetime.datetime.now()).order_by('date').first()
     gigs_booked = gigs.filter(date__year=current_year)
     gigs_played = gigs_booked.filter(date__lt=datetime.datetime.now())
 

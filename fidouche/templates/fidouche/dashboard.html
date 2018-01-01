@@ -19,7 +19,7 @@
 			</div>
 			<div class="panel-body">
 				<p>Most recent gig: <a href="{% url 'gig_finances' last_show.id %}">{{ last_show }} <i class="fa fa-angle-right"></i></a></p>
-				<p>Next gig: <a href="{% url 'gig_finances' next_show.id %}">{{ next_show }} <i class="fa fa-angle-right"></i></a></p>
+				<p>Next gig: {% if next_show %}<a href="{% url 'gig_finances' next_show.id %}">{{ next_show }} <i class="fa fa-angle-right"></i></a>{% else %}<em>No more gigs‽</em>{% endif %}</p>
 				<label class="sr-only" for="gSearch">Find a gig (current year)</label>
 				<div class="input-group">
 					<span class="input-group-addon"><i class="fa fa-search"></i></span>
