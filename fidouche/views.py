@@ -511,6 +511,7 @@ def finance_reports(request, template='fidouche/finance_reports.html'):
     d = {
         'no_dates': False
     }
+    d['last_year'] = date.today().year - 1
     start = request.GET.get('start_date', None)
     end = request.GET.get('end_date', None)
     if start and end:
@@ -571,7 +572,6 @@ def finance_reports(request, template='fidouche/finance_reports.html'):
 
     else:
         d['no_dates'] = True
-        d['last_year'] = date.today().year - 1
 
     return render(request, template, d)
 
