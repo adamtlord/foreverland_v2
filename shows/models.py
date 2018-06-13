@@ -135,7 +135,7 @@ class Show(models.Model):
     # Public Information
     venue = models.ForeignKey(Venue, related_name='shows')
     date = models.DateTimeField()
-    tour = models.ForeignKey(Tour, related_name='show_in_tour', blank=True, null=True)
+    tour = models.ForeignKey(Tour, related_name='show_in_tour', blank=True, null=True, on_delete=models.SET_NULL)
     doors_time = models.TimeField(blank=True, null=True)
     ticket_price = models.CharField(max_length=100, blank=True, null=True)
     ticket_url = models.URLField(max_length=200, blank=True, null=True)
