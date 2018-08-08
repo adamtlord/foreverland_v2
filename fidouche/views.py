@@ -56,12 +56,16 @@ def financial_dashboard(request, template='fidouche/dashboard.html'):
         if gig.payout:
             ytd_player.append(gig.payout)
 
+    payout_sum = sum(ytd_player)
+    payout_avg = payout_sum / len(ytd_player) if len(ytd_player) > 0 else 0
+
     ytd = {
         'gigs_booked': gigs_booked.count(),
         'gigs_played': gigs_played.count(),
-        'net':  sum(ytd_net),
+        'net': sum(ytd_net),
         'gross': sum(ytd_gross),
-        'payout': sum(ytd_player)
+        'payout': payout_sum,
+        'payout_avg': payout_avg
     }
 
     d = {
@@ -134,13 +138,17 @@ def gigs_by_year(request, year=current_year, template='fidouche/gigs_by_year.htm
     for d in sum_all_expenses:
         summed_expenses.update(d)
 
+    payout_sum = sum(payout)
+    payout_avg = payout_sum / len(payout) if len(payout) > 0 else 0
+
     d = {
         'year': year,
         'this_years_gigs': gigs,
         'gigs_played': gigs.count(),
         'gross': sum(gross),
         'net': sum(net),
-        'payout': sum(payout),
+        'payout': payout_sum,
+        'avg_payout': payout_avg,
         'current': current,
         'by_month': by_month,
         'players': sum(players),
