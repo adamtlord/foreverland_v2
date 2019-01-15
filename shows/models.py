@@ -202,7 +202,10 @@ class Show(models.Model):
             for category in production_categories:
                 d[category.name] = []
             for expense in production_expenses:
+                try:
                     d[expense.category.name].append(expense.amount)
+                except Exception:
+                    pass
             for k in d:
                 d[k] = sum(d[k])
         else:
