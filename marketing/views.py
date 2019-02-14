@@ -18,9 +18,9 @@ def homepage(request, template='marketing/homepage.html'):
     public_shows = Show.objects.filter(public=True)
     next_show = public_shows.filter(date__gte=datetime.datetime.now()).order_by('date').first()
     members = Member.objects.filter(active=True).order_by('display_last')
-    vocals = members.filter(active=True, section='v')
-    horns = members.filter(active=True, section='h')
-    rhythm = members.filter(active=True, section='r')
+    vocals = [member for member in members if member.section == 'v']
+    horns = [member for member in members if member.section == 'h']
+    rhythm = [member for member in members if member.section == 'r']
     tonight = False
     if next_show:
         tonight = datetime.datetime.date(next_show.date) == datetime.datetime.today().date()

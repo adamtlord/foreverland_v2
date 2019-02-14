@@ -36,7 +36,10 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
+    import debug_toolbar
+
     urlpatterns += [
         url(r'^404/$', page_not_found),
         url(r'^500/$', server_error),
+        url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
