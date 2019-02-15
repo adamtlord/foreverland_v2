@@ -196,7 +196,7 @@ class Show(models.Model):
     def get_production_costs(self):
         d = {}
         from fidouche.models import ProductionPayment, ProductionCategory
-        production_expenses = list(ProductionPayment.objects.filter(show=self))
+        production_expenses = list(ProductionPayment.objects.filter(show=self).select_related('category'))
         production_categories = ProductionCategory.objects.all()
         if production_expenses:
             for category in production_categories:
@@ -218,7 +218,7 @@ class Show(models.Model):
     def get_expenses(self):
         d = {}
         from fidouche.models import Expense, ExpenseCategory
-        expenses = list(Expense.objects.filter(show=self))
+        expenses = list(Expense.objects.filter(show=self).select_related('new_category'))
         expense_categories = ExpenseCategory.objects.all()
         for category in expense_categories:
             d[category.category] = []

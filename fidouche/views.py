@@ -29,9 +29,9 @@ current_year = date.today().year
 @login_required
 def financial_dashboard(request, template='fidouche/dashboard.html'):
     """"""
-    gigs = Show.objects.filter(date__year=current_year)
-    last_show = Show.objects.filter(date__lte=datetime.datetime.now()).order_by('-date').first()
-    next_show = Show.objects.filter(date__gte=datetime.datetime.now()).order_by('date').first()
+    gigs = Show.objects.filter(date__year=current_year).select_related('venue')
+    last_show = Show.objects.filter(date__lte=datetime.datetime.now()).order_by('-date').select_related('venue').first()
+    next_show = Show.objects.filter(date__gte=datetime.datetime.now()).order_by('date').select_related('venue').first()
     gigs_booked = gigs.filter(date__year=current_year)
     gigs_played = gigs_booked.filter(date__lt=datetime.datetime.now())
 
