@@ -1,4 +1,5 @@
 import datetime
+from collections import OrderedDict
 from django.shortcuts import render, get_object_or_404
 from shows.models import Show
 
@@ -22,16 +23,18 @@ def past_shows(request, template='shows/past.html'):
     """list all past shows"""
     public_shows = Show.objects.filter(public=True).select_related('venue')
     past_shows = public_shows.filter(date__lt=datetime.datetime.now()).order_by('date')
-    shows_by_year = {}
+    shows_by_year = OrderedDict()
     for show in past_shows:
         if show.date.year not in shows_by_year:
             shows_by_year[show.date.year] = []
         shows_by_year[show.date.year].append(show)
+
     show_years = [x for x in shows_by_year]
 
     d = {}
     d['shows_by_year'] = shows_by_year
-    d['show_years'] = show_years
+    d['show_years'] = sorted(show_years)
+
     return render(request, template, d)
 
 
