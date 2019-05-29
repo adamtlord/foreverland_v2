@@ -22,7 +22,7 @@
             <ul class="shows">
                 {% for show in shows %}
                     <li>
-                        <a href="{% url 'show' show.id %}" class="tl"><img src="{{ MEDIA_URL }}{% if show.venue.venue_image != 'venues/' %}{{show.venue.venue_image}}{% else %}venues/blank-venue.jpg{% endif %}"></a>
+                        <a href="{% url 'show' show.id %}" class="tl"><img src="{{ MEDIA_URL }}{% if show.venue.venue_image and show.venue.venue_image != 'venues/' %}{{show.venue.venue_image}}{% else %}venues/blank-venue.jpg{% endif %}"></a>
                         <div class="show">
                             <h4>
                                 <span class="title">
