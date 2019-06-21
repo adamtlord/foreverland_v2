@@ -231,7 +231,7 @@ def gig_finances(request, gig_id=None, template='fidouche/gig_finances.html'):
     PaymentFormSet = inlineformset_factory(Show, Payment, form=PaymentForm, extra=len(active_members), max_num=14)
     SubPaymentFormSet = inlineformset_factory(Show, SubPayment, form=SubPaymentForm, extra=1)
     ProductionPaymentFormSet = inlineformset_factory(Show, ProductionPayment, extra=1, form=ProductionPaymentForm)
-    FiduciaryPaymentFormSet = inlineformset_factory(Show, FiduciaryPayment, extra=0, form=FiduciaryPaymentForm)
+    FiduciaryPaymentFormSet = inlineformset_factory(Show, FiduciaryPayment, extra=1, form=FiduciaryPaymentForm)
 
     if request.method == "POST":
 
