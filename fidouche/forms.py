@@ -170,6 +170,6 @@ class FiduciaryPaymentForm(forms.ModelForm):
         super(FiduciaryPaymentForm, self).__init__(*args, **kwargs)
         for field in ['fidouche', 'amount', 'check_no']:
             if field == 'amount':
-                self.fields[field].widget.attrs['class'] = 'form-control input-sm production-cost'
+                self.fields[field].widget.attrs['class'] = 'form-control input-sm fidouche-cost'
             else:
                 self.fields[field].widget.attrs['class'] = 'form-control input-sm'

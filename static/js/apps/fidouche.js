@@ -18,6 +18,7 @@ $(function($) {
       var account = $('#id_to_account');
       var tourExpense = $('#tour_expense_share');
       var production_cost = 0;
+      var fidouche_cost = 0;
       var iem_cost = 0;
       $('.production-cost').each(function(i, n) {
         var amt = parseFloat($(n).val() || 0);
@@ -27,11 +28,16 @@ $(function($) {
           production_cost += amt;
         }
       });
+      $('.fidouche-cost').each(function(i, n) {
+        var amt = parseFloat($(n).val() || 0);
+        fidouche_cost += amt;
+      });
       // payable
       var g = parseFloat(gross.val()) || 0;
       var cp = parseFloat(commissionField.val()) || 0;
       var pc = production_cost;
       var iem = iem_cost;
+      var fc = fidouche_cost;
       var ps = parseFloat(print.val()) || 0;
       var a = parseFloat(ads.val()) || 0;
       var o = parseFloat(other.val()) || 0;
@@ -48,7 +54,7 @@ $(function($) {
           cb = g;
         }
         c = (parseFloat((cb - pc) * (cp / 100)) || 0).toFixed(2);
-        n = (parseFloat(g - c - (pc + iem + ps + a + o + t)) || 0).toFixed(2);
+        n = (parseFloat(g - c - (pc + fc + iem + ps + a + o + t)) || 0).toFixed(2);
         mp = (parseFloat(n / 13) || 0).toFixed(2);
         acc = (parseFloat(n - sumRealPayouts()) || 0).toFixed(2);
       }
