@@ -218,6 +218,60 @@
 						</table>
 						<button type="button" id="add_production_payments" class="btn btn-link btn-sm btn-block"><i class="fa fa-plus"></i> More payments</button>
 					</fieldset>
+					<fieldset id="fiduciary">
+						<legend>Fidouche</legend>
+						{{ fiduciary_payment_formset.non_form_errors.as_ul }}
+						{{ fiduciary_payment_formset.management_form }}
+						{{ fiduciary_payment_formset.non_form_errors.as_ul }}
+						<table id="gig_fidouche" class="table table-striped">
+							<tbody>
+							{% for form in fiduciary_payment_formset.forms %}
+								<tr>
+									{{ form.id }}
+									{{ form.errors }}
+									<td>
+										<div class="form-group">
+											<label for="{{ form.company.id_for_label }}" class="control-label col-md-4">Fidouche</label>
+											<div class="col-md-8">
+												{{ form.fidouche }}
+											</div>
+										</div>
+										<div class="form-group factor">
+											<label for="{{ form.amount.id_for_label }}" class="control-label col-md-4">Amount</label>
+											<div class="col-md-8">
+												<div class="input-group">
+													<span class="input-group-addon">$</span>
+													{{ form.amount }}
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="{{ form.check_no.id_for_label }}" class="control-label col-md-4">Check #</label>
+											<div class="col-md-6">
+												{{ form.check_no }}
+											</div>
+											<div class="col-md-2">
+												<div class="checkbox">
+													<label for="{{ form.paid.id_for_label }}">
+														{{ form.paid }}
+														Paid
+													</label>
+												</div>
+											</div>
+										</div>
+										<div class="checkbox delete">
+											<label for="{{ form.DELETE.id_for_label }}">
+												{{ form.DELETE }}
+												Delete
+											</label>
+										</div>
+									</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+						<button type="button" id="add_fiduciary_payments" class="btn btn-link btn-sm btn-block"><i class="fa fa-plus"></i> More payments</button>
+					</fieldset>
 				</div>
 			<fieldset class="expenses-summed">
 				<legend class="with-btn">Expenses <button id="itemize_toggle" data-toggle="button" class="btn btn-sm btn-success"><i class="fa fa-list"></i> Itemize Expenses</button></legend>

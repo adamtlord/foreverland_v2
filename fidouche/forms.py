@@ -2,7 +2,7 @@ from django import forms
 from fidouche.widgets import AdminImageWidget
 from shows.models import Show
 from fidouche.models import Payment, SubPayment, Expense, TourExpense, \
-    ProductionPayment, Income
+    ProductionPayment, Income, Fiduciary, FiduciaryPayment
 
 
 FINANCIAL_FIELDS = (
@@ -155,6 +155,20 @@ class ProductionPaymentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductionPaymentForm, self).__init__(*args, **kwargs)
         for field in PRODUCTION_FIELDS:
+            if field == 'amount':
+                self.fields[field].widget.attrs['class'] = 'form-control input-sm production-cost'
+            else:
+                self.fields[field].widget.attrs['class'] = 'form-control input-sm'
+
+
+class FiduciaryPaymentForm(forms.ModelForm):
+    class Meta:
+        model = FiduciaryPayment
+        exclude = []
+
+    def __init__(self, *args, **kwargs):
+        super(FiduciaryPaymentForm, self).__init__(*args, **kwargs)
+        for field in ['fidouche', 'amount', 'check_no']:
             if field == 'amount':
                 self.fields[field].widget.attrs['class'] = 'form-control input-sm production-cost'
             else:

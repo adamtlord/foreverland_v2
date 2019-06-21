@@ -19,9 +19,9 @@ from django.conf import settings
 from members.models import Member, Sub
 from shows.models import Show, Tour, Venue
 from fidouche.models import Payment, SubPayment, Expense, TourExpense, Quote, CommissionPayment, \
-    ProductionPayment, ProductionCategory, Payee, ProductionCompany, Income
+    ProductionPayment, ProductionCategory, Payee, ProductionCompany, Income, Fiduciary, FiduciaryPayment
 from fidouche.forms import GigFinanceForm, ExpenseForm, TourExpenseForm, PaymentForm, SubPaymentForm, \
-    ProductionPaymentForm, IncomeForm
+    ProductionPaymentForm, IncomeForm, FiduciaryPaymentForm
 
 current_year = date.today().year
 
@@ -231,6 +231,7 @@ def gig_finances(request, gig_id=None, template='fidouche/gig_finances.html'):
     PaymentFormSet = inlineformset_factory(Show, Payment, form=PaymentForm, extra=len(active_members), max_num=14)
     SubPaymentFormSet = inlineformset_factory(Show, SubPayment, form=SubPaymentForm, extra=1)
     ProductionPaymentFormSet = inlineformset_factory(Show, ProductionPayment, extra=1, form=ProductionPaymentForm)
+    FiduciaryPaymentFormSet = inlineformset_factory(Show, FiduciaryPayment, extra=0, form=FiduciaryPaymentForm)
 
     if request.method == "POST":
 
@@ -239,16 +240,19 @@ def gig_finances(request, gig_id=None, template='fidouche/gig_finances.html'):
         payment_formset = PaymentFormSet(request.POST, instance=gig)
         sub_payment_formset = SubPaymentFormSet(request.POST, instance=gig)
         production_payment_formset = ProductionPaymentFormSet(request.POST, instance=gig)
+        fiduciary_payment_formset = FiduciaryPaymentFormSet(request.POST, instance=gig)
         if form.is_valid() and \
            expense_formset.is_valid() and \
            payment_formset.is_valid() and \
            sub_payment_formset.is_valid() and \
-           production_payment_formset.is_valid():
+           production_payment_formset.is_valid() and \
+           fiduciary_payment_formset.is_valid():
                 form.save()
                 expense_formset.save()
                 payment_formset.save()
                 sub_payment_formset.save()
                 production_payment_formset.save()
+                fiduciary_payment_formset.save()
 
                 cdata = form.cleaned_data
                 if not cdata['commission_withheld']:
@@ -273,6 +277,7 @@ def gig_finances(request, gig_id=None, template='fidouche/gig_finances.html'):
         payment_formset = PaymentFormSet(instance=gig)
         sub_payment_formset = SubPaymentFormSet(instance=gig)
         production_payment_formset = ProductionPaymentFormSet(instance=gig)
+        fiduciary_payment_formset = FiduciaryPaymentFormSet(instance=gig)
 
         if all(v is None for v in [sf['member'].value() for sf in payment_formset.forms]):
             for subform, data in zip(payment_formset.forms, members_to_pay):
@@ -290,6 +295,7 @@ def gig_finances(request, gig_id=None, template='fidouche/gig_finances.html'):
         'payment_formset': payment_formset,
         'sub_payment_formset': sub_payment_formset,
         'production_payment_formset': production_payment_formset,
+        'fiduciary_payment_formset': fiduciary_payment_formset,
         'gig': gig,
         'iem_cat': iem_cat.id,
         'next_show': next_show

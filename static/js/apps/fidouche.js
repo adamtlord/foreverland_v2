@@ -1,3 +1,6 @@
+/* global FL */
+/* global _ */
+/* global Cookies */
 $(function($) {
   // Methods
   function updateFields() {
@@ -11,14 +14,14 @@ $(function($) {
       var other = $('#id_other_cost');
       var net = $('#id_net');
       var max = $('#max_payout');
-      var payout = $('#id_payout');
+      // var payout = $('#id_payout');
       var account = $('#id_to_account');
       var tourExpense = $('#tour_expense_share');
       var production_cost = 0;
       var iem_cost = 0;
       $('.production-cost').each(function(i, n) {
         var amt = parseFloat($(n).val() || 0);
-        if ($('#id_production_payment-' + i + '-category').val() == FL.VARS.iem_cat) {
+        if ($('#id_production_payment-' + i + '-category').val() === FL.VARS.iem_cat) {
           iem_cost += amt;
         } else {
           production_cost += amt;
@@ -32,7 +35,7 @@ $(function($) {
       var ps = parseFloat(print.val()) || 0;
       var a = parseFloat(ads.val()) || 0;
       var o = parseFloat(other.val()) || 0;
-      var p = parseFloat(payout.val()) || 0;
+      // var p = parseFloat(payout.val()) || 0;
       var t = parseFloat(tourExpense.val()) || 0;
       // receiveable
       var c, n, acc, mp = '';
@@ -136,7 +139,7 @@ $(function($) {
     }
   });
   $('.payment-method').on('change', '#id_gross_method', function() {
-    if ($(this).find('option:selected').val() == 'check') {
+    if ($(this).find('option:selected').val() === 'check') {
       $('#payment_check_no').fadeIn('fast');
     } else {
       $('#payment_check_no').fadeOut('fast');
@@ -197,6 +200,9 @@ $(function($) {
   $('#add_production_payments').click(function() {
     cloneMore('#gig_production tr:last', 'production_payment');
   });
+  $('#add_fiduciary_payments').click(function() {
+    cloneMore('#gig_fidouche tr:last', 'fiduciary_payment');
+  });
   $('#payment_check_all').change(function() {
     if ($(this).prop('checked')) {
       $('.paid input').prop('checked', true);
@@ -205,13 +211,13 @@ $(function($) {
     }
   });
   // On load //
-  if ($('#id_costs_itemized').val() == 'True') {
+  if ($('#id_costs_itemized').val() === 'True') {
     $('#itemize_toggle').click();
   }
-  if ($('#id_subs').val() == 'True') {
+  if ($('#id_subs').val() === 'True') {
     $('#subs_toggle').click();
   }
-  if ($('#id_gross_itemized').val() == 'True') {
+  if ($('#id_gross_itemized').val() === 'True') {
     $('#buyouts_toggle').click();
   }
   var autoCalcState = Cookies.get('autoCalc') === 'false' ? false : true;

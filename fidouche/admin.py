@@ -1,7 +1,8 @@
 from django.contrib import admin
-from fidouche.models import Payment, SubPayment, Payee, Expense, TourExpense, \
+from fidouche.models import Payment, SubPayment, Payee, TourExpense, \
     ExpenseCategory, TaxExpenseCategory, Quote, Agent, CommissionPayment, \
-    ProductionCompany, ProductionCategory, ProductionPayment
+    ProductionCompany, ProductionCategory, ProductionPayment, Fiduciary, \
+    FiduciaryPayment
 
 
 admin.site.register(Payment)
@@ -16,3 +17,5 @@ admin.site.register(CommissionPayment)
 admin.site.register(ProductionCompany)
 admin.site.register(ProductionCategory)
 admin.site.register(ProductionPayment)
+admin.site.register(Fiduciary)
+admin.site.register(FiduciaryPayment)

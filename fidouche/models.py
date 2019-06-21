@@ -200,6 +200,23 @@ class ProductionCompany(models.Model):
         verbose_name_plural = 'Production companies'
 
 
+class Fiduciary(models.Model):
+
+    name = models.CharField(max_length=128)
+    address = models.CharField(max_length=100, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    state = USStateField(max_length=50, blank=True, null=True)
+    zip_code = models.CharField(verbose_name="Zip", max_length=20, blank=True, null=True)
+    phone = PhoneNumberField(blank=True, null=True)
+    ssn = models.CharField(verbose_name="SSN/EIN", max_length=16, blank=True, null=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'Fiduciaries'
+
+
 class ProductionCategory(models.Model):
     name = models.CharField(max_length=128)
     tax_category = models.ForeignKey(TaxExpenseCategory, related_name="production_category", blank=True, null=True)
@@ -235,3 +252,23 @@ class ProductionPayment(models.Model):
     @property
     def new_category(self):
         return self.category
+
+
+class FiduciaryPayment(models.Model):
+    show = models.ForeignKey(Show, related_name="fiduciary_payment", blank=True, null=True)
+    fidouche = models.ForeignKey(Fiduciary, related_name="fiduciary_payment")
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    check_no = models.IntegerField(blank=True, null=True)
+    paid = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['show__date']
+
+    def __unicode__(self):
+        name = str(self.fidouche.name) if self.fidouche else ''
+        show = self.show
+        return '%s for %s (%s)' % (name, show)
+
+    @property
+    def payee(self):
+        return self.fidouche
