@@ -571,7 +571,6 @@ def finance_reports(request, template='fidouche/finance_reports.html'):
         tourExpensePayments = TourExpense.objects.filter(date__range=(start_date, end_date))
         allExpenses = list(chain(expensePayments, tourExpensePayments))
         for payment in allExpenses:
-            print(payment)
             if payment.payee in expense_payments:
                 expense_payments[payment.payee]['total'].append(payment.amount)
                 expense_payments[payment.payee]['payments'].append(payment)
