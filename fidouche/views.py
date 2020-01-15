@@ -567,10 +567,11 @@ def finance_reports(request, template='fidouche/finance_reports.html'):
         })
 
         expense_payments = {}
-        expensePayments = Expense.objects.filter(date__range=(start_date, end_date)).filter(amount__gt=0)
-        tourExpensePayments = TourExpense.objects.filter(date__range=(start_date, end_date)).filter(amount__gt=0)
+        expensePayments = Expense.objects.filter(date__range=(start_date, end_date))
+        tourExpensePayments = TourExpense.objects.filter(date__range=(start_date, end_date))
         allExpenses = list(chain(expensePayments, tourExpensePayments))
         for payment in allExpenses:
+            print(payment)
             if payment.payee in expense_payments:
                 expense_payments[payment.payee]['total'].append(payment.amount)
                 expense_payments[payment.payee]['payments'].append(payment)
@@ -676,8 +677,8 @@ def tax_reports(request, template='fidouche/tax_reports.html'):
         })
 
         expense_payments = {}
-        expensePayments = Expense.objects.filter(date__range=(start_date, end_date)).filter(amount__gt=0)
-        tourExpensePayments = TourExpense.objects.filter(date__range=(start_date, end_date)).filter(amount__gt=0)
+        expensePayments = Expense.objects.filter(date__range=(start_date, end_date))
+        tourExpensePayments = TourExpense.objects.filter(date__range=(start_date, end_date))
         allExpenses = list(chain(expensePayments, tourExpensePayments))
         totalExpensePayments = 0
         for payment in allExpenses:
