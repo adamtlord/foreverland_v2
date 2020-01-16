@@ -706,10 +706,19 @@ def tax_reports(request, template='fidouche/tax_reports.html'):
 
         total_production_payments = sum(total_production_payments)
 
+        fiduciary_payments = FiduciaryPayment.objects.filter(show__date__range=(start_date, end_date)).filter(paid=True).filter(amount__gt=0).order_by('show__date')
+        total_fiduciary_payments = []
+        for payment in fiduciary_payments:
+            total_fiduciary_payments.append(payment.amount)
+
+        total_fiduciary_payments = sum(total_fiduciary_payments)
+
         d.update({
             'production_payments': production_payments,
+            'fiduciary_payments': fiduciary_payments,
             'total_production_payments': total_production_payments,
-            'expense_and_production_total': totalExpensePayments + total_production_payments
+            'total_fiduciary_payments': total_fiduciary_payments,
+            'expense_and_production_total': totalExpensePayments + total_production_payments + total_fiduciary_payments
         })
 
         # this is the data structure we're going for here.
@@ -724,7 +733,7 @@ def tax_reports(request, template='fidouche/tax_reports.html'):
         # }
         vendors = {}
         vendors_total = []
-        allPayments = list(chain(expensePayments, tourExpensePayments, production_payments))
+        allPayments = list(chain(expensePayments, tourExpensePayments, production_payments, fiduciary_payments))
         for expense in allPayments:
             vendors_total.append(expense.amount)
             if expense.payee in vendors:
@@ -736,10 +745,16 @@ def tax_reports(request, template='fidouche/tax_reports.html'):
                     'payments': [],
                     'type': expense.payee.__class__.__name__
                 }
-            if expense.new_category.tax_category.name in vendors[expense.payee]['categories']:
-                vendors[expense.payee]['categories'][expense.new_category.tax_category.name].append(expense.amount)
-            else:
-                vendors[expense.payee]['categories'][expense.new_category.tax_category.name] = [expense.amount]
+            if hasattr(expense, 'new_category'):
+                if expense.new_category.tax_category.name in vendors[expense.payee]['categories']:
+                    vendors[expense.payee]['categories'][expense.new_category.tax_category.name].append(expense.amount)
+                else:
+                    vendors[expense.payee]['categories'][expense.new_category.tax_category.name] = [expense.amount]
+            elif hasattr(expense, 'fidouche'):
+                if 'Fiduciary' in vendors[expense.payee]['categories']:
+                    vendors[expense.payee]['categories']['Fiduciary'].append(expense.amount)
+                else:
+                    vendors[expense.payee]['categories']['Fiduciary'] = [expense.amount]
             vendors[expense.payee]['payments'].append(expense)
         for vendor in vendors:
             vendors[vendor]['total'] = sum(vendors[vendor]['total'])

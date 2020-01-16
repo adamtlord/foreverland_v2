@@ -267,7 +267,7 @@ class FiduciaryPayment(models.Model):
     def __unicode__(self):
         name = str(self.fidouche.name) if self.fidouche else ''
         show = self.show
-        return '%s for %s (%s)' % (name, show)
+        return '%s for %s' % (name, show)
 
     @property
     def payee(self):
