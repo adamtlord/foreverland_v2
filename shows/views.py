@@ -3,7 +3,7 @@ from collections import OrderedDict
 from django.shortcuts import render, get_object_or_404
 from shows.models import Show
 
-UPCOMING_WINDOW_WEEKS = 12
+UPCOMING_WINDOW_WEEKS = 16
 
 
 def upcoming_shows(request, template='shows/upcoming.html'):
