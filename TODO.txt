@@ -1,7 +1,0 @@
-TODO:
-- rewrite Fabfile for basic (needed) commands:
-    - syncdb
-    X launch
-    X bounce
-    - syncuploads?
-- add django rest framework, api app

@@ -1,5 +1,5 @@
 import os
-from string import join
+# from string import join
 
 from django.db import models
 from django.conf import settings
@@ -19,13 +19,13 @@ class Album(models.Model):
     def images(self):
         lst = [x.image.name for x in self.image_set.all()]
         lst = ["<a href='%s/%s'>%s</a>" % (settings.MEDIA_URL, x, x.split('/')[-1]) for x in lst]
-        return join(lst, ', ')
+        return ', '.join(lst)
     images.allow_tags = True
 
     def videos(self):
         lst = [x.video.name for x in self.image_set.all()]
         lst = ["<a href='%s/%s'>%s</a>" % (settings.MEDIA_URL, x, x.split('/')[-1]) for x in lst]
-        return join(lst, ', ')
+        return ', '.join(lst)
     images.allow_tags = True
 
 
@@ -54,11 +54,11 @@ class Image(models.Model):
 
     def tags_(self):
         lst = [x[1] for x in self.tags.values_list()]
-        return str(join(lst, ', '))
+        return str(', '.join(lst))
 
     def albums_(self):
         lst = [x[1] for x in self.albums.values_list()]
-        return str(join(lst, ', '))
+        return str(', '.join(lst))
 
     def thumbnail_(self):
         return "<img border='0' alt='' src='%s/%s' height='40' />" % (
@@ -92,11 +92,11 @@ class Video(models.Model):
 
     def tags_(self):
         lst = [x[1] for x in self.tags.values_list()]
-        return str(join(lst, ', '))
+        return str(', '.join(lst))
 
     def albums_(self):
         lst = [x[1] for x in self.albums.values_list()]
-        return str(join(lst, ', '))
+        return str(', '.join(lst))
 
 
 class Download(models.Model):

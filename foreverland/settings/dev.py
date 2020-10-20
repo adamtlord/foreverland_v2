@@ -31,10 +31,10 @@ extend_list_avoid_repeats(INSTALLED_APPS, [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '%s' % PROJECT_NAME,
-        'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': '',
+        'NAME': 'foreverland',
+        'HOST': 'db',
+        'USER': 'mysql',
+        'PASSWORD': 'abc123',
         'OPTIONS': {
             'init_command': 'SET default_storage_engine=INNODB',
         }
