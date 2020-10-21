@@ -32,7 +32,7 @@ class Member(models.Model):
 
     class Meta:
         ordering = ['-active', '-section', 'display_first']
-    def __unicode__(self):
+    def __str__(self):
         return '%s %s' % (self.display_first, self.display_last)
 
 
@@ -50,5 +50,5 @@ class Sub(models.Model):
     class Meta:
         ordering = ['first_name']
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s %s' % (self.first_name, self.last_name)

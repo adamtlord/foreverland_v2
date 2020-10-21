@@ -9,5 +9,5 @@ class Testimonial(models.Model):
 	show = models.ForeignKey(Show, blank=True, null=True, related_name="testimonial")
 	featured = models.BooleanField(default=False)
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.quote

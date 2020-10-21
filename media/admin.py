@@ -12,7 +12,7 @@ class TagAdmin(admin.ModelAdmin):
 
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ["__unicode__", "title", "size", "tags_", "albums_", "thumbnail_", "created"]
+    list_display = ["__str__", "title", "size", "tags_", "albums_", "thumbnail_", "created"]
     list_filter = ["tags", "albums"]
 
 

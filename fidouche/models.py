@@ -16,7 +16,7 @@ class Payment(models.Model):
         unique_together = (('show', 'member'),)
         ordering = ['show__date']
 
-    def __unicode__(self):
+    def __str__(self):
         payee = str(self.member.display_first) if self.member else '',
         show = str(self.show.venue) if self.show.venue else '',
         date = self.show.date.strftime('%m/%d/%y') if self.show else '',
@@ -32,7 +32,7 @@ class SubPayment(models.Model):
     class Meta:
         unique_together = (('show', 'sub'),)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s for %s on %s' % (self.sub.first_name, self.show.venue, self.show.date.strftime('%m/%d/%y'))
 
 
@@ -45,14 +45,14 @@ class Payee(models.Model):
     phone = PhoneNumberField(blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN#", max_length=16, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
 class TaxExpenseCategory(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -63,7 +63,7 @@ class ExpenseCategory(models.Model):
     category = models.CharField(max_length=100, blank=True, null=True)
     tax_category = models.ForeignKey(TaxExpenseCategory, related_name="expense_category", blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.category
 
     class Meta:
@@ -88,7 +88,7 @@ class Expense(models.Model):
         else:
             return None
 
-    def __unicode__(self):
+    def __str__(self):
         safedate = ''
         if self.date:
             safedate = self.date.strftime('%m/%d/%y') + ', '
@@ -117,7 +117,7 @@ class TourExpense(models.Model):
     def new_category(self):
         return self.category
 
-    def __unicode__(self):
+    def __str__(self):
         safedate = ''
         if self.date:
             safedate = self.date.strftime('%m/%d/%y') + ', '
@@ -132,7 +132,7 @@ class Income(models.Model):
     check_no = models.CharField(max_length=100, blank=True, null=True, verbose_name="Check #")
     notes = models.TextField(blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         safedate = ''
         if self.date:
             safedate = self.date.strftime('%m/%d/%y') + ', '
@@ -145,7 +145,7 @@ class Quote(models.Model):
     source = models.CharField(max_length=128, blank=True, null=True)
     occasion = models.CharField(max_length=256, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s...' % self.quote[0:64]
 
 
@@ -160,7 +160,7 @@ class Agent(models.Model):
     phone = PhoneNumberField(blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN/EIN", max_length=16, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         agency = ', %s' % self.agency if self.agency else ''
         return '%s%s' % (self.name, agency)
 
@@ -176,7 +176,7 @@ class CommissionPayment(models.Model):
         unique_together = (('show', 'agent'),)
         ordering = ['-show__date']
 
-    def __unicode__(self):
+    def __str__(self):
         agent = str(self.agent.name) if self.agent else '',
         show = str(self.show.venue) if self.show.venue else '',
         date = self.show.date.strftime('%m/%d/%y') if self.show else '',
@@ -193,7 +193,7 @@ class ProductionCompany(models.Model):
     phone = PhoneNumberField(blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN/EIN", max_length=16, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -210,7 +210,7 @@ class Fiduciary(models.Model):
     phone = PhoneNumberField(blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN/EIN", max_length=16, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -221,7 +221,7 @@ class ProductionCategory(models.Model):
     name = models.CharField(max_length=128)
     tax_category = models.ForeignKey(TaxExpenseCategory, related_name="production_category", blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -239,7 +239,7 @@ class ProductionPayment(models.Model):
     class Meta:
         ordering = ['show__date']
 
-    def __unicode__(self):
+    def __str__(self):
         company = str(self.company.name) if self.company else ''
         show = self.show
         cat = self.category
@@ -264,7 +264,7 @@ class FiduciaryPayment(models.Model):
     class Meta:
         ordering = ['show__date']
 
-    def __unicode__(self):
+    def __str__(self):
         name = str(self.fidouche.name) if self.fidouche else ''
         show = self.show
         return '%s for %s' % (name, show)

@@ -47,7 +47,7 @@ class Venue(models.Model):
         shows = self.shows.all().order_by('date')
         return shows[0].date.strftime('%Y')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.venue_name
 
 
@@ -125,7 +125,7 @@ class Tour(models.Model):
         else:
             return 0
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -265,5 +265,5 @@ class Show(models.Model):
     class Meta:
         ordering = ['date']
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s %s' % (self.date.strftime('%m/%d/%y'), self.venue)

@@ -13,7 +13,7 @@ class Album(models.Model):
     public = models.BooleanField(default=False)
     show = models.ManyToManyField(Show, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def images(self):
@@ -31,7 +31,7 @@ class Album(models.Model):
 
 class Tag(models.Model):
     tag = models.CharField(max_length=50)
-    def __unicode__(self):
+    def __str__(self):
         return self.tag
 
 
@@ -49,7 +49,7 @@ class Image(models.Model):
         """Image size"""
         return "%s x %s" % (self.width, self.height)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.image.name
 
     def tags_(self):
@@ -87,7 +87,7 @@ class Video(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     featured = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def tags_(self):
@@ -105,7 +105,7 @@ class Download(models.Model):
     tags = models.ManyToManyField(Tag, blank=True)
     updated = models.DateTimeField(auto_now_add=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def extension(self):
