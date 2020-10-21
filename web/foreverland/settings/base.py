@@ -12,7 +12,6 @@ USE_TZ = False
 LANGUAGE_CODE = 'en-us'
 USE_I18N = True
 USE_L10N = True
-SECRET_KEY = 'awozw7pth$35zwy%*yx3!2uuna-1(^rr9u(iha0-0ruvy^i@)z'
 DEFAULT_CHARSET = 'utf-8'
 ROOT_URLCONF = 'foreverland.urls'
 
