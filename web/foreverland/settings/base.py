@@ -111,7 +111,6 @@ AUTHENTICATION_BACKENDS = [
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
-GOOGLE_MAPS_API_KEY = 'AIzaSyDf0TeojAvLH_Xne55O7jcVtTfusoIhkrs'
 
 if 'test' in sys.argv:
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3', 'PASSWORD': '', 'USER': ''}
