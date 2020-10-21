@@ -1,0 +1,40 @@
+version: "3"
+
+volumes:
+  base-data:
+
+services:
+  db:
+    container_name: foreverland_db
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_HOST=localhost
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=foreverland
+      - MYSQL_USER=mysql
+      - MYSQL_PASSWORD=abc123
+      - MYSQL_ROOT_PASSWORD=abc123
+    ports:
+        - "3306:3306"
+    volumes:
+      - ./db:/var/lib/mysql
+      - ./data:/docker-entrypoint-initdb.d
+  web:
+    container_name: foreverland
+    build:
+      context: ./web
+      dockerfile: ./Dockerfile
+    # command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c "echo 'go for django' && tail -f /dev/null"
+    environment:
+      - ENV=dev
+    volumes:
+      - ./web:/code
+    ports:
+      - "8765:8000"
+    depends_on:
+      - db
+    volumes:
+      - base-data:/data
+      - ./web/:/code
