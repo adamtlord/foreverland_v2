@@ -13,14 +13,14 @@ class Payment(models.Model):
     paid = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = (('show', 'member'),)
-        ordering = ['show__date']
+        unique_together = (("show", "member"),)
+        ordering = ["show__date"]
 
     def __str__(self):
-        payee = str(self.member.display_first) if self.member else '',
-        show = str(self.show.venue) if self.show.venue else '',
-        date = self.show.date.strftime('%m/%d/%y') if self.show else '',
-        return '%s for %s on %s' % (payee[0], show[0], date[0])
+        payee = (str(self.member.display_first) if self.member else "",)
+        show = (str(self.show.venue) if self.show.venue else "",)
+        date = (self.show.date.strftime("%m/%d/%y") if self.show else "",)
+        return "%s for %s on %s" % (payee[0], show[0], date[0])
 
 
 class SubPayment(models.Model):
@@ -30,10 +30,14 @@ class SubPayment(models.Model):
     paid = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = (('show', 'sub'),)
+        unique_together = (("show", "sub"),)
 
     def __str__(self):
-        return '%s for %s on %s' % (self.sub.first_name, self.show.venue, self.show.date.strftime('%m/%d/%y'))
+        return "%s for %s on %s" % (
+            self.sub.first_name,
+            self.show.venue,
+            self.show.date.strftime("%m/%d/%y"),
+        )
 
 
 class Payee(models.Model):
@@ -41,7 +45,9 @@ class Payee(models.Model):
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     state = USStateField(max_length=50, blank=True, null=True)
-    zip_code = models.CharField(verbose_name="Zip", max_length=20, blank=True, null=True)
+    zip_code = models.CharField(
+        verbose_name="Zip", max_length=20, blank=True, null=True
+    )
     phone = PhoneNumberField(blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN#", max_length=16, blank=True, null=True)
 
@@ -61,7 +67,9 @@ class TaxExpenseCategory(models.Model):
 
 class ExpenseCategory(models.Model):
     category = models.CharField(max_length=100, blank=True, null=True)
-    tax_category = models.ForeignKey(TaxExpenseCategory, related_name="expense_category", blank=True, null=True)
+    tax_category = models.ForeignKey(
+        TaxExpenseCategory, related_name="expense_category", blank=True, null=True
+    )
 
     def __str__(self):
         return self.category
@@ -75,9 +83,17 @@ class Expense(models.Model):
     show = models.ForeignKey(Show, related_name="expense", blank=True, null=True)
     date = models.DateField(blank=True, null=True)
     payee = models.ForeignKey(Payee, related_name="expense", blank=True, null=True)
-    new_category = models.ForeignKey(ExpenseCategory, related_name="expense_category", blank=True, null=True, verbose_name="Category")
+    new_category = models.ForeignKey(
+        ExpenseCategory,
+        related_name="expense_category",
+        blank=True,
+        null=True,
+        verbose_name="Category",
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    check_no = models.CharField(max_length=100, blank=True, null=True, verbose_name="Check #")
+    check_no = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="Check #"
+    )
     notes = models.TextField(blank=True, null=True)
     receipt_img = models.FileField(upload_to="receipts/", blank=True, null=True)
 
@@ -89,10 +105,10 @@ class Expense(models.Model):
             return None
 
     def __str__(self):
-        safedate = ''
+        safedate = ""
         if self.date:
-            safedate = self.date.strftime('%m/%d/%y') + ', '
-        return '%s$%s to %s' % (safedate, self.amount, self.payee)
+            safedate = self.date.strftime("%m/%d/%y") + ", "
+        return "%s$%s to %s" % (safedate, self.amount, self.payee)
 
 
 class TourExpense(models.Model):
@@ -102,7 +118,9 @@ class TourExpense(models.Model):
     payee = models.ForeignKey(Payee, blank=True, null=True)
     category = models.ForeignKey(ExpenseCategory, blank=True, null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    check_no = models.CharField(max_length=100, blank=True, null=True, verbose_name="Check #")
+    check_no = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="Check #"
+    )
     notes = models.TextField(blank=True, null=True)
     receipt_img = models.FileField(upload_to="receipts/", blank=True, null=True)
 
@@ -118,10 +136,10 @@ class TourExpense(models.Model):
         return self.category
 
     def __str__(self):
-        safedate = ''
+        safedate = ""
         if self.date:
-            safedate = self.date.strftime('%m/%d/%y') + ', '
-        return '%s$%s to %s' % (safedate, self.amount, self.payee)
+            safedate = self.date.strftime("%m/%d/%y") + ", "
+        return "%s$%s to %s" % (safedate, self.amount, self.payee)
 
 
 class Income(models.Model):
@@ -129,14 +147,16 @@ class Income(models.Model):
     date = models.DateField(blank=True, null=True)
     payer = models.CharField(blank=True, null=True, max_length=255)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    check_no = models.CharField(max_length=100, blank=True, null=True, verbose_name="Check #")
+    check_no = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="Check #"
+    )
     notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        safedate = ''
+        safedate = ""
         if self.date:
-            safedate = self.date.strftime('%m/%d/%y') + ', '
-        return '%s$%s to %s' % (safedate, self.amount, self.payee)
+            safedate = self.date.strftime("%m/%d/%y") + ", "
+        return "%s$%s to %s" % (safedate, self.amount, self.payee)
 
 
 class Quote(models.Model):
@@ -146,7 +166,7 @@ class Quote(models.Model):
     occasion = models.CharField(max_length=256, blank=True, null=True)
 
     def __str__(self):
-        return '%s...' % self.quote[0:64]
+        return "%s..." % self.quote[0:64]
 
 
 class Agent(models.Model):
@@ -156,31 +176,37 @@ class Agent(models.Model):
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     state = USStateField(max_length=50, blank=True, null=True)
-    zip_code = models.CharField(verbose_name="Zip", max_length=20, blank=True, null=True)
+    zip_code = models.CharField(
+        verbose_name="Zip", max_length=20, blank=True, null=True
+    )
     phone = PhoneNumberField(blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN/EIN", max_length=16, blank=True, null=True)
 
     def __str__(self):
-        agency = ', %s' % self.agency if self.agency else ''
-        return '%s%s' % (self.name, agency)
+        agency = ", %s" % self.agency if self.agency else ""
+        return "%s%s" % (self.name, agency)
 
 
 class CommissionPayment(models.Model):
-    show = models.ForeignKey(Show, related_name="commission_payment", blank=True, null=True)
-    agent = models.ForeignKey(Agent, related_name="commission_payment", blank=True, null=True)
+    show = models.ForeignKey(
+        Show, related_name="commission_payment", blank=True, null=True
+    )
+    agent = models.ForeignKey(
+        Agent, related_name="commission_payment", blank=True, null=True
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     check_no = models.IntegerField(blank=True, null=True)
     paid = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = (('show', 'agent'),)
-        ordering = ['-show__date']
+        unique_together = (("show", "agent"),)
+        ordering = ["-show__date"]
 
     def __str__(self):
-        agent = str(self.agent.name) if self.agent else '',
-        show = str(self.show.venue) if self.show.venue else '',
-        date = self.show.date.strftime('%m/%d/%y') if self.show else '',
-        return '%s for %s on %s' % (agent[0], show[0], date[0])
+        agent = (str(self.agent.name) if self.agent else "",)
+        show = (str(self.show.venue) if self.show.venue else "",)
+        date = (self.show.date.strftime("%m/%d/%y") if self.show else "",)
+        return "%s for %s on %s" % (agent[0], show[0], date[0])
 
 
 class ProductionCompany(models.Model):
@@ -189,7 +215,9 @@ class ProductionCompany(models.Model):
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     state = USStateField(max_length=50, blank=True, null=True)
-    zip_code = models.CharField(verbose_name="Zip", max_length=20, blank=True, null=True)
+    zip_code = models.CharField(
+        verbose_name="Zip", max_length=20, blank=True, null=True
+    )
     phone = PhoneNumberField(blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN/EIN", max_length=16, blank=True, null=True)
 
@@ -197,7 +225,7 @@ class ProductionCompany(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = 'Production companies'
+        verbose_name_plural = "Production companies"
 
 
 class Fiduciary(models.Model):
@@ -206,7 +234,9 @@ class Fiduciary(models.Model):
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     state = USStateField(max_length=50, blank=True, null=True)
-    zip_code = models.CharField(verbose_name="Zip", max_length=20, blank=True, null=True)
+    zip_code = models.CharField(
+        verbose_name="Zip", max_length=20, blank=True, null=True
+    )
     phone = PhoneNumberField(blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN/EIN", max_length=16, blank=True, null=True)
 
@@ -214,22 +244,26 @@ class Fiduciary(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = 'Fiduciaries'
+        verbose_name_plural = "Fiduciaries"
 
 
 class ProductionCategory(models.Model):
     name = models.CharField(max_length=128)
-    tax_category = models.ForeignKey(TaxExpenseCategory, related_name="production_category", blank=True, null=True)
+    tax_category = models.ForeignKey(
+        TaxExpenseCategory, related_name="production_category", blank=True, null=True
+    )
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name_plural = 'Production categories'
+        verbose_name_plural = "Production categories"
 
 
 class ProductionPayment(models.Model):
-    show = models.ForeignKey(Show, related_name="production_payment", blank=True, null=True)
+    show = models.ForeignKey(
+        Show, related_name="production_payment", blank=True, null=True
+    )
     company = models.ForeignKey(ProductionCompany, related_name="production_payment")
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     check_no = models.IntegerField(blank=True, null=True)
@@ -237,13 +271,13 @@ class ProductionPayment(models.Model):
     paid = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['show__date']
+        ordering = ["show__date"]
 
     def __str__(self):
-        company = str(self.company.name) if self.company else ''
+        company = str(self.company.name) if self.company else ""
         show = self.show
         cat = self.category
-        return '%s for %s (%s)' % (company, show, cat)
+        return "%s for %s (%s)" % (company, show, cat)
 
     @property
     def payee(self):
@@ -255,19 +289,21 @@ class ProductionPayment(models.Model):
 
 
 class FiduciaryPayment(models.Model):
-    show = models.ForeignKey(Show, related_name="fiduciary_payment", blank=True, null=True)
+    show = models.ForeignKey(
+        Show, related_name="fiduciary_payment", blank=True, null=True
+    )
     fidouche = models.ForeignKey(Fiduciary, related_name="fiduciary_payment")
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     check_no = models.IntegerField(blank=True, null=True)
     paid = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['show__date']
+        ordering = ["show__date"]
 
     def __str__(self):
-        name = str(self.fidouche.name) if self.fidouche else ''
+        name = str(self.fidouche.name) if self.fidouche else ""
         show = self.show
-        return '%s for %s' % (name, show)
+        return "%s for %s" % (name, show)
 
     @property
     def payee(self):

@@ -13,11 +13,9 @@ from media.forms import ImageUploadForm
 def photos(request, template="media/photos.html"):
     """Photos page"""
     promo_album = Album.objects.get(title="Promotional Photos")
-    promo_photos = Image.objects.filter(albums__in=[promo_album]).order_by('id')
+    promo_photos = Image.objects.filter(albums__in=[promo_album]).order_by("id")
 
-    d = {
-        'promo_photos': promo_photos
-    }
+    d = {"promo_photos": promo_photos}
 
     return render(request, template, d)
 
@@ -26,15 +24,13 @@ def downloads(request, template="media/downloads.html"):
     """Downloads page"""
     downloadables = Download.objects.all()
     for dl in downloadables:
-        dl.icon_class = ''
-        if dl.extension() in ['.pdf', '.doc']:
-            dl.icon_class = 'fa-file-text-o'
-        if dl.extension() in ['.jpg', '.png', '.gif']:
-            dl.icon_class = 'fa-picture-o'
+        dl.icon_class = ""
+        if dl.extension() in [".pdf", ".doc"]:
+            dl.icon_class = "fa-file-text-o"
+        if dl.extension() in [".jpg", ".png", ".gif"]:
+            dl.icon_class = "fa-picture-o"
 
-    d = {
-        'downloads': downloadables
-    }
+    d = {"downloads": downloadables}
 
     return render(request, template, d)
 
@@ -46,9 +42,7 @@ def behind_the_music(request, template="media/behind_the_music.html"):
     album.images = album.image_set.all()
     album.videos = album.video_set.all()
 
-    d = {
-        'album': album
-    }
+    d = {"album": album}
 
     return render(request, template, d)
 
@@ -56,19 +50,25 @@ def behind_the_music(request, template="media/behind_the_music.html"):
 @login_required
 def upload(request, template="media/upload.html"):
     """(bulk) upload of images"""
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ImageUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
-            for image in request.FILES.getlist('image'):
+            for image in request.FILES.getlist("image"):
                 new_file = Image(image=image)
                 new_file.save()
-                new_file.albums = form.cleaned_data['albums']
+                new_file.albums = form.cleaned_data["albums"]
                 new_file.save()
     else:
-        form = ImageUploadForm(initial={'albums': [3, ]})
+        form = ImageUploadForm(
+            initial={
+                "albums": [
+                    3,
+                ]
+            }
+        )
 
-    d = {'form': form}
+    d = {"form": form}
     return render(request, template, d)
 
 
@@ -80,7 +80,7 @@ def list(request, template="media/list.html"):
 
     paginator = Paginator(albums, 10)
     try:
-        page = int(request.GET.get("page", '1'))
+        page = int(request.GET.get("page", "1"))
     except ValueError:
         page = 1
 
@@ -92,7 +92,7 @@ def list(request, template="media/list.html"):
     for album in albums.object_list:
         album.images = album.image_set.all()[:4]
 
-    d = {'albums': albums, 'user': request.user}
+    d = {"albums": albums, "user": request.user}
 
     return render(request, template, d)
 
@@ -137,11 +137,7 @@ def list(request, template="media/list.html"):
 def image(request, pk, template="media/image.html"):
     """Image page."""
     img = Image.objects.get(pk=pk)
-    d = {
-        'image': img,
-        'user': request.user,
-        'backurl': request.META["HTTP_REFERER"]
-    }
+    d = {"image": img, "user": request.user, "backurl": request.META["HTTP_REFERER"]}
 
     return render(request, template, d)
 
@@ -154,10 +150,10 @@ def update(request):
     # create dictionary of properties for each image
     for k, v in p.items():
         if k.startswith("title") or k.startswith("tags"):
-            k, pk = k.split('-')
+            k, pk = k.split("-")
             images[pk][k] = v
         elif k.startswith("album"):
-            pk = k.split('-')[1]
+            pk = k.split("-")[1]
             images[pk]["albums"] = p.getlist(k)
 
     # process properties, assign to image objects and save
@@ -166,10 +162,11 @@ def update(request):
         image.title = d["title"]
 
         # tags - assign or create if a new tag!
-        tags = d["tags"].split(', ')
+        tags = d["tags"].split(", ")
         lst = []
         for t in tags:
-            if t: lst.append(Tag.objects.get_or_create(tag=t)[0])
+            if t:
+                lst.append(Tag.objects.get_or_create(tag=t)[0])
         image.tags = lst
 
         if "albums" in d:
@@ -182,7 +179,7 @@ def update(request):
 def search(request, template="media/search.html"):
     """Search, filter, sort images."""
     try:
-        page = int(request.GET.get("page", '1'))
+        page = int(request.GET.get("page", "1"))
     except ValueError:
         page = 1
 
@@ -194,7 +191,7 @@ def search(request, template="media/search.html"):
     keys = "title filename width_from width_to height_from height_to tags view"
     keys = keys.split()
     for k in keys:
-        parameters[k] = ''
+        parameters[k] = ""
     parameters["album"] = []
 
     # create dictionary of properties for each image and a dict of search/filter parameters
@@ -204,10 +201,10 @@ def search(request, template="media/search.html"):
         elif k in parameters:
             parameters[k] = v
         elif k.startswith("title") or k.startswith("tags"):
-            k, pk = k.split('-')
+            k, pk = k.split("-")
             images[pk][k] = v
         elif k.startswith("album"):
-            pk = k.split('-')[1]
+            pk = k.split("-")[1]
             images[pk]["albums"] = p.getlist(k)
 
     # save or restore parameters from session
@@ -228,10 +225,16 @@ def search(request, template="media/search.html"):
     # add list of tags as string and list of album names to each image object
     for img in results.object_list:
         tags = [x[1] for x in img.tags.values_list()]
-        img.tag_lst = join(tags, ', ')
+        img.tag_lst = join(tags, ", ")
         img.album_lst = [x[1] for x in img.albums.values_list()]
 
-    d = dict(results=results, user=request.user, albums=Album.objects.all(), prm=parameters, media_url=MEDIA_URL)
+    d = dict(
+        results=results,
+        user=request.user,
+        albums=Album.objects.all(),
+        prm=parameters,
+        media_url=MEDIA_URL,
+    )
     d.update(csrf(request))
 
     return render(request, template, d)
@@ -246,7 +249,7 @@ def update_and_filter(images, p):
         image.rating = int(d["rating"])
 
         # tags - assign or create if a new tag!
-        tags = d["tags"].split(', ')
+        tags = d["tags"].split(", ")
         lst = []
         for t in tags:
             if t:
@@ -259,15 +262,21 @@ def update_and_filter(images, p):
 
     # filter results by parameters
     results = Image.objects.all()
-    if p["title"]       : results = results.filter(title__icontains=p["title"])
-    if p["filename"]    : results = results.filter(image__icontains=p["filename"])
-    if p["width_from"]  : results = results.filter(width__gte=int(p["width_from"]))
-    if p["width_to"]    : results = results.filter(width__lte=int(p["width_to"]))
-    if p["height_from"] : results = results.filter(height__gte=int(p["height_from"]))
-    if p["height_to"]   : results = results.filter(height__lte=int(p["height_to"]))
+    if p["title"]:
+        results = results.filter(title__icontains=p["title"])
+    if p["filename"]:
+        results = results.filter(image__icontains=p["filename"])
+    if p["width_from"]:
+        results = results.filter(width__gte=int(p["width_from"]))
+    if p["width_to"]:
+        results = results.filter(width__lte=int(p["width_to"]))
+    if p["height_from"]:
+        results = results.filter(height__gte=int(p["height_from"]))
+    if p["height_to"]:
+        results = results.filter(height__lte=int(p["height_to"]))
 
     if p["tags"]:
-        tags = p["tags"].split(', ')
+        tags = p["tags"].split(", ")
         lst = []
         for t in tags:
             if t:
@@ -280,4 +289,3 @@ def update_and_filter(images, p):
             or_query = or_query | Q(albums=album)
         results = results.filter(or_query).distinct()
     return results
-

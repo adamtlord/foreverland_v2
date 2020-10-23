@@ -8,15 +8,20 @@ from shows.models import Show
 # insert path to csv file to import here
 # CSV_FILE = '/home/adamlord/webapps/foreverland_python/src/foreverland/apps/fidouche/csv/gigs12.csv'
 
-class Command(BaseCommand):
 
+class Command(BaseCommand):
     def handle(self, *args, **options):
         with open(CSV_FILE) as csvfile:
             gigs = csv.reader(csvfile)
             gigs.next()
             for row in gigs:
                 date = parser.parse(row[0])
-                show = Show.objects.filter(date__range=(datetime.datetime.combine(date, datetime.time.min),datetime.datetime.combine(date, datetime.time.max)))
+                show = Show.objects.filter(
+                    date__range=(
+                        datetime.datetime.combine(date, datetime.time.min),
+                        datetime.datetime.combine(date, datetime.time.max),
+                    )
+                )
                 if show:
                     show = show[0]
                     show.gross = self.__string_to_decimal(row[2])
@@ -31,8 +36,8 @@ class Command(BaseCommand):
                     show.to_account = self.__string_to_decimal(row[11])
                     show.save()
                 else:
-                    print 'no show for %s found in db' % date
-    
+                    print "no show for %s found in db" % date
+
     def __string_to_decimal(self, string):
         if string:
             return Decimal(string)

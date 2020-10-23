@@ -1,8 +1,20 @@
 from django.contrib import admin
-from fidouche.models import Payment, SubPayment, Payee, TourExpense, \
-    ExpenseCategory, TaxExpenseCategory, Quote, Agent, CommissionPayment, \
-    ProductionCompany, ProductionCategory, ProductionPayment, Fiduciary, \
-    FiduciaryPayment
+from fidouche.models import (
+    Payment,
+    SubPayment,
+    Payee,
+    TourExpense,
+    ExpenseCategory,
+    TaxExpenseCategory,
+    Quote,
+    Agent,
+    CommissionPayment,
+    ProductionCompany,
+    ProductionCategory,
+    ProductionPayment,
+    Fiduciary,
+    FiduciaryPayment,
+)
 
 
 admin.site.register(Payment)

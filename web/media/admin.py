@@ -12,12 +12,20 @@ class TagAdmin(admin.ModelAdmin):
 
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ["__str__", "title", "size", "tags_", "albums_", "thumbnail_", "created"]
+    list_display = [
+        "__str__",
+        "title",
+        "size",
+        "tags_",
+        "albums_",
+        "thumbnail_",
+        "created",
+    ]
     list_filter = ["tags", "albums"]
 
 
 class VideoAdmin(admin.ModelAdmin):
-	list_display = ["title", "embed_type", "tags_",  "albums_", "created"]
+    list_display = ["title", "embed_type", "tags_", "albums_", "created"]
 
 
 class DownloadAdmin(admin.ModelAdmin):

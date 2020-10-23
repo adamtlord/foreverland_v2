@@ -1,11 +1,7 @@
 from django.db import models
 from localflavor.us.models import PhoneNumberField, USStateField
 
-SECTIONS = (
-    ('v', 'Vocal'),
-    ('h', 'Horn'),
-    ('r', 'Rhythm')
-)
+SECTIONS = (("v", "Vocal"), ("h", "Horn"), ("r", "Rhythm"))
 
 
 class Member(models.Model):
@@ -23,17 +19,24 @@ class Member(models.Model):
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     state = USStateField(max_length=50, blank=True, null=True)
-    zip_code = models.CharField(verbose_name="Zip", max_length=20, blank=True, null=True)
+    zip_code = models.CharField(
+        verbose_name="Zip", max_length=20, blank=True, null=True
+    )
     phone = PhoneNumberField(blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN#", max_length=16, blank=True, null=True)
     partner = models.BooleanField(default=False)
-    date_partner_joined = models.DateField(verbose_name="Became a Partner", blank=True, null=True)
-    date_partner_left = models.DateField(verbose_name="Left Partnership", blank=True, null=True)
+    date_partner_joined = models.DateField(
+        verbose_name="Became a Partner", blank=True, null=True
+    )
+    date_partner_left = models.DateField(
+        verbose_name="Left Partnership", blank=True, null=True
+    )
 
     class Meta:
-        ordering = ['-active', '-section', 'display_first']
+        ordering = ["-active", "-section", "display_first"]
+
     def __str__(self):
-        return '%s %s' % (self.display_first, self.display_last)
+        return "%s %s" % (self.display_first, self.display_last)
 
 
 class Sub(models.Model):
@@ -43,12 +46,14 @@ class Sub(models.Model):
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     state = USStateField(max_length=50, blank=True, null=True)
-    zip_code = models.CharField(verbose_name="Zip", max_length=20, blank=True, null=True)
+    zip_code = models.CharField(
+        verbose_name="Zip", max_length=20, blank=True, null=True
+    )
     phone = PhoneNumberField(blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN#", max_length=16, blank=True, null=True)
 
     class Meta:
-        ordering = ['first_name']
+        ordering = ["first_name"]
 
     def __str__(self):
-        return '%s %s' % (self.first_name, self.last_name)
+        return "%s %s" % (self.first_name, self.last_name)

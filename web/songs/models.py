@@ -11,7 +11,7 @@ class Song(models.Model):
     release_year = models.CharField(max_length=200, blank=True, null=True)
     display = models.BooleanField(default=True)
     # Foreverland info
-    singer = models.ManyToManyField(Member, related_name='singer', blank=True)
+    singer = models.ManyToManyField(Member, related_name="singer", blank=True)
     foh_notes = models.TextField(verbose_name="Notes for FOH", blank=True, null=True)
 
     def __str__(self):
@@ -19,11 +19,11 @@ class Song(models.Model):
 
 
 class Setlist(models.Model):
-    show = models.ForeignKey(Show, related_name='setlist')
-    songs = models.ManyToManyField(Song, through='SetlistSong')
+    show = models.ForeignKey(Show, related_name="setlist")
+    songs = models.ManyToManyField(Song, through="SetlistSong")
 
     def __str__(self):
-        return '%s %s' % (self.show.date.strftime('%d/%m/%y'), self.show.venue)
+        return "%s %s" % (self.show.date.strftime("%d/%m/%y"), self.show.venue)
 
 
 class SetlistSong(models.Model):
@@ -32,4 +32,4 @@ class SetlistSong(models.Model):
     order = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return '%s' % self.song
+        return "%s" % self.song

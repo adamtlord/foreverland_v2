@@ -1,4 +1,5 @@
 import os
+
 # from string import join
 
 from django.db import models
@@ -18,19 +19,28 @@ class Album(models.Model):
 
     def images(self):
         lst = [x.image.name for x in self.image_set.all()]
-        lst = ["<a href='%s/%s'>%s</a>" % (settings.MEDIA_URL, x, x.split('/')[-1]) for x in lst]
-        return ', '.join(lst)
+        lst = [
+            "<a href='%s/%s'>%s</a>" % (settings.MEDIA_URL, x, x.split("/")[-1])
+            for x in lst
+        ]
+        return ", ".join(lst)
+
     images.allow_tags = True
 
     def videos(self):
         lst = [x.video.name for x in self.image_set.all()]
-        lst = ["<a href='%s/%s'>%s</a>" % (settings.MEDIA_URL, x, x.split('/')[-1]) for x in lst]
-        return ', '.join(lst)
+        lst = [
+            "<a href='%s/%s'>%s</a>" % (settings.MEDIA_URL, x, x.split("/")[-1])
+            for x in lst
+        ]
+        return ", ".join(lst)
+
     images.allow_tags = True
 
 
 class Tag(models.Model):
     tag = models.CharField(max_length=50)
+
     def __str__(self):
         return self.tag
 
@@ -54,33 +64,37 @@ class Image(models.Model):
 
     def tags_(self):
         lst = [x[1] for x in self.tags.values_list()]
-        return str(', '.join(lst))
+        return str(", ".join(lst))
 
     def albums_(self):
         lst = [x[1] for x in self.albums.values_list()]
-        return str(', '.join(lst))
+        return str(", ".join(lst))
 
     def thumbnail_(self):
         return "<img border='0' alt='' src='%s/%s' height='40' />" % (
-                                                                        (settings.MEDIA_URL, self.image.name))
+            (settings.MEDIA_URL, self.image.name)
+        )
+
     thumbnail_.allow_tags = True
 
 
 class Video(models.Model):
-    YOUTUBE = 'yt'
-    FACEBOOK = 'fb'
-    VIMEO = 'vm'
-    OTHER = 'o'
+    YOUTUBE = "yt"
+    FACEBOOK = "fb"
+    VIMEO = "vm"
+    OTHER = "o"
     EMBED_TYPES = (
-        (YOUTUBE, 'YouTube'),
-        (FACEBOOK, 'Facebook'),
-        (VIMEO, 'Vimeo'),
-        (OTHER, 'other')
+        (YOUTUBE, "YouTube"),
+        (FACEBOOK, "Facebook"),
+        (VIMEO, "Vimeo"),
+        (OTHER, "other"),
     )
     title = models.CharField(max_length=60, blank=True, null=True)
     url = models.URLField()
     vid_id = models.CharField(max_length=100, blank=True, null=True)
-    embed_type = models.CharField(max_length=10, blank=True, null=True, choices=EMBED_TYPES, default=YOUTUBE)
+    embed_type = models.CharField(
+        max_length=10, blank=True, null=True, choices=EMBED_TYPES, default=YOUTUBE
+    )
     tags = models.ManyToManyField(Tag, blank=True)
     show = models.ManyToManyField(Show, blank=True)
     albums = models.ManyToManyField(Album, blank=True)
@@ -92,11 +106,11 @@ class Video(models.Model):
 
     def tags_(self):
         lst = [x[1] for x in self.tags.values_list()]
-        return str(', '.join(lst))
+        return str(", ".join(lst))
 
     def albums_(self):
         lst = [x[1] for x in self.albums.values_list()]
-        return str(', '.join(lst))
+        return str(", ".join(lst))
 
 
 class Download(models.Model):

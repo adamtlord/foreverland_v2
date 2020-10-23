@@ -7,6 +7,7 @@ class Thumbnail(ImageSpec):
         processors.Adjust(contrast=1.1, sharpness=1.1),
     ]
 
+
 class Medium(ImageSpec):
     processors = [processors.ResizeToFit(400, 400)]
 
@@ -15,6 +16,6 @@ class Large(ImageSpec):
     processors = [processors.ResizeToFit(960, 960)]
 
 
-register.generator('common:thumbnail', Thumbnail)
-register.generator('common:medium', Medium)
-register.generator('common:large', Large)
+register.generator("common:thumbnail", Thumbnail)
+register.generator("common:medium", Medium)
+register.generator("common:large", Large)

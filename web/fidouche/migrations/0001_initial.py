@@ -12,216 +12,539 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('members', '__first__'),
-        ('shows', '__first__'),
+        ("members", "__first__"),
+        ("shows", "__first__"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Agent',
+            name="Agent",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128)),
-                ('agency', models.CharField(blank=True, max_length=128, null=True)),
-                ('address', models.CharField(blank=True, max_length=100, null=True)),
-                ('city', models.CharField(blank=True, max_length=100, null=True)),
-                ('state', localflavor.us.models.USStateField(blank=True, null=True)),
-                ('zip_code', models.CharField(blank=True, max_length=20, null=True, verbose_name=b'Zip')),
-                ('phone', localflavor.us.models.PhoneNumberField(blank=True, null=True)),
-                ('ssn', models.CharField(blank=True, max_length=16, null=True, verbose_name=b'SSN/EIN')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=128)),
+                ("agency", models.CharField(blank=True, max_length=128, null=True)),
+                ("address", models.CharField(blank=True, max_length=100, null=True)),
+                ("city", models.CharField(blank=True, max_length=100, null=True)),
+                ("state", localflavor.us.models.USStateField(blank=True, null=True)),
+                (
+                    "zip_code",
+                    models.CharField(
+                        blank=True, max_length=20, null=True, verbose_name=b"Zip"
+                    ),
+                ),
+                (
+                    "phone",
+                    localflavor.us.models.PhoneNumberField(blank=True, null=True),
+                ),
+                (
+                    "ssn",
+                    models.CharField(
+                        blank=True, max_length=16, null=True, verbose_name=b"SSN/EIN"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='CommissionPayment',
+            name="CommissionPayment",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
-                ('check_no', models.IntegerField(blank=True, null=True)),
-                ('paid', models.BooleanField(default=False)),
-                ('agent', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='commission_payment', to='fidouche.Agent')),
-                ('show', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='commission_payment', to='shows.Show')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "amount",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, max_digits=10, null=True
+                    ),
+                ),
+                ("check_no", models.IntegerField(blank=True, null=True)),
+                ("paid", models.BooleanField(default=False)),
+                (
+                    "agent",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="commission_payment",
+                        to="fidouche.Agent",
+                    ),
+                ),
+                (
+                    "show",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="commission_payment",
+                        to="shows.Show",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-show__date'],
+                "ordering": ["-show__date"],
             },
         ),
         migrations.CreateModel(
-            name='Expense',
+            name="Expense",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField(blank=True, null=True)),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('check_no', models.CharField(blank=True, max_length=100, null=True, verbose_name=b'Check #')),
-                ('notes', models.TextField(blank=True, null=True)),
-                ('receipt_img', models.FileField(blank=True, null=True, upload_to=b'receipts/')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField(blank=True, null=True)),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=10)),
+                (
+                    "check_no",
+                    models.CharField(
+                        blank=True, max_length=100, null=True, verbose_name=b"Check #"
+                    ),
+                ),
+                ("notes", models.TextField(blank=True, null=True)),
+                (
+                    "receipt_img",
+                    models.FileField(blank=True, null=True, upload_to=b"receipts/"),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='ExpenseCategory',
+            name="ExpenseCategory",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('category', models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("category", models.CharField(blank=True, max_length=100, null=True)),
             ],
             options={
-                'verbose_name_plural': 'Expense Categories',
+                "verbose_name_plural": "Expense Categories",
             },
         ),
         migrations.CreateModel(
-            name='Income',
+            name="Income",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField(blank=True, null=True)),
-                ('payer', models.CharField(blank=True, max_length=255, null=True)),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('check_no', models.CharField(blank=True, max_length=100, null=True, verbose_name=b'Check #')),
-                ('notes', models.TextField(blank=True, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField(blank=True, null=True)),
+                ("payer", models.CharField(blank=True, max_length=255, null=True)),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=10)),
+                (
+                    "check_no",
+                    models.CharField(
+                        blank=True, max_length=100, null=True, verbose_name=b"Check #"
+                    ),
+                ),
+                ("notes", models.TextField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Payee',
+            name="Payee",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=200, null=True)),
-                ('address', models.CharField(blank=True, max_length=100, null=True)),
-                ('city', models.CharField(blank=True, max_length=100, null=True)),
-                ('state', localflavor.us.models.USStateField(blank=True, null=True)),
-                ('zip_code', models.CharField(blank=True, max_length=20, null=True, verbose_name=b'Zip')),
-                ('phone', localflavor.us.models.PhoneNumberField(blank=True, null=True)),
-                ('ssn', models.CharField(blank=True, max_length=16, null=True, verbose_name=b'SSN#')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=200, null=True)),
+                ("address", models.CharField(blank=True, max_length=100, null=True)),
+                ("city", models.CharField(blank=True, max_length=100, null=True)),
+                ("state", localflavor.us.models.USStateField(blank=True, null=True)),
+                (
+                    "zip_code",
+                    models.CharField(
+                        blank=True, max_length=20, null=True, verbose_name=b"Zip"
+                    ),
+                ),
+                (
+                    "phone",
+                    localflavor.us.models.PhoneNumberField(blank=True, null=True),
+                ),
+                (
+                    "ssn",
+                    models.CharField(
+                        blank=True, max_length=16, null=True, verbose_name=b"SSN#"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Payment',
+            name="Payment",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
-                ('paid', models.BooleanField(default=False)),
-                ('member', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='payment', to='members.Member')),
-                ('show', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='payment', to='shows.Show')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "amount",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, max_digits=10, null=True
+                    ),
+                ),
+                ("paid", models.BooleanField(default=False)),
+                (
+                    "member",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="payment",
+                        to="members.Member",
+                    ),
+                ),
+                (
+                    "show",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="payment",
+                        to="shows.Show",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['show__date'],
+                "ordering": ["show__date"],
             },
         ),
         migrations.CreateModel(
-            name='ProductionCategory',
+            name="ProductionCategory",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=128)),
             ],
             options={
-                'verbose_name_plural': 'Production categories',
+                "verbose_name_plural": "Production categories",
             },
         ),
         migrations.CreateModel(
-            name='ProductionCompany',
+            name="ProductionCompany",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128)),
-                ('address', models.CharField(blank=True, max_length=100, null=True)),
-                ('city', models.CharField(blank=True, max_length=100, null=True)),
-                ('state', localflavor.us.models.USStateField(blank=True, null=True)),
-                ('zip_code', models.CharField(blank=True, max_length=20, null=True, verbose_name=b'Zip')),
-                ('phone', localflavor.us.models.PhoneNumberField(blank=True, null=True)),
-                ('ssn', models.CharField(blank=True, max_length=16, null=True, verbose_name=b'SSN/EIN')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=128)),
+                ("address", models.CharField(blank=True, max_length=100, null=True)),
+                ("city", models.CharField(blank=True, max_length=100, null=True)),
+                ("state", localflavor.us.models.USStateField(blank=True, null=True)),
+                (
+                    "zip_code",
+                    models.CharField(
+                        blank=True, max_length=20, null=True, verbose_name=b"Zip"
+                    ),
+                ),
+                (
+                    "phone",
+                    localflavor.us.models.PhoneNumberField(blank=True, null=True),
+                ),
+                (
+                    "ssn",
+                    models.CharField(
+                        blank=True, max_length=16, null=True, verbose_name=b"SSN/EIN"
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Production companies',
+                "verbose_name_plural": "Production companies",
             },
         ),
         migrations.CreateModel(
-            name='ProductionPayment',
+            name="ProductionPayment",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('check_no', models.IntegerField(blank=True, null=True)),
-                ('paid', models.BooleanField(default=False)),
-                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='fidouche.ProductionCategory')),
-                ('company', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='production_payment', to='fidouche.ProductionCompany')),
-                ('show', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='production_payment', to='shows.Show')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=10)),
+                ("check_no", models.IntegerField(blank=True, null=True)),
+                ("paid", models.BooleanField(default=False)),
+                (
+                    "category",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="fidouche.ProductionCategory",
+                    ),
+                ),
+                (
+                    "company",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="production_payment",
+                        to="fidouche.ProductionCompany",
+                    ),
+                ),
+                (
+                    "show",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="production_payment",
+                        to="shows.Show",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['show__date'],
+                "ordering": ["show__date"],
             },
         ),
         migrations.CreateModel(
-            name='Quote',
+            name="Quote",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quote', models.TextField()),
-                ('source', models.CharField(blank=True, max_length=128, null=True)),
-                ('occasion', models.CharField(blank=True, max_length=256, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("quote", models.TextField()),
+                ("source", models.CharField(blank=True, max_length=128, null=True)),
+                ("occasion", models.CharField(blank=True, max_length=256, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='SubPayment',
+            name="SubPayment",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
-                ('paid', models.BooleanField(default=False)),
-                ('show', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='subpayment', to='shows.Show')),
-                ('sub', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='sub', to='members.Sub')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "amount",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, max_digits=10, null=True
+                    ),
+                ),
+                ("paid", models.BooleanField(default=False)),
+                (
+                    "show",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="subpayment",
+                        to="shows.Show",
+                    ),
+                ),
+                (
+                    "sub",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sub",
+                        to="members.Sub",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='TaxExpenseCategory',
+            name="TaxExpenseCategory",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=100, null=True)),
             ],
             options={
-                'verbose_name_plural': 'Tax Expense Categories',
+                "verbose_name_plural": "Tax Expense Categories",
             },
         ),
         migrations.CreateModel(
-            name='TourExpense',
+            name="TourExpense",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField(blank=True, null=True, verbose_name=b'Expense Date')),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('check_no', models.CharField(blank=True, max_length=100, null=True, verbose_name=b'Check #')),
-                ('notes', models.TextField(blank=True, null=True)),
-                ('receipt_img', models.FileField(blank=True, null=True, upload_to=b'receipts/')),
-                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='fidouche.ExpenseCategory')),
-                ('payee', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='fidouche.Payee')),
-                ('tour', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='shows.Tour')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "date",
+                    models.DateField(
+                        blank=True, null=True, verbose_name=b"Expense Date"
+                    ),
+                ),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=10)),
+                (
+                    "check_no",
+                    models.CharField(
+                        blank=True, max_length=100, null=True, verbose_name=b"Check #"
+                    ),
+                ),
+                ("notes", models.TextField(blank=True, null=True)),
+                (
+                    "receipt_img",
+                    models.FileField(blank=True, null=True, upload_to=b"receipts/"),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="fidouche.ExpenseCategory",
+                    ),
+                ),
+                (
+                    "payee",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="fidouche.Payee",
+                    ),
+                ),
+                (
+                    "tour",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="shows.Tour",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='productioncategory',
-            name='tax_category',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='production_category', to='fidouche.TaxExpenseCategory'),
+            model_name="productioncategory",
+            name="tax_category",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="production_category",
+                to="fidouche.TaxExpenseCategory",
+            ),
         ),
         migrations.AddField(
-            model_name='expensecategory',
-            name='tax_category',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='expense_category', to='fidouche.TaxExpenseCategory'),
+            model_name="expensecategory",
+            name="tax_category",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="expense_category",
+                to="fidouche.TaxExpenseCategory",
+            ),
         ),
         migrations.AddField(
-            model_name='expense',
-            name='new_category',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='expense_category', to='fidouche.ExpenseCategory', verbose_name=b'Category'),
+            model_name="expense",
+            name="new_category",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="expense_category",
+                to="fidouche.ExpenseCategory",
+                verbose_name=b"Category",
+            ),
         ),
         migrations.AddField(
-            model_name='expense',
-            name='payee',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='expense', to='fidouche.Payee'),
+            model_name="expense",
+            name="payee",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="expense",
+                to="fidouche.Payee",
+            ),
         ),
         migrations.AddField(
-            model_name='expense',
-            name='show',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='expense', to='shows.Show'),
+            model_name="expense",
+            name="show",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="expense",
+                to="shows.Show",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='subpayment',
-            unique_together=set([('show', 'sub')]),
+            name="subpayment",
+            unique_together=set([("show", "sub")]),
         ),
         migrations.AlterUniqueTogether(
-            name='payment',
-            unique_together=set([('show', 'member')]),
+            name="payment",
+            unique_together=set([("show", "member")]),
         ),
         migrations.AlterUniqueTogether(
-            name='commissionpayment',
-            unique_together=set([('show', 'agent')]),
+            name="commissionpayment",
+            unique_together=set([("show", "agent")]),
         ),
     ]

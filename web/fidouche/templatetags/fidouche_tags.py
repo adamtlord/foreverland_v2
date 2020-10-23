@@ -3,6 +3,7 @@ from django.forms import PasswordInput
 
 register = template.Library()
 
-@register.filter(name='is_password')
+
+@register.filter(name="is_password")
 def is_password(field):
-  return field.field.widget.__class__.__name__ == PasswordInput().__class__.__name__
+    return field.field.widget.__class__.__name__ == PasswordInput().__class__.__name__

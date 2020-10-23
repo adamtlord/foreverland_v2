@@ -10,6 +10,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+
 class AhmFiles(models.Model):
     id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=255L)
@@ -20,8 +21,10 @@ class AhmFiles(models.Model):
     access = models.CharField(max_length=6L)
     show_counter = models.IntegerField()
     link_label = models.CharField(max_length=255L)
+
     class Meta:
-        db_table = 'ahm_files'
+        db_table = "ahm_files"
+
 
 class WpBwbpsCategories(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -29,24 +32,30 @@ class WpBwbpsCategories(models.Model):
     category_id = models.BigIntegerField(null=True, blank=True)
     tag_name = models.CharField(max_length=250L, blank=True)
     updated_date = models.DateTimeField()
+
     class Meta:
-        db_table = 'wp_bwbps_categories'
+        db_table = "wp_bwbps_categories"
+
 
 class WpBwbpsCustomdata(models.Model):
     id = models.IntegerField(primary_key=True)
     image_id = models.IntegerField()
     updated_date = models.DateTimeField()
     bwbps_status = models.IntegerField()
+
     class Meta:
-        db_table = 'wp_bwbps_customdata'
+        db_table = "wp_bwbps_customdata"
+
 
 class WpBwbpsFavorites(models.Model):
     favorite_id = models.BigIntegerField(primary_key=True)
     image_id = models.BigIntegerField()
     user_id = models.BigIntegerField()
     updated_date = models.DateTimeField()
+
     class Meta:
-        db_table = 'wp_bwbps_favorites'
+        db_table = "wp_bwbps_favorites"
+
 
 class WpBwbpsFields(models.Model):
     field_id = models.IntegerField(primary_key=True)
@@ -63,8 +72,10 @@ class WpBwbpsFields(models.Model):
     date_format = models.IntegerField(null=True, blank=True)
     seq = models.IntegerField(null=True, blank=True)
     status = models.IntegerField()
+
     class Meta:
-        db_table = 'wp_bwbps_fields'
+        db_table = "wp_bwbps_fields"
+
 
 class WpBwbpsForms(models.Model):
     form_id = models.IntegerField(primary_key=True)
@@ -73,8 +84,10 @@ class WpBwbpsForms(models.Model):
     css = models.TextField(blank=True)
     fields_used = models.TextField(blank=True)
     category = models.IntegerField(null=True, blank=True)
+
     class Meta:
-        db_table = 'wp_bwbps_forms'
+        db_table = "wp_bwbps_forms"
+
 
 class WpBwbpsGalleries(models.Model):
     gallery_id = models.BigIntegerField(primary_key=True)
@@ -128,8 +141,10 @@ class WpBwbpsGalleries(models.Model):
     pext_insert_setid = models.IntegerField(null=True, blank=True)
     max_user_uploads = models.IntegerField(null=True, blank=True)
     uploads_period = models.IntegerField(null=True, blank=True)
+
     class Meta:
-        db_table = 'wp_bwbps_galleries'
+        db_table = "wp_bwbps_galleries"
+
 
 class WpBwbpsImageratings(models.Model):
     rating_id = models.BigIntegerField(primary_key=True)
@@ -142,8 +157,10 @@ class WpBwbpsImageratings(models.Model):
     comment = models.CharField(max_length=250L, blank=True)
     updated_date = models.DateTimeField()
     status = models.IntegerField()
+
     class Meta:
-        db_table = 'wp_bwbps_imageratings'
+        db_table = "wp_bwbps_imageratings"
+
 
 class WpBwbpsImages(models.Model):
     image_id = models.BigIntegerField(primary_key=True)
@@ -179,8 +196,10 @@ class WpBwbpsImages(models.Model):
     rating_cnt = models.BigIntegerField()
     votes_sum = models.BigIntegerField()
     votes_cnt = models.BigIntegerField()
+
     class Meta:
-        db_table = 'wp_bwbps_images'
+        db_table = "wp_bwbps_images"
+
 
 class WpBwbpsLayouts(models.Model):
     layout_id = models.IntegerField(primary_key=True)
@@ -196,8 +215,10 @@ class WpBwbpsLayouts(models.Model):
     post_type = models.CharField(max_length=20L, blank=True)
     fields_used = models.TextField(blank=True)
     footer_layout = models.TextField(blank=True)
+
     class Meta:
-        db_table = 'wp_bwbps_layouts'
+        db_table = "wp_bwbps_layouts"
+
 
 class WpBwbpsLookup(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -205,8 +226,10 @@ class WpBwbpsLookup(models.Model):
     value = models.CharField(max_length=255L, blank=True)
     label = models.CharField(max_length=255L, blank=True)
     seq = models.IntegerField(null=True, blank=True)
+
     class Meta:
-        db_table = 'wp_bwbps_lookup'
+        db_table = "wp_bwbps_lookup"
+
 
 class WpBwbpsParams(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -216,8 +239,10 @@ class WpBwbpsParams(models.Model):
     text_value = models.CharField(max_length=255L, blank=True)
     user_ip = models.CharField(max_length=30L, blank=True)
     updated_date = models.DateTimeField()
+
     class Meta:
-        db_table = 'wp_bwbps_params'
+        db_table = "wp_bwbps_params"
+
 
 class WpBwbpsRatingssummary(models.Model):
     rating_id = models.BigIntegerField(primary_key=True)
@@ -227,24 +252,34 @@ class WpBwbpsRatingssummary(models.Model):
     avg_rating = models.FloatField()
     rating_cnt = models.BigIntegerField()
     updated_date = models.DateTimeField()
+
     class Meta:
-        db_table = 'wp_bwbps_ratingssummary'
+        db_table = "wp_bwbps_ratingssummary"
+
 
 class WpCommentmeta(models.Model):
     meta_id = models.BigIntegerField(primary_key=True)
     comment_id = models.BigIntegerField()
     meta_key = models.CharField(max_length=255L, blank=True)
     meta_value = models.TextField(blank=True)
+
     class Meta:
-        db_table = 'wp_commentmeta'
+        db_table = "wp_commentmeta"
+
 
 class WpComments(models.Model):
-    comment_id = models.BigIntegerField(primary_key=True, db_column='comment_ID') # Field name made lowercase.
-    comment_post_id = models.BigIntegerField(db_column='comment_post_ID') # Field name made lowercase.
+    comment_id = models.BigIntegerField(
+        primary_key=True, db_column="comment_ID"
+    )  # Field name made lowercase.
+    comment_post_id = models.BigIntegerField(
+        db_column="comment_post_ID"
+    )  # Field name made lowercase.
     comment_author = models.TextField()
     comment_author_email = models.CharField(max_length=100L)
     comment_author_url = models.CharField(max_length=200L)
-    comment_author_ip = models.CharField(max_length=100L, db_column='comment_author_IP') # Field name made lowercase.
+    comment_author_ip = models.CharField(
+        max_length=100L, db_column="comment_author_IP"
+    )  # Field name made lowercase.
     comment_date = models.DateTimeField()
     comment_date_gmt = models.DateTimeField()
     comment_content = models.TextField()
@@ -254,8 +289,10 @@ class WpComments(models.Model):
     comment_type = models.CharField(max_length=20L)
     comment_parent = models.BigIntegerField()
     user_id = models.BigIntegerField()
+
     class Meta:
-        db_table = 'wp_comments'
+        db_table = "wp_comments"
+
 
 class WpGigpressArtists(models.Model):
     artist_id = models.IntegerField(primary_key=True)
@@ -263,8 +300,10 @@ class WpGigpressArtists(models.Model):
     artist_order = models.IntegerField(null=True, blank=True)
     artist_alpha = models.CharField(max_length=255L)
     artist_url = models.CharField(max_length=255L, blank=True)
+
     class Meta:
-        db_table = 'wp_gigpress_artists'
+        db_table = "wp_gigpress_artists"
+
 
 class WpGigpressShows(models.Model):
     show_id = models.IntegerField(primary_key=True)
@@ -273,7 +312,7 @@ class WpGigpressShows(models.Model):
     show_tour_id = models.IntegerField(null=True, blank=True)
     show_date = models.DateField()
     show_multi = models.IntegerField(null=True, blank=True)
-    show_time = models.TextField() # This field type is a guess.
+    show_time = models.TextField()  # This field type is a guess.
     show_expire = models.DateField()
     show_price = models.CharField(max_length=255L, blank=True)
     show_tix_url = models.CharField(max_length=255L, blank=True)
@@ -290,15 +329,19 @@ class WpGigpressShows(models.Model):
     show_venue_url = models.CharField(max_length=255L, blank=True)
     show_venue_phone = models.CharField(max_length=255L, blank=True)
     show_external_url = models.CharField(max_length=255L, blank=True)
+
     class Meta:
-        db_table = 'wp_gigpress_shows'
+        db_table = "wp_gigpress_shows"
+
 
 class WpGigpressTours(models.Model):
     tour_id = models.IntegerField(primary_key=True)
     tour_name = models.CharField(max_length=255L)
     tour_status = models.CharField(max_length=32L, blank=True)
+
     class Meta:
-        db_table = 'wp_gigpress_tours'
+        db_table = "wp_gigpress_tours"
+
 
 class WpGigpressVenues(models.Model):
     venue_id = models.IntegerField(primary_key=True)
@@ -310,8 +353,10 @@ class WpGigpressVenues(models.Model):
     venue_phone = models.CharField(max_length=255L, blank=True)
     venue_state = models.CharField(max_length=255L, blank=True)
     venue_postal_code = models.CharField(max_length=32L, blank=True)
+
     class Meta:
-        db_table = 'wp_gigpress_venues'
+        db_table = "wp_gigpress_venues"
+
 
 class WpLinks(models.Model):
     link_id = models.BigIntegerField(primary_key=True)
@@ -327,8 +372,10 @@ class WpLinks(models.Model):
     link_rel = models.CharField(max_length=255L)
     link_notes = models.TextField()
     link_rss = models.CharField(max_length=255L)
+
     class Meta:
-        db_table = 'wp_links'
+        db_table = "wp_links"
+
 
 class WpNggAlbum(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -338,8 +385,10 @@ class WpNggAlbum(models.Model):
     albumdesc = models.TextField(blank=True)
     sortorder = models.TextField()
     pageid = models.BigIntegerField()
+
     class Meta:
-        db_table = 'wp_ngg_album'
+        db_table = "wp_ngg_album"
+
 
 class WpNggGallery(models.Model):
     gid = models.BigIntegerField(primary_key=True)
@@ -351,8 +400,10 @@ class WpNggGallery(models.Model):
     pageid = models.BigIntegerField()
     previewpic = models.BigIntegerField()
     author = models.BigIntegerField()
+
     class Meta:
-        db_table = 'wp_ngg_gallery'
+        db_table = "wp_ngg_gallery"
+
 
 class WpNggPictures(models.Model):
     pid = models.BigIntegerField(primary_key=True)
@@ -366,27 +417,35 @@ class WpNggPictures(models.Model):
     exclude = models.IntegerField(null=True, blank=True)
     sortorder = models.BigIntegerField()
     meta_data = models.TextField(blank=True)
+
     class Meta:
-        db_table = 'wp_ngg_pictures'
+        db_table = "wp_ngg_pictures"
+
 
 class WpOptions(models.Model):
     option_id = models.BigIntegerField(primary_key=True)
     option_name = models.CharField(max_length=64L, unique=True)
     option_value = models.TextField()
     autoload = models.CharField(max_length=20L)
+
     class Meta:
-        db_table = 'wp_options'
+        db_table = "wp_options"
+
 
 class WpPostmeta(models.Model):
     meta_id = models.BigIntegerField(primary_key=True)
     post_id = models.BigIntegerField()
     meta_key = models.CharField(max_length=255L, blank=True)
     meta_value = models.TextField(blank=True)
+
     class Meta:
-        db_table = 'wp_postmeta'
+        db_table = "wp_postmeta"
+
 
 class WpPosts(models.Model):
-    id = models.BigIntegerField(primary_key=True, db_column='ID') # Field name made lowercase.
+    id = models.BigIntegerField(
+        primary_key=True, db_column="ID"
+    )  # Field name made lowercase.
     post_author = models.BigIntegerField()
     post_date = models.DateTimeField()
     post_date_gmt = models.DateTimeField()
@@ -409,8 +468,10 @@ class WpPosts(models.Model):
     post_type = models.CharField(max_length=20L)
     post_mime_type = models.CharField(max_length=100L)
     comment_count = models.BigIntegerField()
+
     class Meta:
-        db_table = 'wp_posts'
+        db_table = "wp_posts"
+
 
 class WpRandomtext(models.Model):
     randomtext_id = models.IntegerField(primary_key=True)
@@ -419,15 +480,19 @@ class WpRandomtext(models.Model):
     visible = models.CharField(max_length=3L)
     user_id = models.IntegerField()
     timestamp = models.DateTimeField()
+
     class Meta:
-        db_table = 'wp_randomtext'
+        db_table = "wp_randomtext"
+
 
 class WpTermRelationships(models.Model):
     object_id = models.BigIntegerField()
     term_taxonomy_id = models.BigIntegerField()
     term_order = models.IntegerField()
+
     class Meta:
-        db_table = 'wp_term_relationships'
+        db_table = "wp_term_relationships"
+
 
 class WpTermTaxonomy(models.Model):
     term_taxonomy_id = models.BigIntegerField(primary_key=True)
@@ -436,27 +501,35 @@ class WpTermTaxonomy(models.Model):
     description = models.TextField()
     parent = models.BigIntegerField()
     count = models.BigIntegerField()
+
     class Meta:
-        db_table = 'wp_term_taxonomy'
+        db_table = "wp_term_taxonomy"
+
 
 class WpTerms(models.Model):
     term_id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=200L)
     slug = models.CharField(max_length=200L, unique=True)
     term_group = models.BigIntegerField()
+
     class Meta:
-        db_table = 'wp_terms'
+        db_table = "wp_terms"
+
 
 class WpUsermeta(models.Model):
     umeta_id = models.BigIntegerField(primary_key=True)
     user_id = models.BigIntegerField()
     meta_key = models.CharField(max_length=255L, blank=True)
     meta_value = models.TextField(blank=True)
+
     class Meta:
-        db_table = 'wp_usermeta'
+        db_table = "wp_usermeta"
+
 
 class WpUsers(models.Model):
-    id = models.BigIntegerField(primary_key=True, db_column='ID') # Field name made lowercase.
+    id = models.BigIntegerField(
+        primary_key=True, db_column="ID"
+    )  # Field name made lowercase.
     user_login = models.CharField(max_length=60L)
     user_pass = models.CharField(max_length=64L)
     user_nicename = models.CharField(max_length=50L)
@@ -466,31 +539,39 @@ class WpUsers(models.Model):
     user_activation_key = models.CharField(max_length=60L)
     user_status = models.IntegerField()
     display_name = models.CharField(max_length=250L)
+
     class Meta:
-        db_table = 'wp_users'
+        db_table = "wp_users"
+
 
 class WpWpb2DExcludedFiles(models.Model):
     file = models.CharField(max_length=255L, unique=True)
     isdir = models.IntegerField()
+
     class Meta:
-        db_table = 'wp_wpb2d_excluded_files'
+        db_table = "wp_wpb2d_excluded_files"
+
 
 class WpWpb2DOptions(models.Model):
     name = models.CharField(max_length=50L, unique=True)
     value = models.CharField(max_length=255L)
+
     class Meta:
-        db_table = 'wp_wpb2d_options'
+        db_table = "wp_wpb2d_options"
+
 
 class WpWpb2DPremiumExtensions(models.Model):
     name = models.CharField(max_length=50L, unique=True)
     file = models.CharField(max_length=255L)
+
     class Meta:
-        db_table = 'wp_wpb2d_premium_extensions'
+        db_table = "wp_wpb2d_premium_extensions"
+
 
 class WpWpb2DProcessedFiles(models.Model):
     file = models.CharField(max_length=255L, unique=True)
     offset = models.IntegerField()
     uploadid = models.CharField(max_length=50L, blank=True)
-    class Meta:
-        db_table = 'wp_wpb2d_processed_files'
 
+    class Meta:
+        db_table = "wp_wpb2d_processed_files"

@@ -9,83 +9,112 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('fidouche', '0002_fiduciary_fiduciarypayment'),
+        ("fidouche", "0002_fiduciary_fiduciarypayment"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='agent',
-            name='ssn',
-            field=models.CharField(blank=True, max_length=16, null=True, verbose_name='SSN/EIN'),
+            model_name="agent",
+            name="ssn",
+            field=models.CharField(
+                blank=True, max_length=16, null=True, verbose_name="SSN/EIN"
+            ),
         ),
         migrations.AlterField(
-            model_name='agent',
-            name='zip_code',
-            field=models.CharField(blank=True, max_length=20, null=True, verbose_name='Zip'),
+            model_name="agent",
+            name="zip_code",
+            field=models.CharField(
+                blank=True, max_length=20, null=True, verbose_name="Zip"
+            ),
         ),
         migrations.AlterField(
-            model_name='expense',
-            name='check_no',
-            field=models.CharField(blank=True, max_length=100, null=True, verbose_name='Check #'),
+            model_name="expense",
+            name="check_no",
+            field=models.CharField(
+                blank=True, max_length=100, null=True, verbose_name="Check #"
+            ),
         ),
         migrations.AlterField(
-            model_name='expense',
-            name='new_category',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='expense_category', to='fidouche.ExpenseCategory', verbose_name='Category'),
+            model_name="expense",
+            name="new_category",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="expense_category",
+                to="fidouche.ExpenseCategory",
+                verbose_name="Category",
+            ),
         ),
         migrations.AlterField(
-            model_name='expense',
-            name='receipt_img',
-            field=models.FileField(blank=True, null=True, upload_to='receipts/'),
+            model_name="expense",
+            name="receipt_img",
+            field=models.FileField(blank=True, null=True, upload_to="receipts/"),
         ),
         migrations.AlterField(
-            model_name='fiduciary',
-            name='ssn',
-            field=models.CharField(blank=True, max_length=16, null=True, verbose_name='SSN/EIN'),
+            model_name="fiduciary",
+            name="ssn",
+            field=models.CharField(
+                blank=True, max_length=16, null=True, verbose_name="SSN/EIN"
+            ),
         ),
         migrations.AlterField(
-            model_name='fiduciary',
-            name='zip_code',
-            field=models.CharField(blank=True, max_length=20, null=True, verbose_name='Zip'),
+            model_name="fiduciary",
+            name="zip_code",
+            field=models.CharField(
+                blank=True, max_length=20, null=True, verbose_name="Zip"
+            ),
         ),
         migrations.AlterField(
-            model_name='income',
-            name='check_no',
-            field=models.CharField(blank=True, max_length=100, null=True, verbose_name='Check #'),
+            model_name="income",
+            name="check_no",
+            field=models.CharField(
+                blank=True, max_length=100, null=True, verbose_name="Check #"
+            ),
         ),
         migrations.AlterField(
-            model_name='payee',
-            name='ssn',
-            field=models.CharField(blank=True, max_length=16, null=True, verbose_name='SSN#'),
+            model_name="payee",
+            name="ssn",
+            field=models.CharField(
+                blank=True, max_length=16, null=True, verbose_name="SSN#"
+            ),
         ),
         migrations.AlterField(
-            model_name='payee',
-            name='zip_code',
-            field=models.CharField(blank=True, max_length=20, null=True, verbose_name='Zip'),
+            model_name="payee",
+            name="zip_code",
+            field=models.CharField(
+                blank=True, max_length=20, null=True, verbose_name="Zip"
+            ),
         ),
         migrations.AlterField(
-            model_name='productioncompany',
-            name='ssn',
-            field=models.CharField(blank=True, max_length=16, null=True, verbose_name='SSN/EIN'),
+            model_name="productioncompany",
+            name="ssn",
+            field=models.CharField(
+                blank=True, max_length=16, null=True, verbose_name="SSN/EIN"
+            ),
         ),
         migrations.AlterField(
-            model_name='productioncompany',
-            name='zip_code',
-            field=models.CharField(blank=True, max_length=20, null=True, verbose_name='Zip'),
+            model_name="productioncompany",
+            name="zip_code",
+            field=models.CharField(
+                blank=True, max_length=20, null=True, verbose_name="Zip"
+            ),
         ),
         migrations.AlterField(
-            model_name='tourexpense',
-            name='check_no',
-            field=models.CharField(blank=True, max_length=100, null=True, verbose_name='Check #'),
+            model_name="tourexpense",
+            name="check_no",
+            field=models.CharField(
+                blank=True, max_length=100, null=True, verbose_name="Check #"
+            ),
         ),
         migrations.AlterField(
-            model_name='tourexpense',
-            name='date',
-            field=models.DateField(blank=True, null=True, verbose_name='Expense Date'),
+            model_name="tourexpense",
+            name="date",
+            field=models.DateField(blank=True, null=True, verbose_name="Expense Date"),
         ),
         migrations.AlterField(
-            model_name='tourexpense',
-            name='receipt_img',
-            field=models.FileField(blank=True, null=True, upload_to='receipts/'),
+            model_name="tourexpense",
+            name="receipt_img",
+            field=models.FileField(blank=True, null=True, upload_to="receipts/"),
         ),
     ]

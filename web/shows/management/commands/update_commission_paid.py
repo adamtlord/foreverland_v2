@@ -5,6 +5,7 @@ from shows.models import Show
 
 now = datetime.now()
 
+
 class Command(BaseCommand):
     def handle(self, *args, **options):
         shows = Show.objects.filter(date__lte=now)
@@ -12,6 +13,3 @@ class Command(BaseCommand):
             if show.commission and not show.commission_withheld:
                 show.commission_paid = True
                 show.save()
-
-
-
