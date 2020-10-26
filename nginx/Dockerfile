@@ -1,3 +1,4 @@
-FROM nginx:stable-alpine
+FROM nginx:1.19.0-alpine
 
-ADD sites-enabled/ /etc/nginx/sites-enabled
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d
