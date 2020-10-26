@@ -11,6 +11,9 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "foreverland.settings")
+os.environ.setdefault(
+    "DJANGO_SETTINGS_MODULE",
+    "foreverland.settings.prod",
+)
 os.environ["ENV"] = "prod"
 application = get_wsgi_application()

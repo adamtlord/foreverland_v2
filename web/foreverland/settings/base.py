@@ -4,7 +4,7 @@ import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_NAME = 'foreverland'
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
+SECRET_KEY = os.environ.get("SECRET_KEY")
 WSGI_APPLICATION = 'foreverland.wsgi.application'
 
 TIME_ZONE = 'America/Los_Angeles'

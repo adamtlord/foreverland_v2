@@ -1,0 +1,49 @@
+version: "3"
+
+volumes:
+  base-data:
+
+services:
+  nginx:
+    container_name: nginx
+    restart: always
+    build: ./nginx/
+    ports:
+      - "80:80"
+    volumes_from:
+      - web
+    links:
+      - web:web
+
+  db:
+    container_name: foreverland_db
+    image: mysql:5.7
+    restart: always
+    env_file:
+      - .env
+    expose:
+      - "3306"
+    volumes:
+      - ./db:/var/lib/mysql
+      - ./data:/docker-entrypoint-initdb.d
+
+  web:
+    container_name: foreverland
+    restart: always
+    build:
+      context: ./web
+      dockerfile: ./Dockerfile
+    expose:
+      - "8000"
+    links:
+      - db:db
+    command: /usr/local/bin/gunicorn foreverland.wsgi:application -w 2 -b :8000
+    # command: bash -c "echo 'django is ready' && tail -f /dev/null"
+    env_file:
+      - .env
+    environment:
+      - ENV=prod
+    volumes:
+      - base-data:/data
+      - ./web/:/code
+
