@@ -13,13 +13,13 @@ services:
     expose:
       - 8000
     env_file:
-      - .env
+      - .env.prod
     depends_on:
       - db
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
-    command: gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE='foreverland.settings.prod'
     environment:
       - ENV=prod
   db:
@@ -27,18 +27,19 @@ services:
     image: mysql:5.7
     restart: always
     env_file:
-      - .env
+      - .env.prod
     expose:
       - "3306"
     volumes:
-      - ./db_data:/var/lib/mysql
+      - ./db:/var/lib/mysql
       - ./data:/docker-entrypoint-initdb.d
   nginx:
     container_name: nginx
     restart: always
     build: ./nginx/
     ports:
-      - 1337:80
+      - 80:80
+      - 443:443
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles

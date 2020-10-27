@@ -12,10 +12,10 @@ ALLOWED_HOSTS = [
     'www.foreverland.com',
 ]
 ADMINS = ['adam@foreverland.com']
-
+SECRET_KEY = os.environ.get('SECRET_KEY')
 # SSH_HOSTS = 'adamlord.webfactional.com'
-STATIC_URL = '%sstatic/' % WWW_ROOT
-# STATIC_ROOT = '/home/adamlord/webapps/foreverland_staticserve'
+STATIC_URL = "/staticfiles/"
+# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_ROOT = STATIC_URL
 MEDIA_URL = '%suploads/' % WWW_ROOT
 MEDIA_ROOT = MEDIA_URL

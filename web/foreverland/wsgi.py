@@ -15,5 +15,5 @@ os.environ.setdefault(
     "DJANGO_SETTINGS_MODULE",
     "foreverland.settings.prod",
 )
-os.environ["ENV"] = "prod"
+
 application = get_wsgi_application()
