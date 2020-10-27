@@ -10,4 +10,4 @@ dist
 /web/foreverland/_settings.py
 /web/foreverland/settings/base.py
 /web/foreverland/settings/prod.py
-.env
+.env*
