@@ -32,11 +32,10 @@ services:
       - ./data:/docker-entrypoint-initdb.d
   nginx:
     container_name: nginx
+    image: nginx:1.19.0-alpine
     restart: always
-    build: ./nginx/
     ports:
       - 80:80
-      - 443:443
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
