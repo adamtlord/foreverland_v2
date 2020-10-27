@@ -1,7 +1,6 @@
 version: "3.7"
 
 volumes:
-  db_data:
   static_volume:
   media_volume:
 
@@ -20,8 +19,6 @@ services:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
     command: gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE='foreverland.settings.prod'
-    environment:
-      - ENV=prod
   db:
     container_name: foreverland_db
     image: mysql:5.7
