@@ -1,7 +1,7 @@
 FROM python:3.6
 # create the appropriate directories
-ENV HOME=/home/app
-ENV APP_HOME=/home/app/web
+ENV HOME=/home/ubuntu/app
+ENV APP_HOME=/home/ubuntu/app/web
 RUN mkdir $APP_HOME
 RUN mkdir $APP_HOME/staticfiles
 RUN mkdir $APP_HOME/mediafiles
