@@ -34,6 +34,7 @@ services:
     container_name: nginx
     image: nginx:1.19.0-alpine
     restart: always
+    build: ./nginx/
     ports:
       - 80:80
     volumes:
