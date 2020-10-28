@@ -34,10 +34,10 @@ services:
     container_name: nginx
     image: nginx:1.19.0-alpine
     restart: always
-    build: ./nginx/
     ports:
       - 80:80
     volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
     depends_on:
