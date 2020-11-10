@@ -18,7 +18,7 @@ services:
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
-    command: gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE='foreverland.settings.prod'
+    command: bash -c "python3 /code/manage.py collectstatic --noinput && python3 /code/manage.py migrate && gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE='foreverland.settings.prod'"
   db:
     container_name: foreverland_db
     image: mysql:5.7
@@ -30,15 +30,25 @@ services:
     volumes:
       - ./db:/var/lib/mysql
       - ./data:/docker-entrypoint-initdb.d
-  nginx:
-    container_name: nginx
-    image: nginx:1.19.0-alpine
-    restart: always
-    ports:
-      - 80:80
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - static_volume:/home/app/web/staticfiles
-      - media_volume:/home/app/web/mediafiles
-    depends_on:
-      - web
+  proxy:
+    image: tivix/docker-nginx:v11
+    environment:
+      - UPSTREAMS=/:web:8000
+      - NGINX_SERVER_NAME=  # without this, /admin redirects to https://_/
+      - STATICS=/static:/data/staticserve
+      - HTTPS_REDIRECT=false
+    labels:
+      com.tivix.container.name: foreverland-proxy
+      com.tivix.env: prod
+  # nginx:
+  #   container_name: nginx
+  #   image: nginx:1.19.0-alpine
+  #   restart: always
+  #   ports:
+  #     - 80:80
+  #   volumes:
+  #     - ./nginx/conf.d:/etc/nginx/conf.d
+  #     - static_volume:/home/app/web/staticfiles
+  #     - media_volume:/home/app/web/mediafiles
+  #   depends_on:
+  #     - web
