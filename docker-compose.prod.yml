@@ -13,13 +13,14 @@ services:
       - 8000
     env_file:
       - .env.prod
+    environment:
+      - DJANGO_SETTINGS_MODULE=foreverland.settings.prod
     depends_on:
       - db
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
-    command: gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE='foreverland.settings.prod'
-    # command: bash -c "python3 /code/manage.py collectstatic --noinput && python3 /code/manage.py migrate && gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE='foreverland.settings.prod'"
+    command: bash -c "python3 manage.py collectstatic --noinput && python3 manage.py migrate && gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000"
   db:
     container_name: foreverland_db
     image: mysql:5.7
@@ -41,15 +42,3 @@ services:
     labels:
       com.tivix.container.name: foreverland-proxy
       com.tivix.env: prod
-  # nginx:
-  #   container_name: nginx
-  #   image: nginx:1.19.0-alpine
-  #   restart: always
-  #   ports:
-  #     - 80:80
-  #   volumes:
-  #     - ./nginx/conf.d:/etc/nginx/conf.d
-  #     - static_volume:/home/app/web/staticfiles
-  #     - media_volume:/home/app/web/mediafiles
-  #   depends_on:
-  #     - web
