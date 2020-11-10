@@ -18,7 +18,8 @@ services:
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
-    command: bash -c "python3 /code/manage.py collectstatic --noinput && python3 /code/manage.py migrate && gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE='foreverland.settings.prod'"
+    command: gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE='foreverland.settings.prod'
+    # command: bash -c "python3 /code/manage.py collectstatic --noinput && python3 /code/manage.py migrate && gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE='foreverland.settings.prod'"
   db:
     container_name: foreverland_db
     image: mysql:5.7
