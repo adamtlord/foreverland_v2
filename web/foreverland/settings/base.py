@@ -111,7 +111,6 @@ AUTHENTICATION_BACKENDS = [
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
-
 if 'test' in sys.argv:
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3', 'PASSWORD': '', 'USER': ''}
 

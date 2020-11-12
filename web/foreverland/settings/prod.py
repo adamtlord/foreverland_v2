@@ -5,6 +5,7 @@ IS_PROD = True
 DEBUG = False
 DOMAIN_NAME = 'foreverland.com'
 WWW_ROOT = 'http://%s/' % DOMAIN_NAME
+BASE_DIR = '/home/ubuntu/app'
 
 ALLOWED_HOSTS = [
     '23.239.20.171',
@@ -16,14 +17,14 @@ ADMINS = ['adam@foreverland.com']
 SECRET_KEY = os.environ.get('SECRET_KEY')
 # SSH_HOSTS = 'adamlord.webfactional.com'
 STATIC_URL = "/staticfiles/"
-# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATIC_ROOT = STATIC_URL
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 MEDIA_URL = '%suploads/' % WWW_ROOT
 MEDIA_ROOT = MEDIA_URL
-# MEDIA_ROOT = '/home/adamlord/webapps/foreverland_uploadsserve'
-# STATICFILES_DIRS = [
-#     '/home/adamlord/webapps/foreverland_django/foreverland/static'
-# ]
+MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+STATICFILES_DIRS = [
+    '/home/ubuntu/app/staticfiles'
+]
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
