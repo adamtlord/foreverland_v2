@@ -42,3 +42,5 @@ services:
     labels:
       com.tivix.container.name: foreverland-proxy
       com.tivix.env: prod
+    ports:
+      - "0.0.0.0:80:80"
