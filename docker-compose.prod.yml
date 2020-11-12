@@ -52,10 +52,9 @@ services:
     build: ./nginx
     ports:
       - "0.0.0.0:80:80"
-    labels:
-      com.tivix.container.name: foreverland-proxy
-      com.tivix.env: prod
     volumes:
       - static_volume:/home/ubuntu/app/staticfiles
       - media_volume:/home/ubuntu/app/mediafiles
+    depends_on:
+      - web
 
