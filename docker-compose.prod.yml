@@ -37,8 +37,8 @@ services:
     environment:
       - UPSTREAMS=/:web:8000
       - NGINX_SERVER_NAME=  # without this, /admin redirects to https://_/
-      - STATICS=static_volume:/home/ubuntu/app/staticfiles
-      - UPLOADS=media_volume:/home/ubuntu/app/mediafiles
+      - STATICS=/static:/home/ubuntu/app/staticfiles
+      - UPLOADS=/uploads:/home/ubuntu/app/mediafiles
       - HTTPS_REDIRECT=false
     labels:
       com.tivix.container.name: foreverland-proxy
