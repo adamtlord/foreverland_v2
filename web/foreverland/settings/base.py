@@ -21,6 +21,8 @@ IS_DEV = False
 IS_STAGING = False
 IS_PROD = False
 
+SITE_ID = 1
+
 COMPRESS_ENABLED = False
 
 ENV = os.getenv('ENV')
