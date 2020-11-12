@@ -22,9 +22,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 MEDIA_URL = '%suploads/' % WWW_ROOT
 MEDIA_ROOT = MEDIA_URL
 MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
-STATICFILES_DIRS = [
-    '/home/ubuntu/app/staticfiles'
-]
+# STATICFILES_DIRS = [
+#     '/home/ubuntu/app/staticfiles'
+# ]
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
