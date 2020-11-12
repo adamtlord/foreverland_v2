@@ -32,19 +32,30 @@ services:
     volumes:
       - ./db:/var/lib/mysql
       - ./data:/docker-entrypoint-initdb.d
+  # proxy:
+  #   image: tivix/docker-nginx:v11
+  #   environment:
+  #     - UPSTREAMS=/:web:8000
+  #     - NGINX_SERVER_NAME=  # without this, /admin redirects to https://_/
+  #     - STATICS=/static:/home/ubuntu/app/staticfiles
+  #     - UPLOADS=/uploads:/home/ubuntu/app/mediafiles
+  #     - HTTPS_REDIRECT=false
+  #   labels:
+  #     com.tivix.container.name: foreverland-proxy
+  #     com.tivix.env: prod
+  #   volumes:
+  #     - static_volume:/home/ubuntu/app/staticfiles
+  #     - media_volume:/home/ubuntu/app/mediafiles
+  #   ports:
+  #     - "0.0.0.0:80:80"
   proxy:
-    image: tivix/docker-nginx:v11
-    environment:
-      - UPSTREAMS=/:web:8000
-      - NGINX_SERVER_NAME=  # without this, /admin redirects to https://_/
-      - STATICS=/static:/home/ubuntu/app/staticfiles
-      - UPLOADS=/uploads:/home/ubuntu/app/mediafiles
-      - HTTPS_REDIRECT=false
-    labels:
-      com.tivix.container.name: foreverland-proxy
-      com.tivix.env: prod
+    image: nginx
+    ports:
+      - "0.0.0.0:80:80"
     volumes:
       - static_volume:/home/ubuntu/app/staticfiles
       - media_volume:/home/ubuntu/app/mediafiles
-    ports:
-      - "0.0.0.0:80:80"
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - web
+
