@@ -14,7 +14,6 @@ COMPRESS = False
 
 DOMAIN_NAME = "localhost:8000"
 WWW_ROOT = "http://%s/" % DOMAIN_NAME
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 SITE_ID = 1
 
