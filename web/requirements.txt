@@ -12,7 +12,7 @@ djangorestframework==3.8.2
 Fabric==1.12.0
 mysqlclient==2.0.1
 python-memcached==1.59
-Pillow==4.1.1
+Pillow==7.1.0
 pycryptodome
 simplejson==3.8.2
 sorl-thumbnail==12.3
