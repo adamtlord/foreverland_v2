@@ -18,9 +18,9 @@ services:
     depends_on:
       - db
     volumes:
-      - static_volume:/home/app/web/staticfiles
-      - media_volume:/home/app/web/mediafiles
-    command: bash -c "python3 manage.py collectstatic --noinput && python3 manage.py migrate && gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000"
+      - static_volume:/home/ubuntu/app/staticfiles
+      - media_volume:/home/ubuntu/app/mediafiles
+    command: bash -c "python3 manage.py collectstatic --noinput && python3 manage.py compress && python3 manage.py migrate && gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000"
   db:
     container_name: foreverland_db
     image: mysql:5.7
@@ -37,10 +37,14 @@ services:
     environment:
       - UPSTREAMS=/:web:8000
       - NGINX_SERVER_NAME=  # without this, /admin redirects to https://_/
-      - STATICS=/static:/data/staticserve
+      - STATICS=static_volume:/home/ubuntu/app/staticfiles
+      - UPLOADS=media_volume:/home/ubuntu/app/mediafiles
       - HTTPS_REDIRECT=false
     labels:
       com.tivix.container.name: foreverland-proxy
       com.tivix.env: prod
+    volumes:
+      - static_volume:/home/ubuntu/app/staticfiles
+      - media_volume:/home/ubuntu/app/mediafiles
     ports:
       - "0.0.0.0:80:80"
