@@ -7,6 +7,7 @@ DOMAIN_NAME = 'foreverland.com'
 WWW_ROOT = 'http://%s/' % DOMAIN_NAME
 
 ALLOWED_HOSTS = [
+    '23.239.20.171',
     'foreverland.com',
     '.foreverland.com',
     'www.foreverland.com',
