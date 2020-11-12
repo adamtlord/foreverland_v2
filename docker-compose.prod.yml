@@ -49,12 +49,13 @@ services:
   #   ports:
   #     - "0.0.0.0:80:80"
   proxy:
-    build: ./nginx
+    image: nginx:1.19.0-alpine
     ports:
       - "0.0.0.0:80:80"
     volumes:
       - static_volume:/home/ubuntu/app/staticfiles
       - media_volume:/home/ubuntu/app/mediafiles
+      - ./nginx/nginx.conf:/etc/nginx/conf.d
     depends_on:
       - web
 
