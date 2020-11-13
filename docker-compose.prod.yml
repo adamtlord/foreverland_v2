@@ -33,6 +33,7 @@ services:
       - ./db:/var/lib/mysql
       - ./data:/docker-entrypoint-initdb.d
   proxy:
+    container_name: nginx
     image: nginx
     ports:
       - "0.0.0.0:80:80"
@@ -47,6 +48,7 @@ services:
       - web
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
   certbot:
+    container_name: certbot
     image: certbot/certbot
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt
