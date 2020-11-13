@@ -32,30 +32,23 @@ services:
     volumes:
       - ./db:/var/lib/mysql
       - ./data:/docker-entrypoint-initdb.d
-  # proxy:
-  #   image: tivix/docker-nginx:v11
-  #   environment:
-  #     - UPSTREAMS=/:web:8000
-  #     - NGINX_SERVER_NAME=  # without this, /admin redirects to https://_/
-  #     - STATICS=/static:/home/ubuntu/app/staticfiles
-  #     - UPLOADS=/uploads:/home/ubuntu/app/mediafiles
-  #     - HTTPS_REDIRECT=false
-  #   labels:
-  #     com.tivix.container.name: foreverland-proxy
-  #     com.tivix.env: prod
-  #   volumes:
-  #     - static_volume:/home/ubuntu/app/staticfiles
-  #     - media_volume:/home/ubuntu/app/mediafiles
-  #   ports:
-  #     - "0.0.0.0:80:80"
   proxy:
     image: nginx
     ports:
       - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
     volumes:
       - static_volume:/home/ubuntu/app/staticfiles
       - media_volume:/home/ubuntu/app/mediafiles
       - ./nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
     depends_on:
       - web
-
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
