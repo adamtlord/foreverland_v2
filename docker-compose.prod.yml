@@ -20,7 +20,6 @@ services:
     volumes:
       - static_volume:/home/ubuntu/app/staticfiles
       - media_volume:/home/ubuntu/app/mediafiles
-      - ./web/uploads:/home/ubuntu/app/mediafiles
     command: bash -c "python3 manage.py collectstatic --noinput && python3 manage.py compress && python3 manage.py migrate && gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000"
   db:
     container_name: foreverland_db
