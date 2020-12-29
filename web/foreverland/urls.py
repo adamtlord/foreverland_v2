@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from django.views.generic.base import RedirectView
 from django.views.defaults import page_not_found, server_error
 from media.views import downloads, behind_the_music, upload
+from shows.views import TheWorksView
 
 from django.contrib import admin
 
@@ -29,13 +30,13 @@ urlpatterns = [
     url(r"^news-press/", RedirectView.as_view(url="/", permanent=True)),
     url(r"^quotes/", RedirectView.as_view(url="/about#quotes", permanent=True)),
     url(
-        r"^catalog/",
-        RedirectView.as_view(url="http://v2.foreverland.com/catalog/", permanent=True),
+        r"^the-works/",
+        TheWorksView.as_view(), name="the_works"
     ),
-    url(
-        r"^theworks/",
-        RedirectView.as_view(url="http://v2.foreverland.com/theworks/", permanent=True),
-    ),
+    # url(
+    #     r"^catalog/",
+    #     RedirectView.as_view(url="http://v2.foreverland.com/catalog/", permanent=True),
+    # ),
 ]
 
 if settings.DEBUG:
