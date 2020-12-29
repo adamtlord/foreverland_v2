@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block bodyclass %}interior{% endblock %}
+{% block header_includes %}
+<style type="text/css">
+  .responsive-iframe-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 30px;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .responsive-iframe-container iframe,
+  .responsive-iframe-container object,
+  .responsive-iframe-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container">
+  <h2>There's so much shit here!</h2>
+  <div class="hidden-xs responsive-iframe-container">
+    <iframe
+      src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;bgcolor=%23ffffff&amp;ctz=America%2FLos_Angeles&amp;src=YWRhbUBmb3JldmVybGFuZHNmLmNvbQ&amp;src=ZjJha2FyaDZjb2d2MHY5Z2E0aDdqNjhtZ2tAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&amp;src=bWYyM20xMmtwajIxNHR2NWJjOG5mMjNiZG9tZXFwaDhAaW1wb3J0LmNhbGVuZGFyLmdvb2dsZS5jb20&amp;color=%234285F4&amp;color=%23D50000&amp;color=%233F51B5&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=MONTH"
+      style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+  </div>
+  <div class="visible-xs">
+    <iframe
+      src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;bgcolor=%23ffffff&amp;ctz=America%2FLos_Angeles&amp;src=YWRhbUBmb3JldmVybGFuZHNmLmNvbQ&amp;src=ZjJha2FyaDZjb2d2MHY5Z2E0aDdqNjhtZ2tAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&amp;src=bWYyM20xMmtwajIxNHR2NWJjOG5mMjNiZG9tZXFwaDhAaW1wb3J0LmNhbGVuZGFyLmdvb2dsZS5jb20&amp;color=%234285F4&amp;color=%23D50000&amp;color=%233F51B5&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=AGENDA"
+      style="border-width:0" width="280" height="600" frameborder="0" scrolling="no"></iframe>
+  </div>
+  {% endblock %}
