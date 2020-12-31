@@ -1,5 +1,31 @@
 from django.conf.urls import url
-from fidouche.views import *
+from fidouche.views import (
+    financial_dashboard,
+    gigs_by_year,
+    gigs_year_over_year,
+    gig_finances,
+    gig_finances_view,
+    tour_list,
+    tour_detail,
+    expenses_list,
+    all_expenses_list,
+    expense_details,
+    expense_create,
+    expense_delete,
+    income_list,
+    all_income_list,
+    income_details,
+    income_create,
+    income_delete,
+    finance_reports,
+    tax_reports,
+    member_payments,
+    sub_payments,
+    vendor_payments,
+    production_payments,
+    venue_map,
+    venue_map_data,
+)
 
 urlpatterns = [
     url(r"^$", financial_dashboard, {}, name="financial_dashboard"),

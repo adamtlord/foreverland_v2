@@ -68,7 +68,7 @@ def financial_dashboard(request, template="fidouche/dashboard.html"):
 
     quotecount = Quote.objects.all().count()
     rslice = random.random() * (quotecount - 1)
-    quotes = Quote.objects.all()[rslice : rslice + 1]
+    quotes = Quote.objects.all()[rslice: rslice + 1]
 
     ytd_gross = []
     ytd_net = []
@@ -160,9 +160,11 @@ def gigs_by_year(request, year=current_year, template="fidouche/gigs_by_year.htm
             net.append(gig.net)
         if gig.payout:
             payout.append(gig.payout)
-        gig.all_expenses = dict(
-            gig.production_costs.items() + gig.expenses.items() + gig.tour_costs.items()
-        )
+
+        gig.all_expenses = {
+            **gig.production_costs, **gig.expenses,  **gig.tour_costs
+            }
+
         sum_all_expenses.append(gig.all_expenses)
 
     # http://stackoverflow.com/questions/19461747/sum-corresponding-elements-of-multiple-python-dictionaries
@@ -243,9 +245,9 @@ def gigs_year_over_year(request, template="fidouche/gigs_year_over_year.html"):
                 players.append(gig.payout * 14)
         if gig.commission:
             commission.append(gig.commission)
-        gig.all_expenses = dict(
-            gig.production_costs.items() + gig.expenses.items() + gig.tour_costs.items()
-        )
+        gig.all_expenses = {
+            **gig.production_costs, **gig.expenses, **gig.tour_costs
+        }
         sum_all_expenses.append(gig.all_expenses)
 
     d["all_gigs"] = gigs
