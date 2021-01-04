@@ -8,7 +8,6 @@ from fidouche.models import (
     TourExpense,
     ProductionPayment,
     Income,
-    Fiduciary,
     FiduciaryPayment,
 )
 
