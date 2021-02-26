@@ -1,7 +1,7 @@
 from django.conf.urls import url
-from django.views.generic import TemplateView
+from setter.views import SetterJumpoffView
 
 
 urlpatterns = [
-    url(r"^$", TemplateView.as_view(template_name='setter/index.html'), name='setter_base')
+    url(r"^$", SetterJumpoffView.as_view(template_name='setter/index.html'), name='setter_jumpoff')
 ]

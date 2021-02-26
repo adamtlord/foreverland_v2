@@ -1,6 +1,5 @@
 const BundleTracker = require('webpack-bundle-tracker');
 
-// process.env.NODE_ENV = 'production';
 const DEV = process.env.NODE_ENV !== 'production';
 
 let vueConfig = {
@@ -9,12 +8,11 @@ let vueConfig = {
     host: '0.0.0.0',
     port: 8080,
     hot: false,
+    public: '0.0.0.0:8080'
   },
-  publicPath: DEV ? 'http://localhost:8080/' : '/static/dist/',
-  // publicPath: 'http://0.0.0.0:8080/',  // for local, note the url/path you'll access this like cdn  assests
-  // publicPath: '/static/dist/',  // for prod testing
 
-  outputDir: './static/dist/', // just build and throw it in static
+  publicPath: DEV ? 'http://localhost:8080/' : '/static/dist/',
+  outputDir: './static/dist/',
 
   chainWebpack: (config) => {
     // if we don't want to gen output of html

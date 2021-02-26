@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-
+from django.views.generic import TemplateView
 from shows.models import Show
 from songs.models import Song, Setlist, SetlistSong
 
@@ -30,3 +30,15 @@ def view_setlist(request, gig_id=None, template="setter/view_setlist.html"):
 
     d = {"gig": gig, "setsongs": setsongs}
     return render(request, template, d)
+
+
+class SetterJumpoffView(TemplateView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['extra_context'] = {
+            'foo': 1,
+            'bar': 'blah',
+            'django': 'django'
+        }
+
+        return context

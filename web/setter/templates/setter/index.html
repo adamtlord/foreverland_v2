@@ -6,8 +6,16 @@
     <noscript>
         <strong>Please enable JavaScript to continue.</strong>
     </noscript>
-    <div id="thejumpoff"></div>
-    {{ request.user }}
+    <div id="thejumpoff">Protect ya neck</div>
+    <div style="background-color: blueviolet; color: white; font-family: monospace; font-size: 1.5rem; padding: .5rem 1rem;">
+        <p>Django context:</p>
+        <ul>
+            <li>user: {{ request.user }}</li>
+            <li>path: {{ request.path }}</li>
+            {% for key, value in extra_context.items %}
+        <li>{{ key }}: {{ value }}</li>
+        {% endfor %}</ul>
+    </div>
 {% endblock %}
 {% block bundlescripts %}
     {% render_bundle 'main' attrs="rel=preload" %}
