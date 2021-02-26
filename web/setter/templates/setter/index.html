@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load render_bundle from webpack_loader %}
+
+{% block head %}{% endblock %}
+{% block app %}
+    <noscript>
+        <strong>Please enable JavaScript to continue.</strong>
+    </noscript>
+    <div id="thejumpoff"></div>
+    {{ request.user }}
+{% endblock %}
+{% block bundlescripts %}
+    {% render_bundle 'main' attrs="rel=preload" %}
+    {% render_bundle 'about' attrs="rel=preload" %}
+    {% render_bundle 'chunk-vendors' attrs="rel=preload" %}
+{% endblock %}
