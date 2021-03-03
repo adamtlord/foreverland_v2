@@ -13,7 +13,7 @@ admin.autodiscover()
 urlpatterns = [
     url(r"^", include("marketing.urls")),
     url(r"^accounts/", include("accounts.urls")),
-    url(r"^admin/", include(admin.site.urls)),
+    url(r"^admin/", admin.site.urls),
     url(r"^members/", include("members.urls")),
     url(r"^shows/", include("shows.urls")),
     url(r"^songs/", include("songs.urls")),
@@ -29,10 +29,7 @@ urlpatterns = [
     url(r"^song-list/", RedirectView.as_view(url="/songs", permanent=True)),
     url(r"^news-press/", RedirectView.as_view(url="/", permanent=True)),
     url(r"^quotes/", RedirectView.as_view(url="/about#quotes", permanent=True)),
-    url(
-        r"^the-works/",
-        TheWorksView.as_view(), name="the_works"
-    ),
+    url(r"^the-works/", TheWorksView.as_view(), name="the_works"),
     # url(
     #     r"^catalog/",
     #     RedirectView.as_view(url="http://v2.foreverland.com/catalog/", permanent=True),

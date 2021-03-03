@@ -7,8 +7,12 @@ from shows.models import Show, Tour
 
 
 class Payment(models.Model):
-    show = models.ForeignKey(Show, related_name="payment", null=True)
-    member = models.ForeignKey(Member, related_name="payment", null=True)
+    show = models.ForeignKey(
+        Show, related_name="payment", null=True, on_delete=models.SET_NULL
+    )
+    member = models.ForeignKey(
+        Member, related_name="payment", null=True, on_delete=models.SET_NULL
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     paid = models.BooleanField(default=False)
 
@@ -24,8 +28,16 @@ class Payment(models.Model):
 
 
 class SubPayment(models.Model):
-    show = models.ForeignKey(Show, related_name="subpayment", blank=True, null=True)
-    sub = models.ForeignKey(Sub, related_name="sub", blank=True, null=True)
+    show = models.ForeignKey(
+        Show,
+        related_name="subpayment",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    sub = models.ForeignKey(
+        Sub, related_name="sub", blank=True, null=True, on_delete=models.SET_NULL
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     paid = models.BooleanField(default=False)
 
@@ -68,7 +80,11 @@ class TaxExpenseCategory(models.Model):
 class ExpenseCategory(models.Model):
     category = models.CharField(max_length=100, blank=True, null=True)
     tax_category = models.ForeignKey(
-        TaxExpenseCategory, related_name="expense_category", blank=True, null=True
+        TaxExpenseCategory,
+        related_name="expense_category",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
     )
 
     def __str__(self):
@@ -80,15 +96,20 @@ class ExpenseCategory(models.Model):
 
 class Expense(models.Model):
 
-    show = models.ForeignKey(Show, related_name="expense", blank=True, null=True)
+    show = models.ForeignKey(
+        Show, related_name="expense", blank=True, null=True, on_delete=models.SET_NULL
+    )
     date = models.DateField(blank=True, null=True)
-    payee = models.ForeignKey(Payee, related_name="expense", blank=True, null=True)
+    payee = models.ForeignKey(
+        Payee, related_name="expense", blank=True, null=True, on_delete=models.SET_NULL
+    )
     new_category = models.ForeignKey(
         ExpenseCategory,
         related_name="expense_category",
         blank=True,
         null=True,
         verbose_name="Category",
+        on_delete=models.SET_NULL,
     )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     check_no = models.CharField(
@@ -113,10 +134,12 @@ class Expense(models.Model):
 
 class TourExpense(models.Model):
 
-    tour = models.ForeignKey(Tour, blank=True, null=True)
+    tour = models.ForeignKey(Tour, blank=True, null=True, on_delete=models.SET_NULL)
     date = models.DateField(blank=True, null=True, verbose_name="Expense Date")
-    payee = models.ForeignKey(Payee, blank=True, null=True)
-    category = models.ForeignKey(ExpenseCategory, blank=True, null=True)
+    payee = models.ForeignKey(Payee, blank=True, null=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey(
+        ExpenseCategory, blank=True, null=True, on_delete=models.SET_NULL
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     check_no = models.CharField(
         max_length=100, blank=True, null=True, verbose_name="Check #"
@@ -189,10 +212,18 @@ class Agent(models.Model):
 
 class CommissionPayment(models.Model):
     show = models.ForeignKey(
-        Show, related_name="commission_payment", blank=True, null=True
+        Show,
+        related_name="commission_payment",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
     )
     agent = models.ForeignKey(
-        Agent, related_name="commission_payment", blank=True, null=True
+        Agent,
+        related_name="commission_payment",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
     )
     amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     check_no = models.IntegerField(blank=True, null=True)
@@ -250,7 +281,11 @@ class Fiduciary(models.Model):
 class ProductionCategory(models.Model):
     name = models.CharField(max_length=128)
     tax_category = models.ForeignKey(
-        TaxExpenseCategory, related_name="production_category", blank=True, null=True
+        TaxExpenseCategory,
+        related_name="production_category",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
     )
 
     def __str__(self):
@@ -262,12 +297,20 @@ class ProductionCategory(models.Model):
 
 class ProductionPayment(models.Model):
     show = models.ForeignKey(
-        Show, related_name="production_payment", blank=True, null=True
+        Show,
+        related_name="production_payment",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
     )
-    company = models.ForeignKey(ProductionCompany, related_name="production_payment")
+    company = models.ForeignKey(
+        ProductionCompany, related_name="production_payment", on_delete=models.CASCADE
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     check_no = models.IntegerField(blank=True, null=True)
-    category = models.ForeignKey(ProductionCategory, blank=True, null=True)
+    category = models.ForeignKey(
+        ProductionCategory, blank=True, null=True, on_delete=models.SET_NULL
+    )
     paid = models.BooleanField(default=False)
 
     class Meta:
@@ -290,9 +333,15 @@ class ProductionPayment(models.Model):
 
 class FiduciaryPayment(models.Model):
     show = models.ForeignKey(
-        Show, related_name="fiduciary_payment", blank=True, null=True
+        Show,
+        related_name="fiduciary_payment",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
     )
-    fidouche = models.ForeignKey(Fiduciary, related_name="fiduciary_payment")
+    fidouche = models.ForeignKey(
+        Fiduciary, related_name="fiduciary_payment", on_delete=models.CASCADE
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     check_no = models.IntegerField(blank=True, null=True)
     paid = models.BooleanField(default=False)

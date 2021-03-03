@@ -145,7 +145,7 @@ class Show(models.Model):
     # Open to the public/Display on public calendar?
     public = models.BooleanField(default=True)
     # Public Information
-    venue = models.ForeignKey(Venue, related_name="shows")
+    venue = models.ForeignKey(Venue, related_name="shows", on_delete=models.CASCADE)
     date = models.DateTimeField()
     tour = models.ForeignKey(
         Tour,
@@ -206,7 +206,11 @@ class Show(models.Model):
         max_digits=10, decimal_places=2, blank=True, null=True
     )
     agent = models.ForeignKey(
-        "fidouche.Agent", related_name="gig_agent", blank=True, null=True
+        "fidouche.Agent",
+        related_name="gig_agent",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
     )
     commission_withheld = models.BooleanField(default=False)
     commission_percentage = models.IntegerField(default=10, blank=True, null=True)
