@@ -6,30 +6,30 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import int_to_base36
 from django.template import loader
 
-from registration.forms import RegistrationFormUniqueEmail
+# from registration.forms import RegistrationFormUniqueEmail
 from django_common.helper import send_mail_using_template
 
-from accounts.models import UserProfile
+# from accounts.models import UserProfile
 
 
-class RegistrationForm(RegistrationFormUniqueEmail):
-    """Capture other details represented in models.UserProfile and django User class"""
+# class RegistrationForm(RegistrationFormUniqueEmail):
+#     """Capture other details represented in models.UserProfile and django User class"""
 
-    first_name = forms.CharField(label="First Name")
-    last_name = forms.CharField(label="Last Name")
+#     first_name = forms.CharField(label="First Name")
+#     last_name = forms.CharField(label="Last Name")
 
-    RESERVED_USERNAMES = ["admin", "search", "uploads", "static", "media", "edit"]
+#     RESERVED_USERNAMES = ["admin", "search", "uploads", "static", "media", "edit"]
 
-    def clean_username(self):
-        super(RegistrationForm, self).clean_username()
-        username = self.cleaned_data.get("username")
-        if username in self.RESERVED_USERNAMES:
-            raise forms.ValidationError("This username is already taken.")
-        if len(username) < 5:
-            raise forms.ValidationError(
-                "Usernames should be at least 5 characters long."
-            )
-        return username
+#     def clean_username(self):
+#         super(RegistrationForm, self).clean_username()
+#         username = self.cleaned_data.get("username")
+#         if username in self.RESERVED_USERNAMES:
+#             raise forms.ValidationError("This username is already taken.")
+#         if len(username) < 5:
+#             raise forms.ValidationError(
+#                 "Usernames should be at least 5 characters long."
+#             )
+#         return username
 
 
 class UserDetailsForm(forms.ModelForm):

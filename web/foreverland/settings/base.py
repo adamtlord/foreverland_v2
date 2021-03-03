@@ -81,7 +81,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
 
-    'registration',
+    'django_registration',
     'compressor',
     'django_common',
     'sorl.thumbnail',

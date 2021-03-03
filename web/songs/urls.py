@@ -1,6 +1,6 @@
-from django.conf.urls import url
-from songs.views import *
+from django.urls import path
+from songs.views import list_songs
 
 urlpatterns = [
-    url(r"^$", list_songs, {}, name="list_songs"),
+    path("", list_songs, name="list_songs"),
 ]
