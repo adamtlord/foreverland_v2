@@ -9,7 +9,7 @@ def thumbnail(image_path):
 
 
 class AdminImageWidget(AdminFileWidget):
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         output = []
         if value:
             file_name = str(value)
@@ -21,7 +21,7 @@ class AdminImageWidget(AdminFileWidget):
                         '<a href="%s/%s" class="thumb">%s</a>'
                         % (static_url, file_name, thumbnail(file_name))
                     )
-                except:
+                except Exception:
                     pass
             else:
                 try:
@@ -29,7 +29,7 @@ class AdminImageWidget(AdminFileWidget):
                         '<a href="%s/%s" class="file"><i class="fa fa-file-pdf-o"></i> %s</a>'
                         % (static_url, file_name, file_name.split("/")[1])
                     )
-                except:
+                except Exception:
                     pass
         output.append(super(AdminFileWidget, self).render(name, value, attrs))
         return mark_safe(u"".join(output))

@@ -3,7 +3,7 @@ from django.contrib.auth import views as auth_views
 
 from accounts.backends.custom import CustomRegistrationView, CustomActivationView
 from accounts.forms import RegistrationForm, PasswordResetForm
-from accounts.views import *
+from accounts.views import login_error, profile_edit, profile_page
 
 urlpatterns = [
     url(
@@ -13,21 +13,21 @@ urlpatterns = [
     ),
     url(
         r"^login/$",
-        auth_views.login,
+        auth_views.LoginView,
         {"template_name": "registration/login.html"},
         name="auth_login",
     ),
     url(
         r"^login/modal/$",
-        auth_views.login,
+        auth_views.LoginView,
         {"template_name": "registration/fragments/login_modal.html"},
         name="auth_login_modal",
     ),
     url(r"^login/error/$", login_error, name="login_error"),
-    url(r"^logout/$", auth_views.logout, name="auth_logout"),
+    url(r"^logout/$", auth_views.LogoutView, name="auth_logout"),
     url(
         r"^password/reset/$",
-        auth_views.password_reset,
+        auth_views.PasswordResetView,
         {"password_reset_form": PasswordResetForm},
         name="auth_password_reset",
     ),
