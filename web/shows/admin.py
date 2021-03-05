@@ -26,15 +26,8 @@ class ExpenseInline(admin.TabularInline):
 class ShowAdmin(admin.ModelAdmin):
     ordering = ["-date"]
     inlines = [ExpenseInline]
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "venue":
-            kwargs["queryset"] = Venue.objects.order_by("venue_name")
-        return super(ShowAdmin, self).formfield_for_foreignkey(
-            db_field, request, **kwargs
-        )
+    autocomplete_fields = ["venue"]
 
 
 admin.site.register(Show, ShowAdmin)
-
 admin.site.register(Tour)

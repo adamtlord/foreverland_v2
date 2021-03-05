@@ -1,4 +1,4 @@
-from decimal import *
+from decimal import Decimal
 from django.db import models
 from localflavor.us.models import PhoneNumberField, USStateField
 

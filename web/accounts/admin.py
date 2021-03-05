@@ -14,8 +14,3 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 
 admin.site.register(UserProfile, UserProfileAdmin)
-
-# Hide uneeded stuff in admin.
-# from registration.models import RegistrationProfile
-
-# admin.site.unregister(RegistrationProfile)
