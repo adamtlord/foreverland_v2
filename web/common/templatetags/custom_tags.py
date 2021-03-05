@@ -20,30 +20,32 @@ class FormFieldNode(template.Node):
         try:
             form_field = self.form_field.resolve(context)
         except template.VariableDoesNotExist:
-            return ''
+            return ""
 
         widget = form_field.field.widget
 
         if isinstance(widget, widgets.HiddenInput):
             return form_field
         elif isinstance(widget, widgets.RadioSelect):
-            t = get_template('common/fragments/radio_field.html')
+            t = get_template("common/fragments/radio_field.html")
         elif isinstance(widget, widgets.CheckboxInput):
-            t = get_template('common/fragments/checkbox_field.html')
+            t = get_template("common/fragments/checkbox_field.html")
         elif isinstance(widget, widgets.CheckboxSelectMultiple):
-            t = get_template('common/fragments/multi_checkbox_field.html')
+            t = get_template("common/fragments/multi_checkbox_field.html")
         else:
-            t = get_template('common/fragments/form_field.html')
+            t = get_template("common/fragments/form_field.html")
 
         help_text = self.help_text
         if help_text is None:
             help_text = form_field.help_text
 
-        return t.render({
-            'form_field': form_field,
-            'help_text': help_text,
-            'css_classes': self.css_classes
-        })
+        return t.render(
+            {
+                "form_field": form_field,
+                "help_text": help_text,
+                "css_classes": self.css_classes,
+            }
+        )
 
 
 @register.tag
@@ -67,7 +69,8 @@ def render_form_field(parser, token):
             tag_name, form_field = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError(
-            "Unable to parse arguments for {0}".format(repr(token.contents.split()[0])))
+            "Unable to parse arguments for {0}".format(repr(token.contents.split()[0]))
+        )
 
     return FormFieldNode(form_field, help_text=help_text, css_classes=css_classes)
 
@@ -79,8 +82,8 @@ def active(request, pattern):
     Used to assign a css class in navigation bars to active tab/section.
     """
     if request.path == pattern:
-        return 'active'
-    return ''
+        return "active"
+    return ""
 
 
 @register.simple_tag
@@ -90,5 +93,5 @@ def active_starts(request, pattern):
     Used to assign a css class in navigation bars to active tab/section.
     """
     if request.path.startswith(pattern):
-        return 'active'
-    return ''
+        return "active"
+    return ""

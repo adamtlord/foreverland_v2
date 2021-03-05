@@ -49,9 +49,7 @@ urlpatterns = [
     path("income/", all_income_list, {}, name="all_income_list"),
     path("income/<int:income_id>/", income_details, {}, name="income_details"),
     path("income/create/", income_create, {}, name="income_create"),
-    path(
-        "income/delete/<int:income_id>/", income_delete, {}, name="income_delete"
-    ),
+    path("income/delete/<int:income_id>/", income_delete, {}, name="income_delete"),
     path("reports/", finance_reports, {}, name="finance_reports"),
     path("tax-reports/", tax_reports, {}, name="tax_reports"),
     path(
