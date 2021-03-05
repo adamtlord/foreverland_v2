@@ -33,7 +33,7 @@ ROOT_URLCONF = 'foreverland.urls'
 
 DATABASES = {}
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -60,7 +60,7 @@ TEMPLATES = [
 
                 'django.contrib.messages.context_processors.messages',
 
-                'django_common.context_processors.common_settings',
+                # 'django_common.context_processors.common_settings',
 
                 'common.context_processors.random_quote',
                 'common.context_processors.list_years_with_gigs',
@@ -81,9 +81,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
 
-    'registration',
+    # 'django_registration',
     'compressor',
-    'django_common',
+    # 'django_common',
     'sorl.thumbnail',
 
     'marketing',
@@ -107,7 +107,7 @@ SEND_EMAIL_AFTER_ACTIVATION = True  # default: True
 AUTOMATIC_ACTIVATION_AFTER_REGISTRATION = True  # default: True
 
 AUTHENTICATION_BACKENDS = [
-    'django_common.auth_backends.EmailBackend',
+    # 'django_common.auth_backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 

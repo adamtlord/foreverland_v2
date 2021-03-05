@@ -19,7 +19,7 @@ class Song(models.Model):
 
 
 class Setlist(models.Model):
-    show = models.ForeignKey(Show, related_name="setlist")
+    show = models.ForeignKey(Show, related_name="setlist", on_delete=models.CASCADE)
     songs = models.ManyToManyField(Song, through="SetlistSong")
 
     def __str__(self):
@@ -27,8 +27,8 @@ class Setlist(models.Model):
 
 
 class SetlistSong(models.Model):
-    song = models.ForeignKey(Song)
-    setlist = models.ForeignKey(Setlist)
+    song = models.ForeignKey(Song, on_delete=models.CASCADE)
+    setlist = models.ForeignKey(Setlist, on_delete=models.CASCADE)
     order = models.IntegerField(blank=True, null=True)
 
     def __str__(self):

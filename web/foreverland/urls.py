@@ -1,9 +1,10 @@
 from django.conf import settings
 from django.conf.urls import url, include
+from django.urls import path
 from django.conf.urls.static import static
 from django.views.generic.base import RedirectView
 from django.views.defaults import page_not_found, server_error
-from media.views import downloads, behind_the_music, upload
+from media.views import downloads, behind_the_music
 from shows.views import TheWorksView
 
 from django.contrib import admin
@@ -11,32 +12,23 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = [
-    url(r"^", include("marketing.urls")),
-    url(r"^accounts/", include("accounts.urls")),
-    url(r"^admin/", include(admin.site.urls)),
-    url(r"^members/", include("members.urls")),
-    url(r"^shows/", include("shows.urls")),
-    url(r"^songs/", include("songs.urls")),
-    url(r"^photos/", include("media.urls")),
-    url(r"^fidouche/", include("fidouche.urls")),
-    url(r"^setter/", include("setter.urls")),
-    url(r"^downloads/", downloads),
-    url(r"^behind-the-music/", behind_the_music),
-    url(r"^media/upload/", upload, name="media_upload"),
+    path("", include("marketing.urls")),
+    path("accounts/", include("accounts.urls")),
+    path("admin/", admin.site.urls),
+    path("shows/", include("shows.urls")),
+    path("songs/", include("songs.urls")),
+    path("photos/", include("media.urls")),
+    path("fidouche/", include("fidouche.urls")),
+    path("setter/", include("setter.urls")),
+    path("downloads/", downloads),
+    path("behind-the-music/", behind_the_music),
     # Legacy redirects
-    url(r"^upcoming-shows/", RedirectView.as_view(url="/shows", permanent=True)),
-    url(r"^past-shows/", RedirectView.as_view(url="/shows/past", permanent=True)),
-    url(r"^song-list/", RedirectView.as_view(url="/songs", permanent=True)),
-    url(r"^news-press/", RedirectView.as_view(url="/", permanent=True)),
-    url(r"^quotes/", RedirectView.as_view(url="/about#quotes", permanent=True)),
-    url(
-        r"^the-works/",
-        TheWorksView.as_view(), name="the_works"
-    ),
-    # url(
-    #     r"^catalog/",
-    #     RedirectView.as_view(url="http://v2.foreverland.com/catalog/", permanent=True),
-    # ),
+    path("upcoming-shows/", RedirectView.as_view(url="/shows", permanent=True)),
+    path("past-shows/", RedirectView.as_view(url="/shows/past", permanent=True)),
+    path("song-list/", RedirectView.as_view(url="/songs", permanent=True)),
+    path("news-press/", RedirectView.as_view(url="/", permanent=True)),
+    path("quotes/", RedirectView.as_view(url="/about#quotes", permanent=True)),
+    path("the-works/", TheWorksView.as_view(), name="the_works"),
 ]
 
 if settings.DEBUG:

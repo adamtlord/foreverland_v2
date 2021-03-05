@@ -1,9 +1,6 @@
-from django.conf.urls import url
-from media.views import *
+from django.urls import path
+from media.views import photos
 
 urlpatterns = [
-    url(r"^$", photos, {}, name="photos"),
-    url(r"^image/(\d+)/$", image, {}, name="image"),
-    url(r"^update/$", update, {}, name="update"),
-    url(r"^search/$", search, {}, name="search"),
+    path("", photos, {}, name="photos"),
 ]
