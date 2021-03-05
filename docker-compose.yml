@@ -16,8 +16,7 @@ services:
       - db
     volumes:
       - ./web/:/home/ubuntu/app
-    # command: python manage.py runserver 0.0.0.0:8000
-    command: bash -c "python3 manage.py migrate && echo "running" && tail -f /dev/null"
+    command: python manage.py runserver 0.0.0.0:8000
   db:
     container_name: foreverland_db
     image: mysql:5.7
