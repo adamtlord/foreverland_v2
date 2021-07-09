@@ -1,12 +1,11 @@
 import urllib
 
-# import urllib2
 import simplejson
 from django.utils.encoding import smart_str
 
 
 def get_lat_lng(location):
-    location = urllib.quote_plus(smart_str(location))
+    location = urllib.parse.quote_plus(smart_str(location))
     url = (
         "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false"
         % location
