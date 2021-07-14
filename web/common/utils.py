@@ -1,16 +1,14 @@
 import urllib
 
-# import urllib2
 import simplejson
+from django.conf import settings
 from django.utils.encoding import smart_str
 
 
 def get_lat_lng(location):
-    location = urllib.quote_plus(smart_str(location))
-    url = (
-        "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false"
-        % location
-    )
+    location = urllib.parse.quote_plus(smart_str(location))
+    url = f"https://maps.googleapis.com/maps/api/geocode/json?address={location}&sensor=false&key={settings.GOOGLE_MAPS_API_KEY}"
+
     response = urllib.request.urlopen(url).read()
     result = simplejson.loads(response)
     if result["status"] == "OK":
