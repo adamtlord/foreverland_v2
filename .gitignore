@@ -12,3 +12,4 @@ dist
 /web/foreverland/settings/prod.py
 .env*
 mediafiles/
+/web/staticserve
