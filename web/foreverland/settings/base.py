@@ -130,6 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+GOOGLE_MAPS_API_KEY = "%s" % os.getenv("GOOGLE_MAPS_API_KEY")
 
 
 # helper function to extend all the common lists

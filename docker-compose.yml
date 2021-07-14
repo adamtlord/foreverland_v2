@@ -16,7 +16,10 @@ services:
       - db
     volumes:
       - ./web/:/home/ubuntu/app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c "
+      python manage.py collectstatic --noinput &&
+      python manage.py migrate --fake-initial &&
+      python manage.py runserver 0.0.0.0:8000"
   db:
     container_name: foreverland_db
     image: mysql:5.7
