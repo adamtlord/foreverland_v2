@@ -1,5 +1,5 @@
 from django.contrib import admin
-from media.models import Album, Tag, Image, Video, Download
+from media.models import Album, Download, Image, Tag, Video
 
 
 class AlbumAdmin(admin.ModelAdmin):

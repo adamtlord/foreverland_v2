@@ -1,11 +1,10 @@
 import datetime
 
-from django.shortcuts import render, redirect
-
+from django.shortcuts import redirect, render
+from marketing.models import Testimonial
+from media.models import Video
 from members.models import Member
 from shows.models import Show
-from media.models import Video
-from marketing.models import Testimonial
 
 
 def homepage(request, template="marketing/homepage.html"):

@@ -1,7 +1,7 @@
 from random import randint
 
-from marketing.models import Testimonial
 from common.utils import years_with_gigs
+from marketing.models import Testimonial
 
 
 def random_quote(request):

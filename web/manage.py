@@ -20,10 +20,9 @@
 #             )
 #         raise
 #     execute_from_command_line(sys.argv)
-#!/usr/bin/env python
+# !/usr/bin/env python
 import os
 import sys
-
 
 if __name__ == "__main__":
     os.environ.setdefault(

@@ -6,33 +6,53 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('fidouche', '0004_auto_20210304_1045'),
+        ("fidouche", "0004_auto_20210304_1045"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='commissionpayment',
-            name='method',
-            field=models.CharField(choices=[('check', 'Check'), ('venmo', 'Venmo')], default='check', max_length=16),
+            model_name="commissionpayment",
+            name="method",
+            field=models.CharField(
+                choices=[("check", "Check"), ("venmo", "Venmo")],
+                default="check",
+                max_length=16,
+            ),
         ),
         migrations.AddField(
-            model_name='fiduciarypayment',
-            name='method',
-            field=models.CharField(choices=[('check', 'Check'), ('venmo', 'Venmo')], default='check', max_length=16),
+            model_name="fiduciarypayment",
+            name="method",
+            field=models.CharField(
+                choices=[("check", "Check"), ("venmo", "Venmo")],
+                default="check",
+                max_length=16,
+            ),
         ),
         migrations.AddField(
-            model_name='payment',
-            name='method',
-            field=models.CharField(choices=[('check', 'Check'), ('venmo', 'Venmo')], default='check', max_length=16),
+            model_name="payment",
+            name="method",
+            field=models.CharField(
+                choices=[("check", "Check"), ("venmo", "Venmo")],
+                default="check",
+                max_length=16,
+            ),
         ),
         migrations.AddField(
-            model_name='productionpayment',
-            name='method',
-            field=models.CharField(choices=[('check', 'Check'), ('venmo', 'Venmo')], default='check', max_length=16),
+            model_name="productionpayment",
+            name="method",
+            field=models.CharField(
+                choices=[("check", "Check"), ("venmo", "Venmo")],
+                default="check",
+                max_length=16,
+            ),
         ),
         migrations.AddField(
-            model_name='subpayment',
-            name='method',
-            field=models.CharField(choices=[('check', 'Check'), ('venmo', 'Venmo')], default='check', max_length=16),
+            model_name="subpayment",
+            name="method",
+            field=models.CharField(
+                choices=[("check", "Check"), ("venmo", "Venmo")],
+                default="check",
+                max_length=16,
+            ),
         ),
     ]

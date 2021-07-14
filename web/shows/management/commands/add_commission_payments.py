@@ -1,8 +1,8 @@
-from django.core.management.base import BaseCommand
 from datetime import date
 
-from shows.models import Show
+from django.core.management.base import BaseCommand
 from fidouche.models import Agent, CommissionPayment
+from shows.models import Show
 
 today = date.today()
 

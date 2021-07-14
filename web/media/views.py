@@ -1,9 +1,7 @@
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-
-
-from media.models import Album, Image, Download
+from django.core.paginator import EmptyPage, InvalidPage, Paginator
+from django.shortcuts import render
+from media.models import Album, Download, Image
 
 
 def photos(request, template="media/photos.html"):

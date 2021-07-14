@@ -1,9 +1,9 @@
 import datetime
-from django.core.management.base import BaseCommand, CommandError
 
-from legacy.models import WpRandomtext, WpGigpressVenues, WpGigpressShows
+from django.core.management.base import BaseCommand, CommandError
+from legacy.models import WpGigpressShows, WpGigpressVenues, WpRandomtext
 from marketing.models import Testimonial
-from shows.models import Venue, Show
+from shows.models import Show, Venue
 
 
 class Command(BaseCommand):

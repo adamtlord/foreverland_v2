@@ -1,7 +1,8 @@
 import datetime
 from collections import OrderedDict
+
+from django.shortcuts import get_object_or_404, render
 from django.views.generic.base import TemplateView
-from django.shortcuts import render, get_object_or_404
 from shows.models import Show
 
 UPCOMING_WINDOW_WEEKS = 16

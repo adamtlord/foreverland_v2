@@ -1,10 +1,9 @@
 from decimal import Decimal
-from django.db import models
-from localflavor.us.models import PhoneNumberField, USStateField
-
-from sorl.thumbnail import ImageField
 
 from common.utils import get_lat_lng
+from django.db import models
+from localflavor.us.models import PhoneNumberField, USStateField
+from sorl.thumbnail import ImageField
 
 
 class Venue(models.Model):
@@ -245,7 +244,7 @@ class Show(models.Model):
 
     def get_production_costs(self):
         d = {}
-        from fidouche.models import ProductionPayment, ProductionCategory
+        from fidouche.models import ProductionCategory, ProductionPayment
 
         production_expenses = list(
             ProductionPayment.objects.filter(show=self).select_related("category")

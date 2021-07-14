@@ -1,16 +1,8 @@
 from django import forms
+from fidouche.models import (Expense, FiduciaryPayment, Income, Payment,
+                             ProductionPayment, SubPayment, TourExpense)
 from fidouche.widgets import AdminImageWidget
 from shows.models import Show
-from fidouche.models import (
-    Payment,
-    SubPayment,
-    Expense,
-    TourExpense,
-    ProductionPayment,
-    Income,
-    FiduciaryPayment,
-)
-
 
 FINANCIAL_FIELDS = (
     "attendance",

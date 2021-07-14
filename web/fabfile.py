@@ -1,13 +1,10 @@
 import os
-
 from datetime import datetime
 
 from django.conf import settings
-
-from fabric.api import local, run, cd, env, get
+from fabric.api import cd, env, get, local, run
 from fabric.contrib.console import confirm
 from fabric.decorators import runs_once
-
 
 DEFAULT_DB_SETTINGS = settings.DATABASES["default"]
 if not DEFAULT_DB_SETTINGS["PASSWORD"]:
@@ -32,7 +29,8 @@ def get_remote_mysql_pass_arg():
 
 def prod():
     """Sets up the prod environment for fab remote commands"""
-    from foreverland.settings.prod import SSH_HOSTS, DATABASES as PROD_DATABASES
+    from foreverland.settings.prod import DATABASES as PROD_DATABASES
+    from foreverland.settings.prod import SSH_HOSTS
 
     env.user = "adamlord"
     env.hosts = SSH_HOSTS
@@ -125,7 +123,8 @@ def syncdb():
                 DUMP_FILENAME,
             )
         )
-        get("/tmp/%s" % DUMP_FILENAME, os.path.basename(DUMP_FILENAME))  # download db
+        get("/tmp/%s" % DUMP_FILENAME,
+            os.path.basename(DUMP_FILENAME))  # download db
         local("gzip -d %s" % os.path.basename(DUMP_FILENAME))  # ungzip
         freshdb()
         local(
@@ -145,8 +144,8 @@ def r():
     if "gunicorn" in settings.INSTALLED_APPS:
         try:
             local("kill -TERM `cat gunicorn.pid`")
-        except:
-            print "No existing gunicorn process"
+        except Exception as e:
+            print("No existing gunicorn process")
         local("python manage.py run_gunicorn -w 4 --timeout=240 --pid=gunicorn.pid")
     else:
         local("python manage.py runserver")
@@ -155,9 +154,6 @@ def r():
 runserver = r  # alias
 
 
-def deletepycs():
-    local('find . -name "*.pyc" -exec rm -rf {} \;')
-
 
 def freshdb():
     if not settings.IS_DEV:
@@ -165,7 +161,8 @@ def freshdb():
 
     env.warn_only = True  # so fab doesnt drop out if the db doesnt exist yet.
     local(
-        '%s "%s"' % (MYSQL_EXEC_CMD, "drop database %s" % DEFAULT_DB_SETTINGS["NAME"])
+        '%s "%s"' % (MYSQL_EXEC_CMD, "drop database %s" %
+                     DEFAULT_DB_SETTINGS["NAME"])
     )
     env.warn_only = False
     local(
