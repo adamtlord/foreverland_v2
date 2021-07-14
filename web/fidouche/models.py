@@ -5,6 +5,12 @@ from localflavor.us.models import PhoneNumberField, USStateField
 from members.models import Member, Sub
 from shows.models import Show, Tour
 
+VENMO = "venmo"
+CHECK = "check"
+PAYMENT_METHOD_CHOICES = (
+    (CHECK, "Check"),
+    (VENMO, "Venmo"),
+)
 
 class Payment(models.Model):
     show = models.ForeignKey(
@@ -15,6 +21,7 @@ class Payment(models.Model):
     )
     amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     paid = models.BooleanField(default=False)
+    method = models.CharField(max_length=16, choices=PAYMENT_METHOD_CHOICES, default=CHECK)
 
     class Meta:
         unique_together = (("show", "member"),)
@@ -40,6 +47,7 @@ class SubPayment(models.Model):
     )
     amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     paid = models.BooleanField(default=False)
+    method = models.CharField(max_length=16, choices=PAYMENT_METHOD_CHOICES, default=CHECK)
 
     class Meta:
         unique_together = (("show", "sub"),)
@@ -228,6 +236,7 @@ class CommissionPayment(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     check_no = models.IntegerField(blank=True, null=True)
     paid = models.BooleanField(default=False)
+    method = models.CharField(max_length=16, choices=PAYMENT_METHOD_CHOICES, default=CHECK)
 
     class Meta:
         unique_together = (("show", "agent"),)
@@ -312,6 +321,7 @@ class ProductionPayment(models.Model):
         ProductionCategory, blank=True, null=True, on_delete=models.SET_NULL
     )
     paid = models.BooleanField(default=False)
+    method = models.CharField(max_length=16, choices=PAYMENT_METHOD_CHOICES, default=CHECK)
 
     class Meta:
         ordering = ["show__date"]
@@ -345,6 +355,7 @@ class FiduciaryPayment(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     check_no = models.IntegerField(blank=True, null=True)
     paid = models.BooleanField(default=False)
+    method = models.CharField(max_length=16, choices=PAYMENT_METHOD_CHOICES, default=CHECK)
 
     class Meta:
         ordering = ["show__date"]
