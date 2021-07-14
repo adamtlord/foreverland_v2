@@ -1,5 +1,5 @@
 from django.contrib import admin
-from songs.models import Song, Setlist, SetlistSong
+from songs.models import Setlist, SetlistSong, Song
 
 
 class SongAdmin(admin.ModelAdmin):

@@ -1,8 +1,9 @@
-from django.core.management.base import BaseCommand
 from datetime import date
 
+from django.core.management.base import BaseCommand
+from fidouche.models import (ProductionCategory, ProductionCompany,
+                             ProductionPayment)
 from shows.models import Show
-from fidouche.models import ProductionPayment, ProductionCategory, ProductionCompany
 
 today = date.today()
 

@@ -1,13 +1,12 @@
 from django.conf import settings
-from django.conf.urls import url, include
-from django.urls import path
+from django.conf.urls import include, url
 from django.conf.urls.static import static
-from django.views.generic.base import RedirectView
-from django.views.defaults import page_not_found, server_error
-from media.views import downloads, behind_the_music
-from shows.views import TheWorksView
-
 from django.contrib import admin
+from django.urls import path
+from django.views.defaults import page_not_found, server_error
+from django.views.generic.base import RedirectView
+from media.views import behind_the_music, downloads
+from shows.views import TheWorksView
 
 admin.autodiscover()
 

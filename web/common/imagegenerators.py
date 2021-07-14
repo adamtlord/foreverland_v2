@@ -1,4 +1,4 @@
-from imagekit import processors, ImageSpec, register
+from imagekit import ImageSpec, processors, register
 
 
 class Thumbnail(ImageSpec):

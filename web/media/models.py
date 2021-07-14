@@ -1,12 +1,13 @@
 import os
 
-# from string import join
-
-from django.db import models
 from django.conf import settings
+from django.db import models
+from shows.models import Show
 from sorl.thumbnail import ImageField
 
-from shows.models import Show
+# from string import join
+
+
 
 
 class Album(models.Model):

@@ -1,16 +1,8 @@
 from django import forms
+from fidouche.models import (Expense, FiduciaryPayment, Income, Payment,
+                             ProductionPayment, SubPayment, TourExpense)
 from fidouche.widgets import AdminImageWidget
 from shows.models import Show
-from fidouche.models import (
-    Payment,
-    SubPayment,
-    Expense,
-    TourExpense,
-    ProductionPayment,
-    Income,
-    FiduciaryPayment,
-)
-
 
 FINANCIAL_FIELDS = (
     "attendance",
@@ -52,6 +44,7 @@ PRODUCTION_FIELDS = (
     "amount",
     "check_no",
     "category",
+    "method",
 )
 
 
@@ -115,6 +108,7 @@ class PaymentForm(forms.ModelForm):
         super(PaymentForm, self).__init__(*args, **kwargs)
         self.fields["member"].widget.attrs["class"] = "form-control input-sm"
         self.fields["amount"].widget.attrs["class"] = "form-control input-sm"
+        self.fields["method"].widget.attrs["class"] = "form-control input-sm"
 
 
 class SubPaymentForm(forms.ModelForm):
@@ -126,6 +120,7 @@ class SubPaymentForm(forms.ModelForm):
         super(SubPaymentForm, self).__init__(*args, **kwargs)
         self.fields["sub"].widget.attrs["class"] = "form-control input-sm"
         self.fields["amount"].widget.attrs["class"] = "form-control input-sm"
+        self.fields["method"].widget.attrs["class"] = "form-control input-sm"
 
 
 class ProductionPaymentForm(forms.ModelForm):
@@ -151,7 +146,7 @@ class FiduciaryPaymentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(FiduciaryPaymentForm, self).__init__(*args, **kwargs)
-        for field in ["fidouche", "amount", "check_no"]:
+        for field in ["fidouche", "amount", "check_no", "method"]:
             if field == "amount":
                 self.fields[field].widget.attrs[
                     "class"

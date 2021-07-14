@@ -1,8 +1,6 @@
 from django.urls import path
-
 from shows.feeds import CalendarFeed, ShowsFeed
-from shows.views import upcoming_shows, past_shows, show, show_modal
-
+from shows.views import past_shows, show, show_modal, upcoming_shows
 
 urlpatterns = [
     path("", upcoming_shows, {}, name="upcoming_shows"),

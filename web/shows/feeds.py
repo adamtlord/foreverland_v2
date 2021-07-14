@@ -1,9 +1,8 @@
 import datetime
+
 from django.contrib.syndication.views import Feed
 from django.urls import reverse
-
 from django_ical.views import ICalFeed
-
 from shows.models import Show
 
 

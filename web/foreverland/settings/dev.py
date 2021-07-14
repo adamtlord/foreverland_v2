@@ -1,4 +1,5 @@
 import os
+
 from .base import *  # noqa: F401 F403
 from .base import INSTALLED_APPS, extend_list_avoid_repeats
 

@@ -1,6 +1,5 @@
 from common.utils import get_lat_lng
 from django.core.management.base import BaseCommand
-
 from shows.models import Venue
 
 

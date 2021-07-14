@@ -1,6 +1,6 @@
-from django.core.management.base import BaseCommand
 from datetime import datetime
 
+from django.core.management.base import BaseCommand
 from shows.models import Show
 
 now = datetime.now()

@@ -1,6 +1,5 @@
 from django.db.models import OneToOneField
 from django.db.models.fields.related import SingleRelatedObjectDescriptor
-
 from south.modelsinspector import add_introspection_rules
 
 add_introspection_rules([], ["^apps\.utils\.fields\.AutoOneToOneField"])

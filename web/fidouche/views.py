@@ -1,48 +1,27 @@
-import random
 import datetime
 import json
-
+import random
 from datetime import date
 from itertools import chain
 
-from django.forms.models import inlineformset_factory
-from django.db.models import Sum
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from django.contrib.humanize.templatetags.humanize import intcomma
-from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
-from django.http import HttpResponse
-
 from django.conf import settings
-
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
+from django.contrib.humanize.templatetags.humanize import intcomma
+from django.db.models import Sum
+from django.forms.models import inlineformset_factory
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from fidouche.forms import (ExpenseForm, FiduciaryPaymentForm, GigFinanceForm,
+                            IncomeForm, PaymentForm, ProductionPaymentForm,
+                            SubPaymentForm, TourExpenseForm)
+from fidouche.models import (CommissionPayment, Expense, Fiduciary,
+                             FiduciaryPayment, Income, Payee, Payment,
+                             ProductionCategory, ProductionCompany,
+                             ProductionPayment, Quote, SubPayment, TourExpense)
 from members.models import Member, Sub
 from shows.models import Show, Tour, Venue
-from fidouche.models import (
-    Payment,
-    SubPayment,
-    Expense,
-    TourExpense,
-    Quote,
-    CommissionPayment,
-    ProductionPayment,
-    ProductionCategory,
-    Payee,
-    ProductionCompany,
-    Income,
-    Fiduciary,
-    FiduciaryPayment,
-)
-from fidouche.forms import (
-    GigFinanceForm,
-    ExpenseForm,
-    TourExpenseForm,
-    PaymentForm,
-    SubPaymentForm,
-    ProductionPaymentForm,
-    IncomeForm,
-    FiduciaryPaymentForm,
-)
 
 current_year = date.today().year
 

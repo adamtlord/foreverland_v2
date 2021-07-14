@@ -1,6 +1,6 @@
 from django.contrib import admin
-from shows.models import Venue, Show, Tour
 from fidouche.models import Expense
+from shows.models import Show, Tour, Venue
 from sorl.thumbnail.admin import AdminImageMixin
 
 
