@@ -5,7 +5,7 @@ django-ical==1.7.1
 django-localflavor==1.6.2
 djangorestframework==3.12.2
 mysqlclient==2.0.3
-Pillow==8.2.0
+Pillow==9.0.1
 pycryptodome==3.10.1
 simplejson==3.17.2
 sorl-thumbnail==12.7.0
