@@ -1,0 +1,12 @@
+.btn-instagram {
+  color: #fff;
+  background-color: #d13066;
+  border-color: #a31243;
+}
+.btn-instagram:hover,
+.btn-instagram:focus,
+.btn-instagram:active {
+  color: #fff;
+  background-color: #a31243;
+
+}
