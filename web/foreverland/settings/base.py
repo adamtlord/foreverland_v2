@@ -27,6 +27,8 @@ SITE_ID = 1
 
 COMPRESS_ENABLED = False
 
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
 ENV = os.getenv("ENV")
 if not ENV:
     raise Exception("Environment variable ENV is required!")
