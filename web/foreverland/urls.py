@@ -1,8 +1,8 @@
 from django.conf import settings
-from django.conf.urls import include
+from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path
 from django.views.defaults import page_not_found, server_error
 from django.views.generic.base import RedirectView
 from media.views import behind_the_music, downloads
@@ -38,7 +38,7 @@ if settings.DEBUG:
     import debug_toolbar
 
     urlpatterns += [
-        re_path(r"^404/$", page_not_found),
-        re_path(r"^500/$", server_error),
-        re_path(r"^__debug__/", include(debug_toolbar.urls)),
+        url(r"^404/$", page_not_found),
+        url(r"^500/$", server_error),
+        url(r"^__debug__/", include(debug_toolbar.urls)),
     ]
