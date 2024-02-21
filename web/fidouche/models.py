@@ -1,6 +1,7 @@
 from django.db import models
-from localflavor.us.models import PhoneNumberField, USStateField
+from localflavor.us.models import USStateField
 from members.models import Member, Sub
+from phonenumber_field.modelfields import PhoneNumberField
 from shows.models import Show, Tour
 
 VENMO = "venmo"
@@ -106,7 +107,6 @@ class ExpenseCategory(models.Model):
 
 
 class Expense(models.Model):
-
     show = models.ForeignKey(
         Show, related_name="expense", blank=True, null=True, on_delete=models.SET_NULL
     )
@@ -144,7 +144,6 @@ class Expense(models.Model):
 
 
 class TourExpense(models.Model):
-
     tour = models.ForeignKey(Tour, blank=True, null=True, on_delete=models.SET_NULL)
     date = models.DateField(blank=True, null=True, verbose_name="Expense Date")
     payee = models.ForeignKey(Payee, blank=True, null=True, on_delete=models.SET_NULL)
@@ -177,7 +176,6 @@ class TourExpense(models.Model):
 
 
 class Income(models.Model):
-
     date = models.DateField(blank=True, null=True)
     payer = models.CharField(blank=True, null=True, max_length=255)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -194,7 +192,6 @@ class Income(models.Model):
 
 
 class Quote(models.Model):
-
     quote = models.TextField()
     source = models.CharField(max_length=128, blank=True, null=True)
     occasion = models.CharField(max_length=256, blank=True, null=True)
@@ -204,7 +201,6 @@ class Quote(models.Model):
 
 
 class Agent(models.Model):
-
     name = models.CharField(max_length=128)
     agency = models.CharField(max_length=128, blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True)
@@ -255,7 +251,6 @@ class CommissionPayment(models.Model):
 
 
 class ProductionCompany(models.Model):
-
     name = models.CharField(max_length=128)
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
@@ -274,7 +269,6 @@ class ProductionCompany(models.Model):
 
 
 class Fiduciary(models.Model):
-
     name = models.CharField(max_length=128)
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)

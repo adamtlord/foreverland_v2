@@ -2,7 +2,8 @@ from decimal import Decimal
 
 from common.utils import get_lat_lng
 from django.db import models
-from localflavor.us.models import PhoneNumberField, USStateField
+from localflavor.us.models import USStateField
+from phonenumber_field.modelfields import PhoneNumberField
 from sorl.thumbnail import ImageField
 
 
@@ -26,7 +27,7 @@ class Venue(models.Model):
         ordering = ["venue_name"]
 
     def save(self, *args, **kwargs):
-        """ Let's get the latlng before we save"""
+        """Let's get the latlng before we save"""
         super(Venue, self).save(*args, **kwargs)
         if not self.ltlng:
             address = "%s %s %s %s %s %s" % (
@@ -58,7 +59,7 @@ class Venue(models.Model):
 
 
 class Tour(models.Model):
-    """ A collection of shows, ie, Speed of Sound """
+    """A collection of shows, ie, Speed of Sound"""
 
     name = models.CharField(max_length=200, blank=True, null=True)
 
