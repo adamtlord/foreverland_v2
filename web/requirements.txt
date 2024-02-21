@@ -16,7 +16,8 @@ icalendar==5.0.11
 mysqlclient==2.0.3
 phonenumbers==8.13.30
 pillow==10.2.0
-pycryptodome==3.10.1
+pycryptodome==3.20.0
+pymemcache==4.0.0
 python-dateutil==2.8.2
 python-memcached==1.59
 python-stdnum==1.19
