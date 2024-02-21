@@ -1,5 +1,6 @@
 from django.db import models
-from localflavor.us.models import PhoneNumberField, USStateField
+from localflavor.us.models import USStateField
+from phonenumber_field.modelfields import PhoneNumberField
 
 SECTIONS = (("v", "Vocal"), ("h", "Horn"), ("r", "Rhythm"))
 
