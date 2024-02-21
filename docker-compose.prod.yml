@@ -23,7 +23,7 @@ services:
     command: bash -c "python3 manage.py collectstatic --noinput && python3 manage.py compress && python3 manage.py migrate && gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000"
   db:
     container_name: foreverland_db
-    image: mysql:5.7
+    image: mysql:5.8
     restart: always
     env_file:
       - .env.prod
