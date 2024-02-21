@@ -24,7 +24,7 @@ services:
       # sleep infinity"
   db:
     container_name: foreverland_db
-    image: mariadb:10.3
+    image: mariadb:10.4
     restart: always
     env_file:
       - .env

@@ -2,7 +2,8 @@ from decimal import Decimal
 
 from common.utils import get_lat_lng
 from django.db import models
-from localflavor.us.models import PhoneNumberField, USStateField
+from localflavor.us.models import USStateField
+from phonenumber_field.modelfields import PhoneNumberField
 from sorl.thumbnail import ImageField
 
 
