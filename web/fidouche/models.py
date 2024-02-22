@@ -1,6 +1,5 @@
 from django.db import models
-from localflavor.us.models import USStateField
-from phonenumber_field.modelfields import PhoneNumberField
+from localflavor.us.models import PhoneNumberField, USStateField
 from members.models import Member, Sub
 from shows.models import Show, Tour
 
