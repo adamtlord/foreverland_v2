@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 import django.db.models.deletion
 import localflavor.us.models
-from phonenumber_field.modelfields import PhoneNumberField
 from django.db import migrations, models
 
 
@@ -43,7 +42,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "phone",
-                    PhoneNumberField(blank=True, null=True),
+                    localflavor.us.models.PhoneNumberField(blank=True, null=True),
                 ),
                 (
                     "ssn",
@@ -191,7 +190,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "phone",
-                    PhoneNumberField(blank=True, null=True),
+                    localflavor.us.models.PhoneNumberField(blank=True, null=True),
                 ),
                 (
                     "ssn",
@@ -285,7 +284,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "phone",
-                    PhoneNumberField(blank=True, null=True),
+                    localflavor.us.models.PhoneNumberField(blank=True, null=True),
                 ),
                 (
                     "ssn",
