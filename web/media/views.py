@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import EmptyPage, InvalidPage, Paginator
 from django.shortcuts import render
 from media.models import Album, Download, Image
 

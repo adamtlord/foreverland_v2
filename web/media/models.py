@@ -5,10 +5,6 @@ from django.db import models
 from shows.models import Show
 from sorl.thumbnail import ImageField
 
-# from string import join
-
-
-
 
 class Album(models.Model):
     title = models.CharField(max_length=100)
