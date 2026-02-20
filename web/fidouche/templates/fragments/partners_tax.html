@@ -24,7 +24,7 @@
     <tbody>
         {% for partner, payments in partner_payments.items %}
             <tr>
-                <td>{{ partner.first_name }} {{ partner.middle_name }} {{ partner.last_name }} <i class="fa fa-home address-toggle" data-toggle="collapse" data-target="#partner{{ partner.id }}_address"></i>
+                <td>{{ partner.first_name }} {{ partner.middle_name|default:"" }} {{ partner.last_name }} <i class="fa fa-home address-toggle" data-toggle="collapse" data-target="#partner{{ partner.id }}_address"></i>
                     <div id="partner{{ partner.id }}_address" class="collapse">
                         {% if partner.address %}
                             {{ partner.address }}<br>
