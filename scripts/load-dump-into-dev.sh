@@ -25,10 +25,15 @@ if [[ ! -f "$ENV_FILE" ]]; then
   exit 1
 fi
 
-set -a
-# shellcheck source=/dev/null
-source "$ENV_FILE"
-set +a
+# Load only VAR=value lines (avoids executing malformed or comment-like lines)
+while IFS= read -r line || [[ -n "$line" ]]; do
+  if [[ "$line" =~ ^[[:space:]]*# ]] || [[ -z "${line//[[:space:]]/}" ]]; then
+    continue
+  fi
+  if [[ "$line" =~ ^([A-Za-z_][A-Za-z0-9_]*)=(.*)$ ]]; then
+    export "${BASH_REMATCH[1]}=${BASH_REMATCH[2]}"
+  fi
+done < "$ENV_FILE"
 
 for var in MYSQL_DATABASE MYSQL_USER MYSQL_PASSWORD; do
   if [[ -z "${!var:-}" ]]; then
