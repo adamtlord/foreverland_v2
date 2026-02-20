@@ -1,6 +1,10 @@
 /* global FL */
 /* global _ */
 /* global Cookies */
+var PLAYER_COUNT = FL.VARS.PLAYER_COUNT;
+var INCLUDE_BAND_SHARE = true;
+var PAYOUT_COUNT = INCLUDE_BAND_SHARE ? PLAYER_COUNT + 1 : PLAYER_COUNT;
+
 $(function($) {
   // Methods
   function updateFields() {
@@ -55,7 +59,7 @@ $(function($) {
         }
         c = (parseFloat((cb - pc) * (cp / 100)) || 0).toFixed(2);
         n = (parseFloat(g - c - (pc + fc + iem + ps + a + o + t)) || 0).toFixed(2);
-        mp = (parseFloat(n / 13) || 0).toFixed(2);
+        mp = (parseFloat(n / PAYOUT_COUNT) || 0).toFixed(2);
         acc = (parseFloat(n - sumRealPayouts()) || 0).toFixed(2);
       }
       commission.val(c).change();

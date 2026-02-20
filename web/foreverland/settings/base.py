@@ -139,3 +139,7 @@ def extend_list_avoid_repeats(list_to_extend, extend_with):
     """Extends the first list with the elements in the second one, making sure its elements are not already there in the
     original list."""
     list_to_extend.extend(filter(lambda x: not list_to_extend.count(x), extend_with))
+
+
+# Global vars and band settings
+BAND_SIZE = 11

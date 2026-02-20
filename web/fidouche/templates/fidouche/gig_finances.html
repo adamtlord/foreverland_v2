@@ -1,7 +1,7 @@
 {% extends 'base_fidouche.html' %}
 {% load custom_tags humanize %}
 {% block header_includes %}
-<script>var FL = {VARS:{}};</script>
+<script>var FL = {VARS:{PLAYER_COUNT:{{player_count}}}}</script>
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -348,7 +348,7 @@
 								<span class="input-group-addon">$</span>
 								{{ form.payout }}
 							</div>
-							<span class="help-inline" style="display:none;">max. payout for 13 players: <span id="max_payout"></span></span>
+							<span class="help-inline" style="display:none;">max. payout for {{ player_count }} players: $<span id="max_payout"></span></span>
 						</div>
 					</div>
 					<div class="form-group warn">

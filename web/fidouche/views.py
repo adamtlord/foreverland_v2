@@ -337,6 +337,7 @@ def gig_finances(request, gig_id=None, template="fidouche/gig_finances.html"):
         "gig": gig,
         "iem_cat": iem_cat.id,
         "next_show": next_show,
+        "player_count": settings.BAND_SIZE
     }
 
     return render(request, template, d)
