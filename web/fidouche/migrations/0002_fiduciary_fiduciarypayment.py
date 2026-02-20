@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 import django.db.models.deletion
-import localflavor.us.models
 from django.db import migrations, models
 
 
@@ -30,7 +29,7 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=128)),
                 ("address", models.CharField(blank=True, max_length=100, null=True)),
                 ("city", models.CharField(blank=True, max_length=100, null=True)),
-                ("state", localflavor.us.models.USStateField(blank=True, null=True)),
+                ("state", models.CharField(blank=True, max_length=50, null=True)),
                 (
                     "zip_code",
                     models.CharField(
@@ -39,7 +38,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "phone",
-                    localflavor.us.models.PhoneNumberField(blank=True, null=True),
+                    models.CharField(blank=True, max_length=20, null=True),
                 ),
                 (
                     "ssn",

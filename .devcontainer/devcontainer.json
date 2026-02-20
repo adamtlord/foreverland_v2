@@ -4,6 +4,7 @@
   "service": "web",
   "workspaceFolder": "/home/ubuntu/app",
   "shutdownAction": "stopCompose",
+  "overrideCommand": true,
   "customizations": {
     "vscode": {
       "extensions": [
