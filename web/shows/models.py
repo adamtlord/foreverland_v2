@@ -2,7 +2,6 @@ from decimal import Decimal
 
 from common.utils import get_lat_lng
 from django.db import models
-from localflavor.us.models import PhoneNumberField, USStateField
 from sorl.thumbnail import ImageField
 
 
@@ -12,10 +11,10 @@ class Venue(models.Model):
     address1 = models.CharField(max_length=100, blank=True, null=True)
     address2 = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
-    state = USStateField(max_length=50, blank=True, null=True)
+    state = models.CharField(max_length=50, blank=True, null=True)
     zip_code = models.CharField(max_length=20, blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True, default="U.S.A.")
-    phone = PhoneNumberField(blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
     website = models.URLField(max_length=200, blank=True, null=True)
     contact = models.CharField(max_length=100, blank=True, null=True)
     notes = models.TextField(blank=True, null=True)

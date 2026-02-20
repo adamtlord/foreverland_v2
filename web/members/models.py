@@ -1,5 +1,4 @@
 from django.db import models
-from localflavor.us.models import PhoneNumberField, USStateField
 
 SECTIONS = (("v", "Vocal"), ("h", "Horn"), ("r", "Rhythm"))
 
@@ -18,11 +17,11 @@ class Member(models.Model):
     active = models.BooleanField()
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
-    state = USStateField(max_length=50, blank=True, null=True)
+    state = models.CharField(max_length=50, blank=True, null=True)
     zip_code = models.CharField(
         verbose_name="Zip", max_length=20, blank=True, null=True
     )
-    phone = PhoneNumberField(blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN#", max_length=16, blank=True, null=True)
     partner = models.BooleanField(default=False)
     date_partner_joined = models.DateField(
@@ -45,11 +44,11 @@ class Sub(models.Model):
     instrument = models.CharField(max_length=100, blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
-    state = USStateField(max_length=50, blank=True, null=True)
+    state = models.CharField(max_length=50, blank=True, null=True)
     zip_code = models.CharField(
         verbose_name="Zip", max_length=20, blank=True, null=True
     )
-    phone = PhoneNumberField(blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN#", max_length=16, blank=True, null=True)
 
     class Meta:

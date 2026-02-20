@@ -1,5 +1,4 @@
 from django.db import models
-from localflavor.us.models import PhoneNumberField, USStateField
 from members.models import Member, Sub
 from shows.models import Show, Tour
 
@@ -67,11 +66,11 @@ class Payee(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
-    state = USStateField(max_length=50, blank=True, null=True)
+    state = models.CharField(max_length=50, blank=True, null=True)
     zip_code = models.CharField(
         verbose_name="Zip", max_length=20, blank=True, null=True
     )
-    phone = PhoneNumberField(blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN#", max_length=16, blank=True, null=True)
 
     def __str__(self):
@@ -209,11 +208,11 @@ class Agent(models.Model):
     agency = models.CharField(max_length=128, blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
-    state = USStateField(max_length=50, blank=True, null=True)
+    state = models.CharField(max_length=50, blank=True, null=True)
     zip_code = models.CharField(
         verbose_name="Zip", max_length=20, blank=True, null=True
     )
-    phone = PhoneNumberField(blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN/EIN", max_length=16, blank=True, null=True)
 
     def __str__(self):
@@ -259,11 +258,11 @@ class ProductionCompany(models.Model):
     name = models.CharField(max_length=128)
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
-    state = USStateField(max_length=50, blank=True, null=True)
+    state = models.CharField(max_length=50, blank=True, null=True)
     zip_code = models.CharField(
         verbose_name="Zip", max_length=20, blank=True, null=True
     )
-    phone = PhoneNumberField(blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN/EIN", max_length=16, blank=True, null=True)
 
     def __str__(self):
@@ -278,11 +277,11 @@ class Fiduciary(models.Model):
     name = models.CharField(max_length=128)
     address = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
-    state = USStateField(max_length=50, blank=True, null=True)
+    state = models.CharField(max_length=50, blank=True, null=True)
     zip_code = models.CharField(
         verbose_name="Zip", max_length=20, blank=True, null=True
     )
-    phone = PhoneNumberField(blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
     ssn = models.CharField(verbose_name="SSN/EIN", max_length=16, blank=True, null=True)
 
     def __str__(self):
