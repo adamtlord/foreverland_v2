@@ -41,5 +41,5 @@ OUTPUT_FILE="${1:-$DEFAULT_OUTPUT}"
 mkdir -p "$(dirname "$OUTPUT_FILE")"
 
 echo "Dumping ${MYSQL_DATABASE} from container ${CONTAINER} to ${OUTPUT_FILE} ..."
-docker exec "$CONTAINER" mysqldump -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --single-transaction --routines --triggers "$MYSQL_DATABASE" | gzip > "$OUTPUT_FILE"
+docker exec "$CONTAINER" mysqldump -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --single-transaction --no-tablespaces --routines --triggers "$MYSQL_DATABASE" | gzip > "$OUTPUT_FILE"
 echo "Done. $(wc -c < "$OUTPUT_FILE" | tr -d ' ') bytes written."
