@@ -43,6 +43,15 @@ DATABASES = {
     }
 }
 
+# Must come after DATABASES so tests do not hit MySQL.
+import sys  # noqa: E402
+
+if "test" in sys.argv:
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": ":memory:",
+    }
+
 INTERNAL_IPS = ["127.0.0.1"]
 try:
     from local import *  # noqa: F401 F403

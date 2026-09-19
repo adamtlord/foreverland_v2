@@ -26,9 +26,13 @@ def upcoming_shows(request, template="shows/upcoming.html"):
 def past_shows(request, template="shows/past.html"):
     """list all past shows"""
     public_shows = Show.objects.filter(public=True).select_related("venue")
-    past_shows = public_shows.filter(date__lt=datetime.datetime.now()).order_by("date")
+    past_qs = public_shows.filter(date__lt=datetime.datetime.now()).order_by("date")
+    year = request.GET.get("year")
+    if year:
+        past_qs = past_qs.filter(date__year=int(year))
+
     shows_by_year = OrderedDict()
-    for show in past_shows:
+    for show in past_qs:
         if show.date.year not in shows_by_year:
             shows_by_year[show.date.year] = []
         shows_by_year[show.date.year].append(show)
@@ -44,13 +48,13 @@ def past_shows(request, template="shows/past.html"):
 
 def show(request, show_id, template="shows/detail.html"):
     """display individual show"""
-    show = get_object_or_404(Show, pk=show_id)
+    show = get_object_or_404(Show.objects.select_related("venue"), pk=show_id)
     return render(request, template, {"show": show})
 
 
 def show_modal(request, show_id, template="shows/modal.html"):
     """display individual show"""
-    show = get_object_or_404(Show, pk=show_id)
+    show = get_object_or_404(Show.objects.select_related("venue"), pk=show_id)
     return render(request, template, {"show": show})
 
 

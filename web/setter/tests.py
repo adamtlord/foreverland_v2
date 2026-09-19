@@ -1,16 +1,7 @@
-"""
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
-"""
-
 from django.test import TestCase
 
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
+# Setter view behavior is covered in fidouche.tests.SetterViewTests.
+class SetterSmokeTests(TestCase):
+    def test_placeholder(self):
+        self.assertTrue(True)

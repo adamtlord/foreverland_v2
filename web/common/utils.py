@@ -22,8 +22,4 @@ def get_lat_lng(location):
 def years_with_gigs():
     from shows.models import Show
 
-    years = []
-    years_with_gigs = Show.objects.all().dates("date", "year")
-    for year in years_with_gigs:
-        years.append(year.year)
-    return years
+    return [dt.year for dt in Show.objects.dates("date", "year")]

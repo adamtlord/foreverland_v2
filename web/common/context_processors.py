@@ -1,19 +1,13 @@
-from random import randint
-
 from common.utils import years_with_gigs
 from marketing.models import Testimonial
 
 
 def random_quote(request):
-    quote_count = Testimonial.objects.filter(featured=True).count()
-    if quote_count:
-        random_quote = Testimonial.objects.filter(featured=True)[
-            randint(0, quote_count - 1)
-        ]
-    else:
-        random_quote = None
-    return {"random_quote": random_quote}
+    return {
+        "random_quote": Testimonial.objects.filter(featured=True).order_by("?").first()
+    }
 
 
 def list_years_with_gigs(request):
-    return {"active_years": years_with_gigs}
+    # Eager list so templates do not re-query on every {% for year in active_years %}.
+    return {"active_years": years_with_gigs()}

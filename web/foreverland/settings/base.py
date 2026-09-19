@@ -110,13 +110,6 @@ AUTHENTICATION_BACKENDS = [
 
 AUTH_PROFILE_MODULE = "accounts.UserProfile"
 
-if "test" in sys.argv:
-    DATABASES["default"] = {
-        "ENGINE": "django.db.backends.sqlite3",
-        "PASSWORD": "",
-        "USER": "",
-    }
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",

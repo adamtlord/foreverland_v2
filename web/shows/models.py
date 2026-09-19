@@ -63,7 +63,8 @@ class Tour(models.Model):
 
     @property
     def shows(self):
-        return self.show_in_tour.all().order_by("date")
+        # Rely on Show.Meta.ordering so prefetch_related('show_in_tour') is reused.
+        return self.show_in_tour.all()
 
     @property
     def cities(self):
@@ -113,13 +114,14 @@ class Tour(models.Model):
 
     @property
     def expenses(self):
+        if hasattr(self, "_expenses_total_cache"):
+            return self._expenses_total_cache
         from fidouche.models import TourExpense
 
-        expenses = TourExpense.objects.filter(tour=self)
-        if expenses:
-            return sum([expense.amount for expense in expenses])
-        else:
-            return 0
+        expenses = list(TourExpense.objects.filter(tour=self))
+        total = sum([expense.amount for expense in expenses]) if expenses else 0
+        self._expenses_total_cache = total
+        return total
 
     @property
     def all_expenses(self):
@@ -128,12 +130,16 @@ class Tour(models.Model):
 
     @property
     def expense_share(self):
-        shows = self.shows
+        if hasattr(self, "_expense_share_cache"):
+            return self._expense_share_cache
+        shows = list(self.shows)
         expenses = self.expenses
         if shows and expenses:
-            return Decimal("%.2f" % (expenses / len(shows)))
+            share = Decimal("%.2f" % (expenses / len(shows)))
         else:
-            return 0
+            share = 0
+        self._expense_share_cache = share
+        return share
 
     def __str__(self):
         return self.name
@@ -241,14 +247,32 @@ class Show(models.Model):
     settlement_sheet = ImageField(upload_to="receipts/", blank=True, null=True)
     payout_notes = models.TextField(null=True, blank=True)
 
-    def get_production_costs(self):
-        d = {}
-        from fidouche.models import ProductionCategory, ProductionPayment
+    def _production_payment_list(self):
+        cache = getattr(self, "_prefetched_objects_cache", {})
+        if "production_payment" in cache:
+            return list(self.production_payment.all())
+        from fidouche.models import ProductionPayment
 
-        production_expenses = list(
+        return list(
             ProductionPayment.objects.filter(show=self).select_related("category")
         )
-        production_categories = ProductionCategory.objects.all()
+
+    def _expense_list(self):
+        cache = getattr(self, "_prefetched_objects_cache", {})
+        if "expense" in cache:
+            return list(self.expense.all())
+        from fidouche.models import Expense
+
+        return list(Expense.objects.filter(show=self).select_related("new_category"))
+
+    def get_production_costs(self, production_categories=None, production_expenses=None):
+        d = {}
+        from fidouche.models import ProductionCategory
+
+        if production_expenses is None:
+            production_expenses = self._production_payment_list()
+        if production_categories is None:
+            production_categories = list(ProductionCategory.objects.all())
         if production_expenses:
             for category in production_categories:
                 d[category.name] = []
@@ -266,14 +290,14 @@ class Show(models.Model):
             d["IEM"] = iem
         return d
 
-    def get_expenses(self):
+    def get_expenses(self, expense_categories=None, expenses=None):
         d = {}
-        from fidouche.models import Expense, ExpenseCategory
+        from fidouche.models import ExpenseCategory
 
-        expenses = list(
-            Expense.objects.filter(show=self).select_related("new_category")
-        )
-        expense_categories = ExpenseCategory.objects.all()
+        if expenses is None:
+            expenses = self._expense_list()
+        if expense_categories is None:
+            expense_categories = list(ExpenseCategory.objects.all())
         for category in expense_categories:
             d[category.category] = []
         if expenses:
@@ -288,13 +312,15 @@ class Show(models.Model):
                 d[k] = sum(d[k])
         return d
 
-    def get_show_costs(self):
-        production_costs = self.get_production_costs()
+    def get_show_costs(self, production_costs=None, expense_costs=None):
+        if production_costs is None:
+            production_costs = self.get_production_costs()
         production = []
         for k in production_costs:
             production.append(production_costs[k])
         production = sum(production)
-        expense_costs = self.get_expenses()
+        if expense_costs is None:
+            expense_costs = self.get_expenses()
         expenses = []
         for k in expense_costs:
             if type(expense_costs[k]) is list:
@@ -305,16 +331,44 @@ class Show(models.Model):
         commission = self.commission if self.commission else 0
         return production + expenses + commission
 
-    def get_total_costs(self):
-        tour_costs = self.tour.expense_share if self.tour else 0
+    def get_total_costs(self, show_costs=None, tour_share=None):
+        if tour_share is None:
+            tour_share = self.tour.expense_share if self.tour else 0
+        if show_costs is None:
+            show_costs = self.get_show_costs()
+        return show_costs + tour_share
 
-        return self.get_show_costs() + tour_costs
-
-    def get_tour_costs(self):
+    def get_tour_costs(self, tour_share=None):
         d = {}
         if self.tour:
-            d["Tour Costs"] = self.tour.expense_share
+            if tour_share is None:
+                tour_share = self.tour.expense_share
+            d["Tour Costs"] = tour_share
         return d
+
+    def attach_cost_breakdown(
+        self, production_categories=None, expense_categories=None, tour_share=None
+    ):
+        """Compute all cost dicts once without re-querying overlapping pieces."""
+        self.production_costs = self.get_production_costs(
+            production_categories=production_categories
+        )
+        self.expenses = self.get_expenses(expense_categories=expense_categories)
+        self.tour_costs = self.get_tour_costs(tour_share=tour_share)
+        show_costs = self.get_show_costs(self.production_costs, self.expenses)
+        if tour_share is None and self.tour:
+            tour_share = self.tour.expense_share
+        elif tour_share is None:
+            tour_share = 0
+        self.total_expenses = self.get_total_costs(
+            show_costs=show_costs, tour_share=tour_share or 0
+        )
+        self.all_expenses = {
+            **self.production_costs,
+            **self.expenses,
+            **self.tour_costs,
+        }
+        return self
 
     class Meta:
         ordering = ["date"]

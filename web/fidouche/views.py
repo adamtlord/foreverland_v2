@@ -1,6 +1,5 @@
 import datetime
 import json
-import random
 from datetime import date
 from itertools import chain
 
@@ -9,15 +8,15 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.humanize.templatetags.humanize import intcomma
-from django.db.models import Sum
+from django.db.models import Count, Min, Prefetch, Sum
 from django.forms.models import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from fidouche.forms import (ExpenseForm, FiduciaryPaymentForm, GigFinanceForm,
                             IncomeForm, PaymentForm, ProductionPaymentForm,
                             SubPaymentForm, TourExpenseForm)
-from fidouche.models import (CommissionPayment, Expense, Fiduciary,
-                             FiduciaryPayment, Income, Payee, Payment,
+from fidouche.models import (CommissionPayment, Expense, ExpenseCategory,
+                             Fiduciary, FiduciaryPayment, Income, Payee, Payment,
                              ProductionCategory, ProductionCompany,
                              ProductionPayment, Quote, SubPayment, TourExpense)
 from members.models import Member, Sub
@@ -26,10 +25,53 @@ from shows.models import Show, Tour, Venue
 current_year = date.today().year
 
 
+def _shows_with_cost_relations(queryset):
+    return queryset.select_related("venue", "tour").prefetch_related(
+        Prefetch(
+            "production_payment",
+            queryset=ProductionPayment.objects.select_related("category"),
+        ),
+        Prefetch(
+            "expense",
+            queryset=Expense.objects.select_related("new_category"),
+        ),
+        Prefetch("payment", queryset=Payment.objects.all()),
+    )
+
+
+def _attach_costs_to_shows(gigs):
+    """Load categories once and attach cost breakdowns without repeated queries."""
+    gigs = list(gigs)
+    if not gigs:
+        return gigs
+    production_categories = list(ProductionCategory.objects.all())
+    expense_categories = list(ExpenseCategory.objects.all())
+    tour_meta = {}
+    for gig in gigs:
+        tour_share = None
+        if gig.tour_id:
+            if gig.tour_id not in tour_meta:
+                # Populate caches on this tour instance, then reuse values.
+                expenses_total = gig.tour.expenses
+                share = gig.tour.expense_share
+                tour_meta[gig.tour_id] = (share, expenses_total)
+            tour_share, expenses_total = tour_meta[gig.tour_id]
+            gig.tour._expense_share_cache = tour_share
+            gig.tour._expenses_total_cache = expenses_total
+        gig.attach_cost_breakdown(
+            production_categories=production_categories,
+            expense_categories=expense_categories,
+            tour_share=tour_share,
+        )
+    return gigs
+
+
 @login_required
 def financial_dashboard(request, template="fidouche/dashboard.html"):
     """"""
-    gigs = Show.objects.filter(date__year=current_year).select_related("venue")
+    gigs = _shows_with_cost_relations(
+        Show.objects.filter(date__year=current_year)
+    )
     last_show = (
         Show.objects.filter(date__lte=datetime.datetime.now())
         .order_by("-date")
@@ -42,36 +84,24 @@ def financial_dashboard(request, template="fidouche/dashboard.html"):
         .select_related("venue")
         .first()
     )
-    gigs_booked = gigs.filter(date__year=current_year)
-    gigs_played = gigs_booked.filter(date__lt=datetime.datetime.now())
+    now = datetime.datetime.now()
+    gigs = _attach_costs_to_shows(gigs)
+    gigs_played = [g for g in gigs if g.date < now]
+    gigs_booked_count = len(gigs)
+    gigs_played_count = len(gigs_played)
 
-    quotecount = Quote.objects.all().count()
-    rslice = random.random() * (quotecount - 1)
-    quotes = Quote.objects.all()[rslice : rslice + 1]
+    quote = Quote.objects.order_by("?").first() or Quote(quote="")
 
-    ytd_gross = []
-    ytd_net = []
-    ytd_player = []
-
-    for gig in gigs:
-        gig.production_costs = gig.get_production_costs()
-        gig.expenses = gig.get_expenses()
-        gig.total_expenses = gig.get_total_costs()
-
-    for gig in gigs_played:
-        if gig.gross:
-            ytd_gross.append(gig.gross)
-        if gig.net:
-            ytd_net.append(gig.net)
-        if gig.payout:
-            ytd_player.append(gig.payout)
+    ytd_gross = [g.gross for g in gigs_played if g.gross]
+    ytd_net = [g.net for g in gigs_played if g.net]
+    ytd_player = [g.payout for g in gigs_played if g.payout]
 
     payout_sum = sum(ytd_player)
-    payout_avg = payout_sum / len(ytd_player) if len(ytd_player) > 0 else 0
+    payout_avg = payout_sum / len(ytd_player) if ytd_player else 0
 
     ytd = {
-        "gigs_booked": gigs_booked.count(),
-        "gigs_played": gigs_played.count(),
+        "gigs_booked": gigs_booked_count,
+        "gigs_played": gigs_played_count,
         "net": sum(ytd_net),
         "gross": sum(ytd_gross),
         "payout": payout_sum,
@@ -83,7 +113,7 @@ def financial_dashboard(request, template="fidouche/dashboard.html"):
         "last_show": last_show,
         "next_show": next_show,
         "ytd": ytd,
-        "quote": quotes[0],
+        "quote": quote,
     }
     return render(request, template, d)
 
@@ -92,12 +122,27 @@ def financial_dashboard(request, template="fidouche/dashboard.html"):
 def gigs_by_year(request, year=current_year, template="fidouche/gigs_by_year.html"):
     """Listing of all gigs in the given year"""
 
-    gigs = Show.objects.filter(date__year=year)
+    gigs_qs = Show.objects.filter(date__year=year)
     current = False
     if int(year) == int(current_year):
-        gigs = gigs.filter(date__lt=datetime.datetime.now())
+        gigs_qs = gigs_qs.filter(date__lt=datetime.datetime.now())
         current = True
+
+    month_stats = {
+        row["date__month"]: row
+        for row in gigs_qs.values("date__month").annotate(
+            count=Count("id"), gross=Sum("gross")
+        )
+    }
     by_month = {}
+    for m in range(1, 13):
+        stats = month_stats.get(m)
+        by_month[m] = {
+            "count": stats["count"] if stats else 0,
+            "gross": {"gross__sum": stats["gross"] if stats else None},
+        }
+
+    gigs = _attach_costs_to_shows(_shows_with_cost_relations(gigs_qs))
     players = []
     commission = []
     to_account = []
@@ -107,20 +152,9 @@ def gigs_by_year(request, year=current_year, template="fidouche/gigs_by_year.htm
     sum_all_expenses = []
     all_total_expenses = []
 
-    for m in range(1, 13):
-        month_gigs = gigs.filter(date__month=m)
-        by_month[m] = {
-            "count": month_gigs.count(),
-            "gross": month_gigs.aggregate(Sum("gross")),
-        }
-
     for gig in gigs:
-        gig.production_costs = gig.get_production_costs()
-        gig.expenses = gig.get_expenses()
-        gig.tour_costs = gig.get_tour_costs()
-        gig.total_expenses = gig.get_total_costs()
         all_total_expenses.append(gig.total_expenses)
-        gig.payments = Payment.objects.filter(show=gig)
+        gig.payments = list(gig.payment.all())
         if gig.payments:
             for pay in gig.payments:
                 if pay.amount:
@@ -140,11 +174,8 @@ def gigs_by_year(request, year=current_year, template="fidouche/gigs_by_year.htm
         if gig.payout:
             payout.append(gig.payout)
 
-        gig.all_expenses = {**gig.production_costs, **gig.expenses, **gig.tour_costs}
-
         sum_all_expenses.append(gig.all_expenses)
 
-    # http://stackoverflow.com/questions/19461747/sum-corresponding-elements-of-multiple-python-dictionaries
     from collections import Counter
 
     summed_expenses = Counter()
@@ -157,7 +188,7 @@ def gigs_by_year(request, year=current_year, template="fidouche/gigs_by_year.htm
     d = {
         "year": year,
         "this_years_gigs": gigs,
-        "gigs_played": gigs.count(),
+        "gigs_played": len(gigs),
         "gross": sum(gross),
         "net": sum(net),
         "payout": payout_sum,
@@ -178,41 +209,35 @@ def gigs_year_over_year(request, template="fidouche/gigs_year_over_year.html"):
     d = {}
     from common.utils import years_with_gigs
 
-    years_with_gigs = years_with_gigs()
-    gigs = Show.objects.all()
+    years_list = years_with_gigs()
+    year_rows = {
+        row["date__year"]: row
+        for row in Show.objects.values("date__year").annotate(
+            gigs_played=Count("id"),
+            net=Sum("net"),
+            gross=Sum("gross"),
+            payout=Sum("payout"),
+        )
+    }
     years = {}
+    for year in years_list:
+        row = year_rows.get(year, {})
+        years[year] = {
+            "gigs_played": row.get("gigs_played") or 0,
+            "net": row.get("net") or 0,
+            "gross": row.get("gross") or 0,
+            "payout": row.get("payout") or 0,
+        }
+    d["years"] = years
+
+    gigs = _attach_costs_to_shows(_shows_with_cost_relations(Show.objects.all()))
     players = []
     commission = []
     sum_all_expenses = []
     all_total_expenses = []
-    for year in years_with_gigs:
-        years[year] = {}
-        this_years_gigs = gigs.filter(date__year=year)
-        y_gross = []
-        y_net = []
-        y_player = []
-        for gig in this_years_gigs:
-            if gig.gross:
-                y_gross.append(gig.gross)
-            if gig.net:
-                y_net.append(gig.net)
-            if gig.payout:
-                y_player.append(gig.payout)
-        years[year] = {
-            "gigs_played": this_years_gigs.count(),
-            "net": sum(y_net),
-            "gross": sum(y_gross),
-            "payout": sum(y_player),
-        }
-    d["years"] = years
-
     for gig in gigs:
-        gig.production_costs = gig.get_production_costs()
-        gig.expenses = gig.get_expenses()
-        gig.tour_costs = gig.get_tour_costs()
-        gig.total_expenses = gig.get_total_costs()
         all_total_expenses.append(gig.total_expenses)
-        gig.payments = Payment.objects.filter(show=gig)
+        gig.payments = list(gig.payment.all())
         if gig.payments:
             for pay in gig.payments:
                 if pay.amount:
@@ -222,7 +247,6 @@ def gigs_year_over_year(request, template="fidouche/gigs_year_over_year.html"):
                 players.append(gig.payout * 14)
         if gig.commission:
             commission.append(gig.commission)
-        gig.all_expenses = {**gig.production_costs, **gig.expenses, **gig.tour_costs}
         sum_all_expenses.append(gig.all_expenses)
 
     d["all_gigs"] = gigs
@@ -235,9 +259,13 @@ def gig_finances(request, gig_id=None, template="fidouche/gig_finances.html"):
     """Choose a gig from this year"""
 
     gig_id = int(gig_id)
-    gig = get_object_or_404(Show, pk=gig_id)
+    gig = get_object_or_404(
+        Show.objects.select_related("venue", "tour", "agent"), pk=gig_id
+    )
     active_members = Member.objects.filter(active=True)
-    iem_cat = ProductionCategory.objects.filter(name__icontains="iem")[0]
+    iem_cat = ProductionCategory.objects.filter(name__icontains="iem").first()
+    if iem_cat is None:
+        iem_cat = ProductionCategory.objects.create(name="IEM")
 
     members_to_pay = [member for member in active_members]
 
@@ -348,10 +376,14 @@ def gig_finances_view(request, gig_id=None, template="fidouche/gig_finances_view
     """Read-only view of gig finance info"""
 
     gig_id = int(gig_id)
-    gig = get_object_or_404(Show, pk=gig_id)
-    payments = Payment.objects.filter(show=gig)
-    sub_payments = SubPayment.objects.filter(show=gig)
-    expenses = Expense.objects.filter(show=gig)
+    gig = get_object_or_404(
+        Show.objects.select_related("venue", "tour"), pk=gig_id
+    )
+    payments = Payment.objects.filter(show=gig).select_related("member")
+    sub_payments = SubPayment.objects.filter(show=gig).select_related("sub")
+    expenses = Expense.objects.filter(show=gig).select_related(
+        "payee", "new_category"
+    )
     buyouts = False
     if (
         gig.fee
@@ -376,7 +408,9 @@ def gig_finances_view(request, gig_id=None, template="fidouche/gig_finances_view
 @login_required
 def expenses_list(request, year=current_year, template="fidouche/expenses_list.html"):
     """Show non-gig expenses"""
-    expenses = Expense.objects.filter(show__isnull=True, date__year=year)
+    expenses = Expense.objects.filter(
+        show__isnull=True, date__year=year
+    ).select_related("payee", "new_category")
     # tour_expenses = TourExpense.objects.filter(date__year=year)
     # all_expenses = list(chain(expenses, tour_expenses))
     d = {"expenses": expenses}
@@ -387,8 +421,12 @@ def expenses_list(request, year=current_year, template="fidouche/expenses_list.h
 @login_required
 def all_expenses_list(request, template="fidouche/expenses_list.html"):
     """Show non-gig expenses"""
-    expenses = Expense.objects.filter(show__isnull=True)
-    tour_expenses = TourExpense.objects.all()
+    expenses = Expense.objects.filter(show__isnull=True).select_related(
+        "payee", "new_category"
+    )
+    tour_expenses = TourExpense.objects.select_related(
+        "payee", "category", "tour"
+    ).all()
     all_expenses = list(chain(expenses, tour_expenses))
     d = {"expenses": all_expenses}
 
@@ -595,6 +633,7 @@ def finance_reports(request, template="fidouche/finance_reports.html"):
             Payment.objects.filter(show__date__range=(start_date, end_date))
             .filter(paid=True)
             .filter(amount__gt=0)
+            .select_related("member", "show", "show__venue")
         )
         for payment in memberPayments:
             if payment.member in member_payments:
@@ -614,6 +653,7 @@ def finance_reports(request, template="fidouche/finance_reports.html"):
             SubPayment.objects.filter(show__date__range=(start_date, end_date))
             .filter(paid=True)
             .filter(amount__gt=0)
+            .select_related("sub", "show", "show__venue")
         )
         for payment in subPayments:
             if payment.sub in sub_payments:
@@ -633,10 +673,12 @@ def finance_reports(request, template="fidouche/finance_reports.html"):
         )
 
         expense_payments = {}
-        expensePayments = Expense.objects.filter(date__range=(start_date, end_date))
+        expensePayments = Expense.objects.filter(
+            date__range=(start_date, end_date)
+        ).select_related("payee", "new_category", "new_category__tax_category", "show")
         tourExpensePayments = TourExpense.objects.filter(
             date__range=(start_date, end_date)
-        )
+        ).select_related("payee", "category", "category__tax_category", "tour")
         allExpenses = list(chain(expensePayments, tourExpensePayments))
         for payment in allExpenses:
             if payment.payee in expense_payments:
@@ -676,6 +718,7 @@ def tax_reports(request, template="fidouche/tax_reports.html"):
             Payment.objects.filter(show__date__range=(start_date, end_date))
             .filter(paid=True)
             .filter(amount__gt=0)
+            .select_related("member", "show", "show__venue")
         )
 
         # PARTNER PAYMENTS aka "Guaranteed Payments"
@@ -719,6 +762,7 @@ def tax_reports(request, template="fidouche/tax_reports.html"):
             SubPayment.objects.filter(show__date__range=(start_date, end_date))
             .filter(paid=True)
             .filter(amount__gt=0)
+            .select_related("sub", "show", "show__venue")
         )
         nonPartnerPayments = payments.exclude(id__in=partnerPayments)
         non_partners_total = []
@@ -758,10 +802,12 @@ def tax_reports(request, template="fidouche/tax_reports.html"):
         )
 
         expense_payments = {}
-        expensePayments = Expense.objects.filter(date__range=(start_date, end_date))
+        expensePayments = Expense.objects.filter(
+            date__range=(start_date, end_date)
+        ).select_related("payee", "new_category", "new_category__tax_category", "show")
         tourExpensePayments = TourExpense.objects.filter(
             date__range=(start_date, end_date)
-        )
+        ).select_related("payee", "category", "category__tax_category", "tour")
         allExpenses = list(chain(expensePayments, tourExpensePayments))
         totalExpensePayments = 0
         for payment in allExpenses:
@@ -795,25 +841,23 @@ def tax_reports(request, template="fidouche/tax_reports.html"):
             ProductionPayment.objects.filter(show__date__range=(start_date, end_date))
             .filter(paid=True)
             .filter(amount__gt=0)
+            .select_related("company", "category", "category__tax_category", "show", "show__venue")
             .order_by("show__date")
         )
-        total_production_payments = []
-        for payment in production_payments:
-            total_production_payments.append(payment.amount)
-
-        total_production_payments = sum(total_production_payments)
+        total_production_payments = production_payments.aggregate(
+            total=Sum("amount")
+        )["total"] or 0
 
         fiduciary_payments = (
             FiduciaryPayment.objects.filter(show__date__range=(start_date, end_date))
             .filter(paid=True)
             .filter(amount__gt=0)
+            .select_related("fidouche", "show", "show__venue")
             .order_by("show__date")
         )
-        total_fiduciary_payments = []
-        for payment in fiduciary_payments:
-            total_fiduciary_payments.append(payment.amount)
-
-        total_fiduciary_payments = sum(total_fiduciary_payments)
+        total_fiduciary_payments = fiduciary_payments.aggregate(
+            total=Sum("amount")
+        )["total"] or 0
 
         d.update(
             {
@@ -891,20 +935,23 @@ def tax_reports(request, template="fidouche/tax_reports.html"):
             CommissionPayment.objects.filter(show__date__range=(start_date, end_date))
             .filter(paid=True)
             .filter(amount__gt=0)
+            .select_related("agent", "show", "show__venue")
             .order_by("show__date")
         )
-        total_commission_payments = []
-        for payment in commission_payments:
-            total_commission_payments.append(payment.amount)
+        total_commission_payments = commission_payments.aggregate(
+            total=Sum("amount")
+        )["total"] or 0
         d.update(
             {
                 "commission_payments": commission_payments,
-                "total_commission_payments": sum(total_commission_payments),
+                "total_commission_payments": total_commission_payments,
             }
         )
 
         # Income
-        shows = Show.objects.filter(date__range=(start_date, end_date))
+        shows = Show.objects.filter(date__range=(start_date, end_date)).select_related(
+            "venue", "agent"
+        )
         paid_by_client = shows.filter(payer="client")
         paid_by_client_total_gross = []
         for show in paid_by_client:
@@ -926,14 +973,17 @@ def tax_reports(request, template="fidouche/tax_reports.html"):
         d["paid_by_agent"] = paid_by_agent
         d["paid_by_agent_total_gross"] = sum(paid_by_agent_total_gross)
 
-        other_income = Income.objects.filter(date__range=(start_date, end_date))
+        other_income = list(
+            Income.objects.filter(date__range=(start_date, end_date))
+        )
+        other_income_total = sum([income.amount for income in other_income])
         d["other_income"] = other_income
-        d["total_other_income"] = sum([income.amount for income in other_income])
+        d["total_other_income"] = other_income_total
 
         d["total_income"] = (
             sum(paid_by_agent_total_gross)
             + sum(paid_by_client_total_gross)
-            + sum([income.amount for income in other_income])
+            + other_income_total
         )
 
         d["expense_grand_total"] = (
@@ -966,15 +1016,14 @@ def member_payments(request, member_id=None, template="fidouche/payments.html"):
         d["start_date"] = start_date
         d["end_date"] = end_date
         # All payments for the date range
-        payment_totals = []
-        payments = Payment.objects.filter(
-            show__date__range=(start_date, end_date)
-        ).filter(member=member, amount__gt=0)
-        for payment in payments:
-            payment_totals.append(payment.amount)
+        payments = (
+            Payment.objects.filter(show__date__range=(start_date, end_date))
+            .filter(member=member, amount__gt=0)
+            .select_related("show", "show__venue", "member")
+        )
         d["payments"] = payments
         d["payee"] = member
-        d["total"] = sum(payment_totals)
+        d["total"] = payments.aggregate(total=Sum("amount"))["total"] or 0
     else:
         d["no_dates"] = True
 
@@ -995,15 +1044,14 @@ def sub_payments(request, sub_id=None, template="fidouche/payments.html"):
         d["start_date"] = start_date
         d["end_date"] = end_date
         # All payments for the date range
-        payment_totals = []
-        payments = SubPayment.objects.filter(
-            show__date__range=(start_date, end_date)
-        ).filter(sub=sub, amount__gt=0)
-        for payment in payments:
-            payment_totals.append(payment.amount)
+        payments = (
+            SubPayment.objects.filter(show__date__range=(start_date, end_date))
+            .filter(sub=sub, amount__gt=0)
+            .select_related("show", "show__venue", "sub")
+        )
         d["payments"] = payments
         d["payee"] = sub
-        d["total"] = sum(payment_totals)
+        d["total"] = payments.aggregate(total=Sum("amount"))["total"] or 0
     else:
         d["no_dates"] = True
 
@@ -1024,19 +1072,20 @@ def vendor_payments(request, vendor_id=None, template="fidouche/vendor_payments.
         d["start_date"] = start_date
         d["end_date"] = end_date
         # All payments for the date range
-        payment_totals = []
         expense_payments = Expense.objects.filter(
             date__range=(start_date, end_date)
-        ).filter(payee=vendor, amount__gt=0)
+        ).filter(payee=vendor, amount__gt=0).select_related(
+            "payee", "new_category", "new_category__tax_category", "show"
+        )
         tour_payments = TourExpense.objects.filter(
             date__range=(start_date, end_date)
-        ).filter(payee=vendor, amount__gt=0)
+        ).filter(payee=vendor, amount__gt=0).select_related(
+            "payee", "category", "category__tax_category", "tour"
+        )
         payments = list(chain(expense_payments, tour_payments))
-        for payment in payments:
-            payment_totals.append(payment.amount)
         d["payments"] = payments
         d["payee"] = vendor
-        d["total"] = sum(payment_totals)
+        d["total"] = sum(payment.amount for payment in payments)
     else:
         d["no_dates"] = True
 
@@ -1059,15 +1108,16 @@ def production_payments(
         d["start_date"] = start_date
         d["end_date"] = end_date
         # All payments for the date range
-        payment_totals = []
-        payments = ProductionPayment.objects.filter(
-            show__date__range=(start_date, end_date)
-        ).filter(company=vendor, amount__gt=0)
-        for payment in payments:
-            payment_totals.append(payment.amount)
+        payments = (
+            ProductionPayment.objects.filter(show__date__range=(start_date, end_date))
+            .filter(company=vendor, amount__gt=0)
+            .select_related(
+                "company", "category", "category__tax_category", "show", "show__venue"
+            )
+        )
         d["payments"] = payments
         d["payee"] = vendor
-        d["total"] = sum(payment_totals)
+        d["total"] = payments.aggregate(total=Sum("amount"))["total"] or 0
     else:
         d["no_dates"] = True
 
@@ -1078,7 +1128,15 @@ def production_payments(
 def tour_list(request, template="fidouche/tour_list.html"):
     """View all tours"""
     d = {}
-    tours = Tour.objects.all()
+    tours = Tour.objects.annotate(
+        show_count=Count("show_in_tour", distinct=True),
+        expense_total=Sum("tourexpense__amount"),
+    ).prefetch_related(
+        Prefetch(
+            "show_in_tour",
+            queryset=Show.objects.select_related("venue").order_by("date"),
+        )
+    )
     d["tours"] = tours
 
     return render(request, template, d)
@@ -1089,7 +1147,15 @@ def tour_detail(request, tour_id=None, template="fidouche/tour_detail.html"):
     """View tour"""
     ExpenseFormSet = inlineformset_factory(Tour, TourExpense, form=TourExpenseForm)
     d = {}
-    tour = get_object_or_404(Tour, pk=tour_id)
+    tour = get_object_or_404(
+        Tour.objects.prefetch_related(
+            Prefetch(
+                "show_in_tour",
+                queryset=Show.objects.select_related("venue").order_by("date"),
+            )
+        ),
+        pk=tour_id,
+    )
     if request.method == "POST":
 
         expense_formset = ExpenseFormSet(request.POST, request.FILES, instance=tour)
@@ -1129,22 +1195,34 @@ def venue_map(request, template="fidouche/venue_map.html"):
 
 
 def venue_map_data(request):
-    venue_set = Venue.objects.exclude(ltlng="")
-    venue_set = [v for v in venue_set if v.shows.all()]
-    venues = sorted(venue_set, key=lambda v: v.first_show)
+    venues = (
+        Venue.objects.exclude(ltlng="")
+        .annotate(
+            num_shows=Count("shows"),
+            first_date=Min("shows__date"),
+            net_sum=Sum("shows__net"),
+        )
+        .filter(num_shows__gt=0)
+        .prefetch_related("shows")
+        .order_by("first_date")
+    )
     venue_data = []
     for venue in venues:
-        venue_ltlng = list([float(x) for x in venue.ltlng.split(",")])
+        venue_ltlng = [float(x) for x in venue.ltlng.split(",")]
         venue_image_url = None
-        venue_net = 0
-        venue_average = 0
-        shows = venue.shows.all()
+        shows = list(venue.shows.all())
         net_shows = [show for show in shows if show.net]
         if venue.venue_image:
             venue_image_url = venue.venue_image.url
         if net_shows:
             venue_net = int(sum([show.net for show in net_shows]))
-            venue_average = int(sum([show.net for show in net_shows])) / len(net_shows)
+            venue_average = venue_net / len(net_shows)
+        else:
+            venue_net = 0
+            venue_average = 0
+        first_show_year = (
+            venue.first_date.strftime("%Y") if venue.first_date else None
+        )
         venue_data.append(
             {
                 "coordinates": venue_ltlng,
@@ -1158,7 +1236,7 @@ def venue_map_data(request):
                 "average": max(venue_average, 0),
                 "average_display": intcomma(venue_average),
                 "num_shows": len(shows),
-                "first_show_year": venue.first_show_year,
+                "first_show_year": first_show_year,
             }
         )
 

@@ -17,7 +17,7 @@
 		<tbody>
 			{% for tour in tours %}
 				<tr>
-					<td><a href="{% url 'tour_detail' tour.id %}">{{ tour.name }}</a> <span class="badge">{{ tour.shows.count }}</span></td>
+					<td><a href="{% url 'tour_detail' tour.id %}">{{ tour.name }}</a> <span class="badge">{{ tour.show_count }}</span></td>
 					<td class="no-pad">
 						{% if tour.shows %}
 							<table class="table table-condensed">
@@ -41,7 +41,7 @@
 							{{ tour.date_range }}
 						{% endif %}
 					</td>
-					<td>${{ tour.expenses|intcomma }}</td>
+					<td>${{ tour.expense_total|default:0|intcomma }}</td>
 				</tr>
 			{% endfor %}
 		</tbody>

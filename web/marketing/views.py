@@ -1,4 +1,5 @@
 import datetime
+import random
 
 from django.shortcuts import redirect, render
 from marketing.models import Testimonial
@@ -16,9 +17,14 @@ def homepage(request, template="marketing/homepage.html"):
         return redirect("/shows/ical")
     public_shows = Show.objects.filter(public=True)
     next_show = (
-        public_shows.filter(date__gte=datetime.datetime.now()).order_by("date").first()
+        public_shows.filter(date__gte=datetime.datetime.now())
+        .select_related("venue")
+        .order_by("date")
+        .first()
     )
-    members = Member.objects.filter(active=True).order_by("display_last")
+    members = Member.objects.filter(active=True).order_by("display_last").only(
+        "display_first", "display_last", "instrument", "section"
+    )
     vocals = [member for member in members if member.section == "v"]
     horns = [member for member in members if member.section == "h"]
     rhythm = [member for member in members if member.section == "r"]
@@ -42,11 +48,12 @@ def homepage(request, template="marketing/homepage.html"):
 
 def about(request, template="marketing/about.html"):
     """Featured Testimonials"""
-    testimonials = Testimonial.objects.all().order_by("?")
+    testimonials = list(Testimonial.objects.all())
+    random.shuffle(testimonials)
 
     d = {"quotes": testimonials}
 
-    return render(request, template, d)
+    return render(request, template)
 
 
 def faq(request, template="marketing/faq.html"):

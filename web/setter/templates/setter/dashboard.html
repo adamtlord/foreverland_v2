@@ -29,7 +29,7 @@
             <div class="panel-body">
                 <ul>
                     {% for setlist in setlists %}
-                        <li><a href="{% url 'view_setlist' setlist.show.id %}">{{ setlist }}</a> <small>{{ setlist.songs.all|length }} songs</small></li>
+                        <li><a href="{% url 'view_setlist' setlist.show.id %}">{{ setlist }}</a> <small>{{ setlist.song_count }} songs</small></li>
                     {% endfor %}
                 </ul>
             </div>
