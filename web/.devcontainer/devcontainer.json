@@ -1,0 +1,24 @@
+{
+  "name": "foreverland",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "workspaceFolder": "/home/ubuntu/app",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/ubuntu/app,type=bind,consistency=cached",
+  "mounts": [
+    "source=${localWorkspaceFolder}/..,target=/home/ubuntu/foreverland_v2,type=bind,consistency=cached"
+  ],
+  "remoteEnv": {
+    "GIT_DIR": "/home/ubuntu/foreverland_v2/.git",
+    "GIT_WORK_TREE": "/home/ubuntu/foreverland_v2"
+  },
+  "postStartCommand": "git status -sb || true",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "git.detectSubmodules": false
+      }
+    }
+  }
+}

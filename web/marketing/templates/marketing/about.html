@@ -19,10 +19,6 @@
 	</ul>
 </div>
 {% endblock %}
-{% block require_js %}
-	 <script type="text/javascript">
-	    require(['{{ STATIC_URL }}js/common.js'], function () {
-	        require(['about']);
-	    });
-	</script>
+{% block page_js %}
+	<script type="module" src="{{ STATIC_URL }}js/apps/about.js"></script>
 {% endblock %}

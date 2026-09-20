@@ -35,10 +35,6 @@
 
 </div>
 {% endblock %}
-{% block require_js %}
-     <script type="text/javascript">
-        require(['{{ STATIC_URL }}js/common.js'], function () {
-            require(['media']);
-        });
-    </script>
+{% block page_js %}
+     <script type="module" src="{{ STATIC_URL }}js/apps/media.js"></script>
 {% endblock %}

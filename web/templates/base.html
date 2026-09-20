@@ -63,15 +63,12 @@
                 js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10&appId=247646052052822";
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));</script>
-            <script type="text/javascript" src="{{ STATIC_URL }}js/lib/min/require-jquery-min.js"></script>
-            <script>
-                require(['{{ STATIC_URL }}js/common.js'], function () {
-                    require(['sitewide']);
-                });
-            </script>
-            {% block require_js %}{% endblock %}
-
         {% endcompress %}
+        <script type="text/javascript" src="{{ STATIC_URL }}js/lib/jquery.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/lib/underscore.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/lib/bootstrap.js"></script>
+        <script type="module" src="{{ STATIC_URL }}js/apps/sitewide.js"></script>
+        {% block page_js %}{% endblock %}
         {% block modals %}{% endblock %}
     </body>
 </html>
