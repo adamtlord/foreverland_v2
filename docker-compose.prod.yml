@@ -1,4 +1,14 @@
-version: "3.7"
+# Production stack (gunicorn + mysql:5.7 + nginx + certbot).
+# Always pass -f docker-compose.prod.yml. Bare `docker compose up` starts the
+# dev MariaDB stack instead and leaves nginx/certbot as orphans.
+#
+#   docker compose -f docker-compose.prod.yml down
+#   docker compose -f docker-compose.prod.yml up -d --build --force-recreate
+#
+# Do not pass --remove-orphans unless you intend to delete nginx/certbot (TLS).
+# .env.prod must set MYSQL_ROOT_PASSWORD (MYSQL_PASSWORD is the app user only).
+# Datadir is ./db → /var/lib/mysql. If that directory is empty, MySQL will
+# initialize a new data dir instead of using existing production data.
 
 volumes:
   static_volume:
@@ -20,7 +30,7 @@ services:
     volumes:
       - static_volume:/home/ubuntu/app/staticfiles
       - media_volume:/home/ubuntu/app/mediafiles
-    command: bash -c "python3 manage.py collectstatic --noinput && python3 manage.py compress && python3 manage.py migrate && gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000"
+    command: bash -c "python3 manage.py collectstatic --noinput && python3 manage.py compress && python3 manage.py migrate --fake-initial --noinput && gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000"
   db:
     container_name: foreverland_db
     image: mysql:5.7

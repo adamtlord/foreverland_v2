@@ -42,7 +42,7 @@ for var in MYSQL_DATABASE MYSQL_USER MYSQL_PASSWORD; do
   fi
 done
 
-CONTAINER="${DEV_DB_CONTAINER:-foreverland_db}"
+CONTAINER="${DEV_DB_CONTAINER:-foreverland_db_dev}"
 if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
   echo "Container ${CONTAINER} is not running. Start dev stack first (e.g. docker compose up -d db)." >&2
   exit 1
