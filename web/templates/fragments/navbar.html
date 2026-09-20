@@ -28,8 +28,8 @@
                 <li class="{% active request faq_url %}"><a href="{% url 'faq' %}">FAQ</a></li>
                 <li class="{% active request booking_url %}"><a href="{% url 'booking' %}">Booking</a></li>
                 <li class="social">
-                    <a href="http://facebook.com/ForeverlandSF"><i class="fa fa-facebook-square"></i></a>
-                    <a href="http://instagram.com/foreverland"><i class="fa fa-instagram"></i></a>
+                    <a href="{{ FACEBOOK_PAGE_URL }}"><i class="fa fa-facebook-square"></i></a>
+                    <a href="{{ INSTAGRAM_PROFILE_URL }}"><i class="fa fa-instagram"></i></a>
                 </li>
             </ul>
             <a href="#" id="nav_close_btn" class="visible-xs"><i class="fa fa-times-circle"></i></a>

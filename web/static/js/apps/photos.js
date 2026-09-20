@@ -1,23 +1,8 @@
 import '../lib/magnific-popup.min.js';
-import '../lib/instafeed.min.js';
 
 const $ = window.jQuery;
-const Instafeed = window.Instafeed;
 
 $(function() {
-  var feed = new Instafeed({
-    clientId: 'e57e58115b304e319ef65ad52d8555ba',
-    get: 'user',
-    userId: 201585387,
-    accessToken: '201585387.e57e581.dafbe9ceedf4475b909749652bbdb290',
-    resolution: 'standard_resolution',
-    template: '<a href="{{image}}" class="thumb" title="{{caption}}"><img src="{{image}}"" /></a>',
-    after: function() {
-      $('#instafeed_spinner').fadeOut('fast');
-    }
-  });
-  feed.run();
-
   $('.album-popup').magnificPopup({
     delegate: 'a',
     type: 'image',

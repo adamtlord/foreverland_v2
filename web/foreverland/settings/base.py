@@ -63,6 +63,7 @@ TEMPLATES = [
                 # 'django_common.context_processors.common_settings',
                 "common.context_processors.random_quote",
                 "common.context_processors.list_years_with_gigs",
+                "common.context_processors.social_links",
             ],
         },
     },
@@ -136,3 +137,7 @@ def extend_list_avoid_repeats(list_to_extend, extend_with):
 
 # Global vars and band settings
 BAND_SIZE = 11
+FACEBOOK_PAGE_URL = "https://www.facebook.com/ForeverlandSF"
+FACEBOOK_APP_ID = "247646052052822"
+FACEBOOK_SDK_VERSION = "v23.0"
+INSTAGRAM_PROFILE_URL = "https://www.instagram.com/foreverland/"

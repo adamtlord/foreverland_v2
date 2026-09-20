@@ -8,5 +8,17 @@
 .btn-instagram:active {
   color: #fff;
   background-color: #a31243;
+}
 
+.instagram-media {
+  margin: 0 auto !important;
+  max-width: 100% !important;
+}
+
+.fb-page {
+  width: 100%;
+}
+
+#sidebar .insta {
+  margin-bottom: 32px;
 }

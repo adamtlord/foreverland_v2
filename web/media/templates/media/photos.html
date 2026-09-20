@@ -2,12 +2,19 @@
 {% load custom_tags %}
 {% load thumbnail %}
 {% block title %} | Photos{% endblock %}
+{% block social_sdk %}
+    {% include 'fragments/social_sdk.html' %}
+{% endblock %}
 
 {% block body %}
 <div class="container interior">
-    <h3><i class="fa fa-instagram"></i> Instagram Feed <small id="instafeed_spinner">Loading <i class="fa fa-spinner fa-spin"></i></small></h3>
-    <p>Follow us at <a href="https://instagram.com/foreverland/">instagram.com/foreverland</a>
-    <div id="instafeed" class="album album-with-captions album-popup"></div>
+    <h3><i class="fa fa-instagram"></i> Instagram</h3>
+    <p>Follow us at <a href="{{ INSTAGRAM_PROFILE_URL }}">instagram.com/foreverland</a></p>
+    <div class="row">
+        <div class="col-md-6">
+            {% include 'fragments/instagram_embed.html' %}
+        </div>
+    </div>
 	<h3>Promotional Photos</h3>
     <div class="row album album-with-captions">
         {% for photo in promo_photos %}
@@ -37,7 +44,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-{% block page_js %}
-     <script type="module" src="{{ STATIC_URL }}js/apps/photos.js"></script>
 {% endblock %}

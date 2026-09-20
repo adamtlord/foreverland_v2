@@ -18,9 +18,10 @@
     {% block fb_meta_tags %}
         <meta property="og:title" content="Foreverland" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://foreverland.com" />
+        <meta property="og:url" content="https://foreverland.com" />
         <meta property="og:image" content="{{ STATIC_URL }}img/fb-img.png" />
         <meta property="og:site_name" content="Foreverland" />
+        {% if FACEBOOK_APP_ID %}<meta property="fb:app_id" content="{{ FACEBOOK_APP_ID }}" />{% endif %}
         <meta property="fb:admins" content="1304571" />
         <meta property="og:description" content="The electrifying tribute to Michael Jackson" />
     {% endblock %}
@@ -54,16 +55,7 @@
         <footer>
             {% include 'fragments/footer.html' %}
         </footer>
-        <div id="fb-root"></div>
-        {% compress js %}
-            <script>(function(d, s, id) {
-                var js, fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) return;
-                js = d.createElement(s); js.id = id;
-                js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10&appId=247646052052822";
-                fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));</script>
-        {% endcompress %}
+        {% block social_sdk %}{% endblock %}
         <script type="text/javascript" src="{{ STATIC_URL }}js/lib/jquery.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/lib/underscore.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/lib/bootstrap.js"></script>
