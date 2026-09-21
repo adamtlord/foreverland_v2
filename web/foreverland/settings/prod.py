@@ -40,7 +40,8 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
+        # Default Django 4.2 backend requires MySQL 8. Prod is still 5.7.32.
+        "ENGINE": "foreverland.mysql57",
         "NAME": "%s" % os.getenv("MYSQL_DATABASE"),
         "HOST": "%s" % os.getenv("MYSQL_HOST"),
         "USER": "%s" % os.getenv("MYSQL_USER"),
