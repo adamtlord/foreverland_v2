@@ -1,0 +1,16 @@
+# Dev Container overrides. Used only with .devcontainer/devcontainer.json.
+# Regular `docker compose up` still uses the repo-root compose file as-is.
+services:
+  web:
+    # Mount the git root so Cursor's workspace includes docker files, scripts, and .git.
+    # Parent compose still bind-mounts ./web -> /home/ubuntu/app for Django.
+    volumes:
+      # Paths are relative to the *first* compose file (repo-root docker-compose.yml),
+      # not this override file.
+      - .:/workspaces/foreverland_v2:cached
+    working_dir: /workspaces/foreverland_v2
+    # Don't fight leftover/local stacks for host 8765. Cursor forwards 8000.
+    ports: !reset []
+  db:
+    # Don't fight leftover/local stacks for host 3306. Web talks to db on the compose network.
+    ports: !reset []

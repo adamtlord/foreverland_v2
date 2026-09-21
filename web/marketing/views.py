@@ -53,7 +53,7 @@ def about(request, template="marketing/about.html"):
 
     d = {"quotes": testimonials}
 
-    return render(request, template)
+    return render(request, template, d)
 
 
 def faq(request, template="marketing/faq.html"):

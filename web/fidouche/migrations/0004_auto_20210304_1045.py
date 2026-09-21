@@ -7,8 +7,8 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("members", "__first__"),
-        ("shows", "__first__"),
+        ("members", "0001_initial"),
+        ("shows", "0001_initial"),
         ("fidouche", "0003_auto_20201021_0956"),
     ]
 

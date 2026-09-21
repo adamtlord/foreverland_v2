@@ -1,8 +1,9 @@
 {
   "name": "Foreverland (Django)",
-  "dockerComposeFile": ["../docker-compose.yml"],
+  "dockerComposeFile": ["../docker-compose.yml", "docker-compose.yml"],
   "service": "web",
-  "workspaceFolder": "/home/ubuntu/app",
+  "runServices": ["web", "db"],
+  "workspaceFolder": "/workspaces/foreverland_v2",
   "shutdownAction": "stopCompose",
   "overrideCommand": true,
   "customizations": {
@@ -14,7 +15,10 @@
       ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python",
-        "python.analysis.extraPaths": ["/home/ubuntu/app"]
+        "python.analysis.extraPaths": [
+          "/workspaces/foreverland_v2/web",
+          "/home/ubuntu/app"
+        ]
       }
     }
   },
@@ -23,10 +27,11 @@
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": true,
       "configureZshAsDefaultShell": true,
-      "installOhMyZsh": true
+      "installOhMyZsh": true,
+      "username": "none"
     }
   },
   "forwardPorts": [8000],
-  "postCreateCommand": "pip install -r requirements.txt",
+  "postCreateCommand": "pip install -r web/requirements.txt",
   "remoteUser": "root"
 }

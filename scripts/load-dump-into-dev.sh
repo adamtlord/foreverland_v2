@@ -61,3 +61,4 @@ else
   docker exec -i "$CONTAINER" mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" < "$DUMP_FILE"
 fi
 echo "Done."
+echo "Next (from web/): python manage.py repair_migration_history && python manage.py migrate"
