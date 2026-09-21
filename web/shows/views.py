@@ -24,26 +24,37 @@ def upcoming_shows(request, template="shows/upcoming.html"):
 
 
 def past_shows(request, template="shows/past.html"):
-    """list all past shows"""
-    public_shows = Show.objects.filter(public=True).select_related("venue")
-    past_qs = public_shows.filter(date__lt=datetime.datetime.now()).order_by("date")
+    """List past shows, defaulting to the latest year."""
+    from common.utils import years_with_gigs
+
+    show_years = years_with_gigs()
     year = request.GET.get("year")
     if year:
-        past_qs = past_qs.filter(date__year=int(year))
+        try:
+            year = int(year)
+        except (TypeError, ValueError):
+            year = None
+    if not year:
+        year = show_years[-1] if show_years else None
+
+    public_shows = Show.objects.filter(public=True).select_related("venue")
+    past_qs = public_shows.filter(date__lt=datetime.datetime.now()).order_by("date")
+    if year:
+        past_qs = past_qs.filter(date__year=year)
 
     shows_by_year = OrderedDict()
     for show in past_qs:
-        if show.date.year not in shows_by_year:
-            shows_by_year[show.date.year] = []
-        shows_by_year[show.date.year].append(show)
+        shows_by_year.setdefault(show.date.year, []).append(show)
 
-    show_years = [x for x in shows_by_year]
-
-    d = {}
-    d["shows_by_year"] = shows_by_year
-    d["show_years"] = sorted(show_years)
-
-    return render(request, template, d)
+    return render(
+        request,
+        template,
+        {
+            "shows_by_year": shows_by_year,
+            "show_years": show_years,
+            "selected_year": year,
+        },
+    )
 
 
 def show(request, show_id, template="shows/detail.html"):

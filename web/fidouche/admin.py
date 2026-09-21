@@ -1,3 +1,4 @@
+from common.admin import MaskedSSNAdmin
 from django.contrib import admin
 from fidouche.models import (Agent, CommissionPayment, ExpenseCategory,
                              Fiduciary, FiduciaryPayment, Payee, Payment,
@@ -7,15 +8,15 @@ from fidouche.models import (Agent, CommissionPayment, ExpenseCategory,
 
 admin.site.register(Payment)
 admin.site.register(SubPayment)
-admin.site.register(Payee)
+admin.site.register(Payee, MaskedSSNAdmin)
 admin.site.register(TourExpense)
 admin.site.register(ExpenseCategory)
 admin.site.register(TaxExpenseCategory)
 admin.site.register(Quote)
-admin.site.register(Agent)
+admin.site.register(Agent, MaskedSSNAdmin)
 admin.site.register(CommissionPayment)
-admin.site.register(ProductionCompany)
+admin.site.register(ProductionCompany, MaskedSSNAdmin)
 admin.site.register(ProductionCategory)
 admin.site.register(ProductionPayment)
-admin.site.register(Fiduciary)
+admin.site.register(Fiduciary, MaskedSSNAdmin)
 admin.site.register(FiduciaryPayment)

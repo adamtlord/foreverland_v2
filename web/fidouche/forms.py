@@ -1,3 +1,4 @@
+from common.uploads import validate_receipt_file
 from django import forms
 from fidouche.models import (Expense, FiduciaryPayment, Income, Payment,
                              ProductionPayment, SubPayment, TourExpense)
@@ -60,6 +61,13 @@ class GigFinanceForm(forms.ModelForm):
             if field not in ["settlement_sheet", "commission_paid"]:
                 self.fields[field].widget.attrs["class"] = "form-control"
 
+    def clean_settlement_sheet(self):
+        uploaded = self.cleaned_data.get("settlement_sheet")
+        error = validate_receipt_file(uploaded)
+        if error:
+            raise forms.ValidationError(error)
+        return uploaded
+
 
 class IncomeForm(forms.ModelForm):
     class Meta:
@@ -85,6 +93,13 @@ class ExpenseForm(forms.ModelForm):
             self.fields[field].widget.attrs["class"] = "form-control input-sm"
         self.fields["date"].widget.attrs["data-format"] = "YYYY-MM-DD"
 
+    def clean_receipt_img(self):
+        uploaded = self.cleaned_data.get("receipt_img")
+        error = validate_receipt_file(uploaded)
+        if error:
+            raise forms.ValidationError(error)
+        return uploaded
+
 
 class TourExpenseForm(forms.ModelForm):
     class Meta:
@@ -97,6 +112,13 @@ class TourExpenseForm(forms.ModelForm):
         for field in TOUR_EXPENSE_FIELDS:
             self.fields[field].widget.attrs["class"] = "form-control input-sm"
         self.fields["date"].widget.attrs["data-format"] = "YYYY-MM-DD"
+
+    def clean_receipt_img(self):
+        uploaded = self.cleaned_data.get("receipt_img")
+        error = validate_receipt_file(uploaded)
+        if error:
+            raise forms.ValidationError(error)
+        return uploaded
 
 
 class PaymentForm(forms.ModelForm):

@@ -32,6 +32,6 @@
     }
   },
   "forwardPorts": [8000],
-  "postCreateCommand": "pip install -r web/requirements.txt",
+  "postCreateCommand": "pip install -r web/requirements-dev.txt",
   "remoteUser": "root"
 }

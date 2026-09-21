@@ -112,7 +112,7 @@
 						<tr>
 							<th>Settlement sheet</th>
 							<td>
-								<a href="{{ gig.settlement_sheet.url }}" class="thumb">
+								<a href="{% url 'private_receipt' gig.settlement_sheet.name|cut:'receipts/' %}" class="thumb">
 								{% thumbnail gig.settlement_sheet "100" as im %}
 									<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
 								{% endthumbnail %}

@@ -10,7 +10,7 @@ class QueryCountBaselineTests(TestCase):
 
     def setUp(self):
         self.fx = build_performance_fixture()
-        create_user()
+        create_user(is_staff=True)
         self.client = Client()
         self.client.login(username="tester", password="pass")
         self.year = self.fx["year"]

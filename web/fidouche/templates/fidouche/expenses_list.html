@@ -44,10 +44,10 @@
 				<td>
 					{% if expense.receipt_img %}
 						{% if expense.filetype == 'pdf' %}
-							<a href="{{ MEDIA_URL }}{{ expense.receipt_img.name }}" target="_blank"><i class="fa fa-file-pdf-o"></i> view</a>
+							<a href="{% url 'private_receipt' expense.receipt_img.name|cut:'receipts/' %}" target="_blank"><i class="fa fa-file-pdf-o"></i> view</a>
 						{% else %}
 							{% thumbnail expense.receipt_img "60x60" crop="center" as im %}
-							<a href="{{ MEDIA_URL }}{{ expense.receipt_img.name }}" class="thumb">
+							<a href="{% url 'private_receipt' expense.receipt_img.name|cut:'receipts/' %}" class="thumb">
 								<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
 							</a>
 							{% endthumbnail %}

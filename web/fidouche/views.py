@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.db.models import Count, Min, Prefetch, Sum
 from django.forms.models import inlineformset_factory
-from django.http import HttpResponse
+from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from fidouche.forms import (ExpenseForm, FiduciaryPaymentForm, GigFinanceForm,
                             IncomeForm, PaymentForm, ProductionPaymentForm,
@@ -1182,6 +1182,23 @@ def tour_detail(request, tour_id=None, template="fidouche/tour_detail.html"):
         "maps_key": settings.GOOGLE_MAPS_API_KEY,
     }
     return render(request, template, d)
+
+
+@staff_member_required
+def private_receipt(request, filename):
+    """Serve receipt/settlement files only to staff. Blocks path traversal."""
+    import os
+
+    filename = filename.replace("\\", "/").lstrip("/")
+    if ".." in filename.split("/"):
+        raise Http404()
+    receipts_root = os.path.normpath(os.path.join(settings.MEDIA_ROOT, "receipts"))
+    full = os.path.normpath(os.path.join(receipts_root, filename))
+    if not (full == receipts_root or full.startswith(receipts_root + os.sep)):
+        raise Http404()
+    if not os.path.isfile(full):
+        raise Http404()
+    return FileResponse(open(full, "rb"))
 
 
 @login_required

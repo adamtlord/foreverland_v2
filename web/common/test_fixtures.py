@@ -22,8 +22,12 @@ from shows.models import Show, Tour, Venue
 from songs.models import Setlist, SetlistSong, Song
 
 
-def create_user(username="tester", password="pass"):
-    return User.objects.create_user(username=username, password=password)
+def create_user(username="tester", password="pass", is_staff=False):
+    user = User.objects.create_user(username=username, password=password)
+    if is_staff:
+        user.is_staff = True
+        user.save(update_fields=["is_staff"])
+    return user
 
 
 def create_venue(name="Test Venue", city="Oakland", state="CA", ltlng="37.8,-122.2"):

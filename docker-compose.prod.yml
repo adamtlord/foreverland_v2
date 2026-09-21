@@ -1,4 +1,7 @@
 # Production stack (gunicorn + mysql:5.7 + nginx + certbot).
+# mysql:5.7 is EOL (Oct 2023). Do not swap the image in this file until the
+# ./db datadir is upgraded (dump/restore or mysql_upgrade) to MySQL 8 or
+# MariaDB 10.11+. See M10 in the audit mitigation plan.
 # Always pass -f docker-compose.prod.yml. Bare `docker compose up` starts the
 # dev MariaDB stack instead and leaves nginx/certbot as orphans.
 #
@@ -30,7 +33,7 @@ services:
     volumes:
       - static_volume:/home/ubuntu/app/staticfiles
       - media_volume:/home/ubuntu/app/mediafiles
-    command: bash -c "python3 manage.py collectstatic --noinput && python3 manage.py compress && python3 manage.py repair_migration_history && python3 manage.py migrate --noinput && gunicorn foreverland.wsgi:application --bind 0.0.0.0:8000"
+    command: /home/ubuntu/app/entrypoint.sh
   db:
     container_name: foreverland_db
     image: mysql:5.7

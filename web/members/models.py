@@ -1,3 +1,4 @@
+from common.fields import EncryptedCharField
 from django.db import models
 
 SECTIONS = (("v", "Vocal"), ("h", "Horn"), ("r", "Rhythm"))
@@ -22,7 +23,7 @@ class Member(models.Model):
         verbose_name="Zip", max_length=20, blank=True, null=True
     )
     phone = models.CharField(max_length=20, blank=True, null=True)
-    ssn = models.CharField(verbose_name="SSN#", max_length=16, blank=True, null=True)
+    ssn = EncryptedCharField(verbose_name="SSN#", max_length=255, blank=True, null=True)
     partner = models.BooleanField(default=False)
     date_partner_joined = models.DateField(
         verbose_name="Became a Partner", blank=True, null=True
@@ -49,7 +50,7 @@ class Sub(models.Model):
         verbose_name="Zip", max_length=20, blank=True, null=True
     )
     phone = models.CharField(max_length=20, blank=True, null=True)
-    ssn = models.CharField(verbose_name="SSN#", max_length=16, blank=True, null=True)
+    ssn = EncryptedCharField(verbose_name="SSN#", max_length=255, blank=True, null=True)
 
     class Meta:
         ordering = ["first_name"]

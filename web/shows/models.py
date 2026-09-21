@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from common.uploads import receipt_upload_to
 from common.utils import get_lat_lng
 from django.db import models
 from sorl.thumbnail import ImageField
@@ -25,9 +26,26 @@ class Venue(models.Model):
         ordering = ["venue_name"]
 
     def save(self, *args, **kwargs):
-        """ Let's get the latlng before we save"""
+        """Geocode once when lat/lng is missing. Never block a save on Maps."""
+        should_geocode = not self.ltlng
+        if self.pk:
+            previous = (
+                Venue.objects.filter(pk=self.pk)
+                .values("address1", "address2", "city", "state", "zip_code", "ltlng")
+                .first()
+            )
+            if previous:
+                address_changed = any(
+                    previous.get(field) != getattr(self, field)
+                    for field in ("address1", "address2", "city", "state", "zip_code")
+                )
+                if previous.get("ltlng") and not address_changed:
+                    self.ltlng = self.ltlng or previous["ltlng"]
+                    should_geocode = False
+                elif address_changed:
+                    should_geocode = True
         super(Venue, self).save(*args, **kwargs)
-        if not self.ltlng:
+        if should_geocode:
             address = "%s %s %s %s %s %s" % (
                 self.venue_name,
                 self.address1,
@@ -37,10 +55,12 @@ class Venue(models.Model):
                 self.zip_code,
             )
             try:
-                self.ltlng = get_lat_lng(address)
+                coords = get_lat_lng(address)
             except Exception:
-                raise Exception
-            super(Venue, self).save(*args, **kwargs)
+                coords = ""
+            if coords:
+                self.ltlng = coords
+                super(Venue, self).save(update_fields=["ltlng"])
 
     @property
     def first_show(self):
@@ -244,7 +264,7 @@ class Show(models.Model):
         max_digits=10, decimal_places=2, blank=True, null=True
     )
     subs = models.BooleanField(default=False)
-    settlement_sheet = ImageField(upload_to="receipts/", blank=True, null=True)
+    settlement_sheet = ImageField(upload_to=receipt_upload_to, blank=True, null=True)
     payout_notes = models.TextField(null=True, blank=True)
 
     def _production_payment_list(self):

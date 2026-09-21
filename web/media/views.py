@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from media.models import Album, Download, Image
 
 
@@ -33,7 +33,10 @@ def downloads(request, template="media/downloads.html"):
 @login_required
 def behind_the_music(request, template="media/behind_the_music.html"):
     """Behind the music page"""
-    album = Album.objects.prefetch_related("image_set", "video_set").get(pk=3)
+    album = get_object_or_404(
+        Album.objects.prefetch_related("image_set", "video_set"),
+        title="Behind the Music",
+    )
     album.images = album.image_set.all()
     album.videos = album.video_set.all()
 

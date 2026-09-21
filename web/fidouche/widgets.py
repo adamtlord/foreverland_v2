@@ -1,3 +1,4 @@
+from common.uploads import staff_receipt_url
 from django.contrib.admin.widgets import AdminFileWidget
 from django.utils.safestring import mark_safe
 from sorl.thumbnail import get_thumbnail
@@ -13,21 +14,22 @@ class AdminImageWidget(AdminFileWidget):
         output = []
         if value:
             file_name = str(value)
-            static_url = "/uploads"
+            href = staff_receipt_url(value)
             file_type = value.name[-3:]
             if file_type != "pdf":
                 try:
                     output.append(
-                        '<a href="%s/%s" class="thumb">%s</a>'
-                        % (static_url, file_name, thumbnail(file_name))
+                        '<a href="%s" class="thumb">%s</a>'
+                        % (href, thumbnail(file_name))
                     )
                 except Exception:
                     pass
             else:
                 try:
+                    display = file_name.split("/")[-1]
                     output.append(
-                        '<a href="%s/%s" class="file"><i class="fa fa-file-pdf-o"></i> %s</a>'
-                        % (static_url, file_name, file_name.split("/")[1])
+                        '<a href="%s" class="file"><i class="fa fa-file-pdf-o"></i> %s</a>'
+                        % (href, display)
                     )
                 except Exception:
                     pass

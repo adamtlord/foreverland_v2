@@ -10,7 +10,7 @@ from django.urls import reverse
 class FidoucheViewBehaviorTests(TestCase):
     def setUp(self):
         self.fx = build_performance_fixture()
-        self.user = create_user()
+        self.user = create_user(is_staff=True)
         self.client = Client()
         self.client.login(username="tester", password="pass")
         self.year = self.fx["year"]
@@ -119,6 +119,38 @@ class ContextProcessorTests(TestCase):
         ctx = random_quote(request)
         self.assertIsNotNone(ctx["random_quote"])
         self.assertEqual(ctx["random_quote"].quote, "Great show")
+
+
+class FidoucheStaffGateTests(TestCase):
+    def setUp(self):
+        self.fx = build_performance_fixture()
+        create_user(username="member", password="pass", is_staff=False)
+        self.client = Client()
+        self.client.login(username="member", password="pass")
+
+    def test_non_staff_cannot_read_dashboard(self):
+        response = self.client.get(reverse("financial_dashboard"))
+        self.assertIn(response.status_code, (302, 403))
+        if response.status_code == 302:
+            self.assertTrue(
+                "/accounts/login" in response.url or "/admin/login" in response.url
+            )
+
+    def test_non_staff_cannot_read_tax_reports(self):
+        response = self.client.get(reverse("tax_reports"))
+        self.assertIn(response.status_code, (302, 403))
+        if response.status_code == 302:
+            self.assertTrue(
+                "/accounts/login" in response.url or "/admin/login" in response.url
+            )
+
+    def test_anonymous_cannot_read_dashboard(self):
+        anon = Client()
+        response = anon.get(reverse("financial_dashboard"))
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(
+            "/accounts/login" in response.url or "/admin/login" in response.url
+        )
 
 
 class SetterViewTests(TestCase):

@@ -116,7 +116,7 @@
 	</tbody>
 </table>
 <blockquote class="qotd">
-	<p><span>&ldquo;</span> {{ quote.quote|safe }} <span>&rdquo;</span></p>
+	<p><span>&ldquo;</span> {{ quote.quote }} <span>&rdquo;</span></p>
 	{% if quote.source or quote.occasion %}
 		<footer>
 			{% if quote.source %}{{ quote.source }}{% endif %}{% if quote.occasion %}, <cite>{{ quote.occasion }}</cite>{% endif %}

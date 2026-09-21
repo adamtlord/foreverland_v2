@@ -5,6 +5,8 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.views.defaults import page_not_found, server_error
 from django.views.generic.base import RedirectView
+from django.contrib.admin.views.decorators import staff_member_required
+from fidouche.views import private_receipt
 from media.views import behind_the_music, downloads
 from shows.views import TheWorksView
 
@@ -28,6 +30,12 @@ urlpatterns = [
     path("news-press/", RedirectView.as_view(url="/", permanent=True)),
     path("quotes/", RedirectView.as_view(url="/about#quotes", permanent=True)),
     path("the-works/", TheWorksView.as_view(), name="the_works"),
+    # Must win over DEBUG static() so /uploads/receipts/ is never public.
+    path(
+        "uploads/receipts/<path:filename>",
+        staff_member_required(private_receipt),
+        name="private_receipt_media",
+    ),
 ]
 
 if settings.DEBUG:
@@ -35,10 +43,15 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
-    import debug_toolbar
-
     urlpatterns += [
         re_path(r"^404/$", page_not_found),
         re_path(r"^500/$", server_error),
-        re_path(r"^__debug__/", include(debug_toolbar.urls)),
     ]
+    try:
+        import debug_toolbar
+    except ImportError:
+        debug_toolbar = None
+    if debug_toolbar:
+        urlpatterns += [
+            re_path(r"^__debug__/", include(debug_toolbar.urls)),
+        ]

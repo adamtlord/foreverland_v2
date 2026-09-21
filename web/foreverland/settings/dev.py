@@ -1,7 +1,7 @@
 import os
 
 from .base import *  # noqa: F401 F403
-from .base import INSTALLED_APPS, extend_list_avoid_repeats
+from .base import INSTALLED_APPS, MIDDLEWARE, extend_list_avoid_repeats
 
 # dev overrides
 PROJECT_ROOT = os.path.dirname(
@@ -53,6 +53,17 @@ if "test" in sys.argv:
     }
 
 INTERNAL_IPS = ["127.0.0.1"]
+try:
+    import debug_toolbar  # noqa: F401
+
+    extend_list_avoid_repeats(INSTALLED_APPS, ["debug_toolbar", "django_extensions"])
+    if "debug_toolbar.middleware.DebugToolbarMiddleware" not in MIDDLEWARE:
+        MIDDLEWARE = [
+            "debug_toolbar.middleware.DebugToolbarMiddleware"
+        ] + list(MIDDLEWARE)
+except ImportError:
+    extend_list_avoid_repeats(INSTALLED_APPS, ["django_extensions"])
+
 try:
     from local import *  # noqa: F401 F403
 except ImportError:

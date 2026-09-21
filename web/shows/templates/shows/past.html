@@ -12,12 +12,12 @@
     </div>
     <ul class="nav nav-pills" role="menu">
         {% for year in show_years reversed %}
-            <li{% if forloop.first %} class="active"{% endif %}><a href="#showyear_{{ year }}" data-toggle="tab">{{ year }}</a></li>
+            <li{% if year == selected_year %} class="active"{% endif %}><a href="?year={{ year }}">{{ year }}</a></li>
         {% endfor %}
     </ul>
     <div class="tab-content">
     {% for year, shows in shows_by_year.items %}
-        <div id="showyear_{{ year }}" class="tab-pane fade{% if forloop.last %} active in{% endif %}">
+        <div id="showyear_{{ year }}" class="tab-pane fade active in">
             <h3>{{ year }}</h3>
             <ul class="shows">
                 {% for show in shows %}
@@ -33,7 +33,7 @@
                                 </span>
                             </h4>
                             {% if show.opener %}Opener: {{ show.opener }}<br>{% endif %}
-                            {% if show.notes %}<small>{{ show.notes|safe }}</small>{% endif %}
+                            {% if show.notes %}<small>{{ show.notes|linebreaksbr }}</small>{% endif %}
                         </div>
                     </li>
                 {% endfor %}

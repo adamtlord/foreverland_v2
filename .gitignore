@@ -8,8 +8,6 @@ dist
 
 /config.codekit
 /web/foreverland/_settings.py
-/web/foreverland/settings/base.py
-/web/foreverland/settings/prod.py
 .env*
 mediafiles/
 data/dumps/

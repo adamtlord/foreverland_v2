@@ -1,3 +1,5 @@
+from common.fields import EncryptedCharField
+from common.uploads import receipt_upload_to
 from django.db import models
 from members.models import Member, Sub
 from shows.models import Show, Tour
@@ -71,7 +73,7 @@ class Payee(models.Model):
         verbose_name="Zip", max_length=20, blank=True, null=True
     )
     phone = models.CharField(max_length=20, blank=True, null=True)
-    ssn = models.CharField(verbose_name="SSN#", max_length=16, blank=True, null=True)
+    ssn = EncryptedCharField(verbose_name="SSN#", max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -126,7 +128,7 @@ class Expense(models.Model):
         max_length=100, blank=True, null=True, verbose_name="Check #"
     )
     notes = models.TextField(blank=True, null=True)
-    receipt_img = models.FileField(upload_to="receipts/", blank=True, null=True)
+    receipt_img = models.FileField(upload_to=receipt_upload_to, blank=True, null=True)
 
     @property
     def filetype(self):
@@ -155,7 +157,7 @@ class TourExpense(models.Model):
         max_length=100, blank=True, null=True, verbose_name="Check #"
     )
     notes = models.TextField(blank=True, null=True)
-    receipt_img = models.FileField(upload_to="receipts/", blank=True, null=True)
+    receipt_img = models.FileField(upload_to=receipt_upload_to, blank=True, null=True)
 
     @property
     def filetype(self):
@@ -213,7 +215,9 @@ class Agent(models.Model):
         verbose_name="Zip", max_length=20, blank=True, null=True
     )
     phone = models.CharField(max_length=20, blank=True, null=True)
-    ssn = models.CharField(verbose_name="SSN/EIN", max_length=16, blank=True, null=True)
+    ssn = EncryptedCharField(
+        verbose_name="SSN/EIN", max_length=255, blank=True, null=True
+    )
 
     def __str__(self):
         agency = ", %s" % self.agency if self.agency else ""
@@ -263,7 +267,9 @@ class ProductionCompany(models.Model):
         verbose_name="Zip", max_length=20, blank=True, null=True
     )
     phone = models.CharField(max_length=20, blank=True, null=True)
-    ssn = models.CharField(verbose_name="SSN/EIN", max_length=16, blank=True, null=True)
+    ssn = EncryptedCharField(
+        verbose_name="SSN/EIN", max_length=255, blank=True, null=True
+    )
 
     def __str__(self):
         return self.name
@@ -282,7 +288,9 @@ class Fiduciary(models.Model):
         verbose_name="Zip", max_length=20, blank=True, null=True
     )
     phone = models.CharField(max_length=20, blank=True, null=True)
-    ssn = models.CharField(verbose_name="SSN/EIN", max_length=16, blank=True, null=True)
+    ssn = EncryptedCharField(
+        verbose_name="SSN/EIN", max_length=255, blank=True, null=True
+    )
 
     def __str__(self):
         return self.name

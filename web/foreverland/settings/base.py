@@ -1,21 +1,21 @@
 import os
-import sys
+
+from .env import env_bool, require_allowed_hosts, require_secret_key
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_NAME = "foreverland"
 PROJECT_ROOT = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 )
-SECRET_KEY = os.environ.get("SECRET_KEY")
-DEBUG = int(os.environ.get("DEBUG", default=0))
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+SECRET_KEY = require_secret_key()
+DEBUG = env_bool("DEBUG", "0")
+ALLOWED_HOSTS = require_allowed_hosts()
 WSGI_APPLICATION = "foreverland.wsgi.application"
 
 TIME_ZONE = "America/Los_Angeles"
 USE_TZ = False
 LANGUAGE_CODE = "en-us"
 USE_I18N = True
-USE_L10N = True
 DEFAULT_CHARSET = "utf-8"
 ROOT_URLCONF = "foreverland.urls"
 
@@ -33,16 +33,24 @@ ENV = os.getenv("ENV")
 if not ENV:
     raise Exception("Environment variable ENV is required!")
 
-ROOT_URLCONF = "foreverland.urls"
-
 DATABASES = {}
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "foreverland",
+    }
+}
+
 MIDDLEWARE = [
-    "django.middleware.common.CommonMiddleware",
+    "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "accounts.middleware.LoginRateLimitMiddleware",
 ]
 
 
@@ -60,7 +68,6 @@ TEMPLATES = [
                 "django.template.context_processors.media",
                 "django.template.context_processors.request",
                 "django.contrib.messages.context_processors.messages",
-                # 'django_common.context_processors.common_settings',
                 "common.context_processors.random_quote",
                 "common.context_processors.list_years_with_gigs",
                 "common.context_processors.social_links",
@@ -79,10 +86,7 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.sitemaps",
     "django.contrib.staticfiles",
-    "django_extensions",
-    # 'django_registration',
     "compressor",
-    # 'django_common',
     "sorl.thumbnail",
     "marketing",
     "members",
@@ -95,6 +99,19 @@ INSTALLED_APPS = [
     "setter",
 ]
 
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(PROJECT_ROOT, "staticserve")
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_ROOT, "static"),
+]
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder",
+]
+MEDIA_URL = "/uploads/"
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, "uploads")
+
 # auth / django-registration params
 ACCOUNT_ACTIVATION_DAYS = 7
 LOGIN_URL = "/accounts/login/"
@@ -105,11 +122,8 @@ SEND_EMAIL_AFTER_ACTIVATION = True  # default: True
 AUTOMATIC_ACTIVATION_AFTER_REGISTRATION = True  # default: True
 
 AUTHENTICATION_BACKENDS = [
-    # 'django_common.auth_backends.EmailBackend',
     "django.contrib.auth.backends.ModelBackend",
 ]
-
-AUTH_PROFILE_MODULE = "accounts.UserProfile"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -125,7 +139,7 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-GOOGLE_MAPS_API_KEY = "%s" % os.getenv("GOOGLE_MAPS_API_KEY")
+GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY") or ""
 
 
 # helper function to extend all the common lists
@@ -138,6 +152,9 @@ def extend_list_avoid_repeats(list_to_extend, extend_with):
 # Global vars and band settings
 BAND_SIZE = 11
 FACEBOOK_PAGE_URL = "https://www.facebook.com/ForeverlandSF"
-FACEBOOK_APP_ID = "247646052052822"
+FACEBOOK_APP_ID = os.environ.get("FACEBOOK_APP_ID", "")
 FACEBOOK_SDK_VERSION = "v23.0"
 INSTAGRAM_PROFILE_URL = "https://www.instagram.com/foreverland/"
+X_FRAME_OPTIONS = "SAMEORIGIN"
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
