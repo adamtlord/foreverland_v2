@@ -12,6 +12,8 @@ services:
     env_file:
       - .env.prod
     environment:
+      # Override .env.prod MYSQL_HOST=db so clients do not talk to live 5.7.
+      MYSQL_HOST: "127.0.0.1"
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}

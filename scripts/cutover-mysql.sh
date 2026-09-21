@@ -89,10 +89,19 @@ require_live_db() {
   fi
 }
 
+# .env.prod sets MYSQL_HOST=db. Inside db8 that points at live 5.7, so every
+# client must pin 127.0.0.1 and clear MYSQL_HOST.
+mysql_local() {
+  local container="$1"
+  shift
+  docker exec -e MYSQL_HOST=127.0.0.1 -e MYSQL_UNIX_PORT= "$container" "$@"
+}
+
 mysql_root() {
   local container="$1"
   shift
-  docker exec "$container" mysql \
+  mysql_local "$container" mysql \
+    -h127.0.0.1 \
     -uroot -p"$MYSQL_ROOT_PASSWORD" \
     --init-command="SET SESSION sql_mode=''" \
     "$@"
@@ -154,7 +163,8 @@ dump_live() {
   local dest="$1"
   mkdir -p "$(dirname "$dest")"
   echo "Dumping ${MYSQL_DATABASE} from ${LIVE_CONTAINER} (as root) to ${dest} ..."
-  docker exec "$LIVE_CONTAINER" mysqldump \
+  mysql_local "$LIVE_CONTAINER" mysqldump \
+    -h127.0.0.1 \
     -uroot -p"$MYSQL_ROOT_PASSWORD" \
     --single-transaction --no-tablespaces --routines --triggers --set-gtid-purged=OFF \
     "$MYSQL_DATABASE" | gzip > "$dest"
@@ -172,7 +182,7 @@ wait_for_mysql() {
   local tries=60
   local i
   for i in $(seq 1 "$tries"); do
-    if docker exec "$container" mysqladmin ping -h127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent >/dev/null 2>&1; then
+    if mysql_local "$container" mysqladmin ping -h127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent >/dev/null 2>&1; then
       return 0
     fi
     sleep 2
@@ -187,13 +197,15 @@ restore_dump() {
   local container="$2"
   echo "Restoring ${dump} into ${container} as root (sql_mode empty) ..."
   if [[ "$dump" == *.gz ]]; then
-    gunzip -c "$dump" | docker exec -i "$container" mysql \
+    gunzip -c "$dump" | docker exec -e MYSQL_HOST=127.0.0.1 -e MYSQL_UNIX_PORT= -i "$container" mysql \
+      -h127.0.0.1 \
       -uroot -p"$MYSQL_ROOT_PASSWORD" \
       --init-command="SET SESSION sql_mode=''" \
       --force \
       "$MYSQL_DATABASE"
   else
-    docker exec -i "$container" mysql \
+    docker exec -e MYSQL_HOST=127.0.0.1 -e MYSQL_UNIX_PORT= -i "$container" mysql \
+      -h127.0.0.1 \
       -uroot -p"$MYSQL_ROOT_PASSWORD" \
       --init-command="SET SESSION sql_mode=''" \
       --force \
@@ -203,8 +215,8 @@ restore_dump() {
 
 print_version() {
   local container="$1"
-  docker exec "$container" mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -Nse "SELECT VERSION();" 2>/dev/null \
-    || docker exec "$container" mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" -Nse "SELECT VERSION();"
+  mysql_root "$container" -Nse "SELECT VERSION();" 2>/dev/null \
+    || mysql_local "$container" mysql -h127.0.0.1 -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" -Nse "SELECT VERSION();"
 }
 
 container_image() {
@@ -236,7 +248,12 @@ cmd_stage() {
     echo "FORCE=1: removing staging container and ${STAGE_DATADIR} (not ./db)"
     compose_stage stop db8 >/dev/null 2>&1 || true
     compose_stage rm -f db8 >/dev/null 2>&1 || true
-    rm -rf "$STAGE_DATADIR"
+    docker rm -f "$STAGE_CONTAINER" >/dev/null 2>&1 || true
+    # Files are uid 999 (mysql). Host ubuntu cannot rm them.
+    if [[ -e "$STAGE_DATADIR" ]]; then
+      docker run --rm -v "$(dirname "$STAGE_DATADIR"):/parent" alpine:3.20 \
+        rm -rf "/parent/$(basename "$STAGE_DATADIR")"
+    fi
   fi
   mkdir -p "$STAGE_DATADIR"
 
