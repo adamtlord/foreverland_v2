@@ -6,7 +6,8 @@
 services:
   db8:
     container_name: foreverland_db8
-    image: ${MYSQL_CUTOVER_IMAGE:-mysql:8.0}
+    # Script exports this. Must be mysql:8.0 or mariadb:10.11, never 5.7.
+    image: ${MYSQL_CUTOVER_IMAGE:?Set MYSQL_CUTOVER_IMAGE to mysql:8.0 or mariadb:10.11}
     restart: "no"
     env_file:
       - .env.prod

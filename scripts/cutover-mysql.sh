@@ -68,6 +68,10 @@ load_env_prod() {
   else
     export MYSQL_CUTOVER_IMAGE="${MYSQL_CUTOVER_IMAGE:-mysql:8.0}"
   fi
+  if [[ "$MYSQL_CUTOVER_IMAGE" == *5.7* ]]; then
+    echo "MYSQL_CUTOVER_IMAGE=${MYSQL_CUTOVER_IMAGE} is still 5.7. Set mysql:8.0 or mariadb:10.11." >&2
+    exit 1
+  fi
 }
 
 compose() {
@@ -203,6 +207,23 @@ print_version() {
     || docker exec "$container" mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" -Nse "SELECT VERSION();"
 }
 
+container_image() {
+  docker inspect "$1" --format '{{.Config.Image}}' 2>/dev/null || echo ""
+}
+
+assert_stage_is_upgrade() {
+  local version image
+  version="$(print_version "$STAGE_CONTAINER")"
+  image="$(container_image "$STAGE_CONTAINER")"
+  echo "Stage image: ${image}  version: ${version}"
+  if [[ "$version" == 5.7* ]] || [[ "$image" == *5.7* ]]; then
+    echo "Stage is still MySQL 5.7 (${image} / ${version}). Not a cutover target." >&2
+    echo "Check .env / .env.prod for MYSQL_CUTOVER_IMAGE, then:" >&2
+    echo "  MYSQL_CUTOVER_IMAGE=mysql:8.0 FORCE=1 $0 stage" >&2
+    exit 1
+  fi
+}
+
 cmd_stage() {
   require_live_db
   assert_has_data "$LIVE_CONTAINER" "live" || exit 1
@@ -225,8 +246,9 @@ cmd_stage() {
   dump_live "$dump"
 
   echo "Starting ${STAGE_CONTAINER} (${MYSQL_CUTOVER_IMAGE}) on ${STAGE_DATADIR} ..."
-  compose_stage up -d db8
+  compose_stage up -d --force-recreate --no-deps db8
   wait_for_mysql "$STAGE_CONTAINER"
+  assert_stage_is_upgrade
   restore_dump "$dump" "$STAGE_CONTAINER"
   assert_has_data "$STAGE_CONTAINER" "staged restore" || exit 1
 
@@ -310,6 +332,7 @@ cmd_cutover() {
     echo "${STAGE_CONTAINER} is not running. Run $0 stage first." >&2
     exit 1
   fi
+  assert_stage_is_upgrade
   assert_has_data "$STAGE_CONTAINER" "staged before cutover" || exit 1
 
   echo "Stopping web so nothing writes to 5.7 ..."
