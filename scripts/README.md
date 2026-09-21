@@ -47,8 +47,14 @@ Do this on the Ubuntu prod host after Django 4.2 is already running against 5.7 
 # 2. After you have checked finance totals against the staged DB:
 CUTOVER=1 ./scripts/cutover-mysql.sh cutover
 
-# 3. If the new server is wrong:
+# 3. If the new server is wrong or empty:
 ROLLBACK=1 ./scripts/cutover-mysql.sh rollback
+```
+
+If live is empty after cutover, do not keep serving MySQL 8. The 5.7 files are in `./db57-backup-*`. Rollback puts those back and force-recreates `mysql:5.7`. To stay on 8 instead, only if a cutover dump is large and contains `INSERT` rows:
+
+```bash
+./scripts/cutover-mysql.sh import-dump data/dumps/foreverland-cutover-final-YYYY-MM-DD-HHMMSS.sql.gz
 ```
 
 `cutover` stops web, takes a final dump, restores it, renames `./db` → `./db57-backup-TIMESTAMP`, promotes `./db8` → `./db`, sets `PROD_DB_IMAGE` in `.env.prod`, and starts db+web. Keep the backup directory for a week. Then switch `ENGINE` to `django.db.backends.mysql` and delete `web/foreverland/mysql57/`.

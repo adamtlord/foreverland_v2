@@ -2,10 +2,11 @@
 # Stage and cut over prod from mysql:5.7 (./db) to MySQL 8 or MariaDB 10.11 (./db8).
 # Never deletes ./db. Never mounts the live datadir into the new server.
 #
-#   ./scripts/cutover-mysql.sh stage      # dump 5.7, start db8, restore into ./db8
+#   ./scripts/cutover-mysql.sh stage
 #   ./scripts/cutover-mysql.sh status
-#   CUTOVER=1 ./scripts/cutover-mysql.sh cutover   # stop writes, final dump, swap ./db
+#   CUTOVER=1 ./scripts/cutover-mysql.sh cutover
 #   ROLLBACK=1 ./scripts/cutover-mysql.sh rollback
+#   ./scripts/cutover-mysql.sh import-dump [path.sql.gz]   # load a dump into live
 #
 # Optional: MYSQL_CUTOVER_IMAGE=mariadb:10.11 (default mysql:8.0)
 
@@ -22,9 +23,11 @@ STAGE_CONTAINER="foreverland_db8"
 LIVE_DATADIR="${REPO_ROOT}/db"
 STAGE_DATADIR="${REPO_ROOT}/db8"
 DUMP_DIR="${REPO_ROOT}/data/dumps"
+# Django tables that must have rows after a real restore.
+CANARY_TABLES=(shows_show members_member auth_user)
 
 usage() {
-  echo "Usage: $0 stage|status|cutover|rollback" >&2
+  echo "Usage: $0 stage|status|cutover|rollback|import-dump [dump.sql.gz]" >&2
   echo "  MYSQL_CUTOVER_IMAGE=mysql:8.0 (default) or mariadb:10.11" >&2
   echo "  CUTOVER=1 $0 cutover" >&2
   echo "  ROLLBACK=1 $0 rollback" >&2
@@ -82,15 +85,82 @@ require_live_db() {
   fi
 }
 
+mysql_root() {
+  local container="$1"
+  shift
+  docker exec "$container" mysql \
+    -uroot -p"$MYSQL_ROOT_PASSWORD" \
+    --init-command="SET SESSION sql_mode=''" \
+    "$@"
+}
+
+count_tables() {
+  local container="$1"
+  mysql_root "$container" -Nse \
+    "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='${MYSQL_DATABASE}' AND table_type='BASE TABLE';"
+}
+
+count_rows() {
+  local container="$1"
+  local table="$2"
+  mysql_root "$container" -Nse \
+    "SELECT COUNT(*) FROM \`${MYSQL_DATABASE}\`.\`${table}\`;" 2>/dev/null || echo 0
+}
+
+summarize_db() {
+  local container="$1"
+  local tables rows
+  tables="$(count_tables "$container")"
+  echo "${container}: ${tables} tables in ${MYSQL_DATABASE}"
+  local table
+  for table in "${CANARY_TABLES[@]}"; do
+    rows="$(count_rows "$container" "$table")"
+    echo "  ${table}: ${rows} rows"
+  done
+}
+
+assert_has_data() {
+  local container="$1"
+  local label="$2"
+  local tables rows
+  tables="$(count_tables "$container" | tr -cd '0-9')"
+  if [[ "${tables:-0}" -lt 10 ]]; then
+    echo "${label}: ${container} has ${tables:-0} tables (need >= 10). Refusing." >&2
+    summarize_db "$container" >&2
+    return 1
+  fi
+  local ok=0
+  local table
+  for table in "${CANARY_TABLES[@]}"; do
+    rows="$(count_rows "$container" "$table" | tr -cd '0-9')"
+    if [[ "${rows:-0}" -gt 0 ]]; then
+      ok=1
+      break
+    fi
+  done
+  if [[ "$ok" -ne 1 ]]; then
+    echo "${label}: ${container} has schema but canary tables are empty. Refusing." >&2
+    summarize_db "$container" >&2
+    return 1
+  fi
+  summarize_db "$container"
+}
+
 dump_live() {
   local dest="$1"
   mkdir -p "$(dirname "$dest")"
-  echo "Dumping ${MYSQL_DATABASE} from ${LIVE_CONTAINER} to ${dest} ..."
+  echo "Dumping ${MYSQL_DATABASE} from ${LIVE_CONTAINER} (as root) to ${dest} ..."
   docker exec "$LIVE_CONTAINER" mysqldump \
-    -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" \
-    --single-transaction --no-tablespaces --routines --triggers \
+    -uroot -p"$MYSQL_ROOT_PASSWORD" \
+    --single-transaction --no-tablespaces --routines --triggers --set-gtid-purged=OFF \
     "$MYSQL_DATABASE" | gzip > "$dest"
-  echo "Dump size: $(wc -c < "$dest" | tr -d ' ') bytes"
+  local bytes
+  bytes="$(wc -c < "$dest" | tr -d ' ')"
+  echo "Dump size: ${bytes} bytes"
+  if [[ "${bytes:-0}" -lt 10000 ]]; then
+    echo "Dump is too small (${bytes} bytes). Not a real foreverland dump." >&2
+    exit 1
+  fi
 }
 
 wait_for_mysql() {
@@ -108,15 +178,22 @@ wait_for_mysql() {
   exit 1
 }
 
-restore_to_stage() {
+restore_dump() {
   local dump="$1"
-  echo "Restoring ${dump} into ${STAGE_CONTAINER} as root ..."
+  local container="$2"
+  echo "Restoring ${dump} into ${container} as root (sql_mode empty) ..."
   if [[ "$dump" == *.gz ]]; then
-    gunzip -c "$dump" | docker exec -i "$STAGE_CONTAINER" \
-      mysql -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"
+    gunzip -c "$dump" | docker exec -i "$container" mysql \
+      -uroot -p"$MYSQL_ROOT_PASSWORD" \
+      --init-command="SET SESSION sql_mode=''" \
+      --force \
+      "$MYSQL_DATABASE"
   else
-    docker exec -i "$STAGE_CONTAINER" \
-      mysql -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" < "$dump"
+    docker exec -i "$container" mysql \
+      -uroot -p"$MYSQL_ROOT_PASSWORD" \
+      --init-command="SET SESSION sql_mode=''" \
+      --force \
+      "$MYSQL_DATABASE" < "$dump"
   fi
 }
 
@@ -128,6 +205,7 @@ print_version() {
 
 cmd_stage() {
   require_live_db
+  assert_has_data "$LIVE_CONTAINER" "live" || exit 1
   if [[ -e "$STAGE_DATADIR" ]] && [[ -n "$(ls -A "$STAGE_DATADIR" 2>/dev/null || true)" ]]; then
     if [[ "${FORCE:-}" != "1" ]]; then
       echo "${STAGE_DATADIR} already has files. Refusing to reuse it." >&2
@@ -149,13 +227,14 @@ cmd_stage() {
   echo "Starting ${STAGE_CONTAINER} (${MYSQL_CUTOVER_IMAGE}) on ${STAGE_DATADIR} ..."
   compose_stage up -d db8
   wait_for_mysql "$STAGE_CONTAINER"
-  restore_to_stage "$dump"
+  restore_dump "$dump" "$STAGE_CONTAINER"
+  assert_has_data "$STAGE_CONTAINER" "staged restore" || exit 1
 
   echo
   echo "Staged ${MYSQL_CUTOVER_IMAGE}: $(print_version "$STAGE_CONTAINER")"
-  echo "Live mysql:5.7 still serving from ./db: $(print_version "$LIVE_CONTAINER")"
+  echo "Live still serving from ./db: $(print_version "$LIVE_CONTAINER")"
   echo "Dump kept at ${dump}"
-  echo "Next: exercise finance on a spare web against MYSQL_HOST=${STAGE_CONTAINER}, then CUTOVER=1 $0 cutover"
+  echo "Next: CUTOVER=1 $0 cutover"
 }
 
 cmd_status() {
@@ -168,6 +247,7 @@ cmd_status() {
     docker ps -a --format '{{.Names}} {{.Status}}' | grep "^${LIVE_CONTAINER} "
     if docker ps --format '{{.Names}}' | grep -q "^${LIVE_CONTAINER}$"; then
       echo "  version $(print_version "$LIVE_CONTAINER")"
+      summarize_db "$LIVE_CONTAINER" || true
     fi
   else
     echo "Live ${LIVE_CONTAINER}: not created"
@@ -177,12 +257,14 @@ cmd_status() {
     docker ps -a --format '{{.Names}} {{.Status}}' | grep "^${STAGE_CONTAINER} "
     if docker ps --format '{{.Names}}' | grep -q "^${STAGE_CONTAINER}$"; then
       echo "  version $(print_version "$STAGE_CONTAINER")"
+      summarize_db "$STAGE_CONTAINER" || true
     fi
   else
     echo "Stage ${STAGE_CONTAINER}: not created"
   fi
   ls -ld "$LIVE_DATADIR" "$STAGE_DATADIR" 2>/dev/null || true
   ls -d "${REPO_ROOT}"/db57-backup-* 2>/dev/null || true
+  ls -lh "${DUMP_DIR}"/foreverland-cutover-*.sql.gz 2>/dev/null || true
 }
 
 set_prod_db_image() {
@@ -198,12 +280,28 @@ set_prod_db_image() {
   export PROD_DB_IMAGE="$image"
 }
 
+cmd_import_dump() {
+  require_live_db
+  local dump="${1:-}"
+  if [[ -z "$dump" ]]; then
+    dump="$(ls -1t "${DUMP_DIR}"/foreverland-cutover-final-*.sql.gz 2>/dev/null | head -n 1 || true)"
+  fi
+  if [[ -z "$dump" || ! -f "$dump" ]]; then
+    echo "No dump file. Pass a path or keep one in ${DUMP_DIR}/foreverland-cutover-final-*.sql.gz" >&2
+    exit 1
+  fi
+  restore_dump "$dump" "$LIVE_CONTAINER"
+  assert_has_data "$LIVE_CONTAINER" "import-dump" || exit 1
+  echo "Import complete."
+}
+
 cmd_cutover() {
   if [[ "${CUTOVER:-}" != "1" ]]; then
     echo "Refusing cutover without CUTOVER=1 (this stops web and swaps ./db)." >&2
     exit 1
   fi
   require_live_db
+  assert_has_data "$LIVE_CONTAINER" "live before cutover" || exit 1
   if [[ ! -d "$STAGE_DATADIR" ]] || [[ -z "$(ls -A "$STAGE_DATADIR" 2>/dev/null || true)" ]]; then
     echo "No staged ./db8. Run $0 stage first." >&2
     exit 1
@@ -212,6 +310,7 @@ cmd_cutover() {
     echo "${STAGE_CONTAINER} is not running. Run $0 stage first." >&2
     exit 1
   fi
+  assert_has_data "$STAGE_CONTAINER" "staged before cutover" || exit 1
 
   echo "Stopping web so nothing writes to 5.7 ..."
   docker stop foreverland >/dev/null
@@ -220,7 +319,8 @@ cmd_cutover() {
   stamp="$(date +%Y-%m-%d-%H%M%S)"
   local dump="${DUMP_DIR}/foreverland-cutover-final-${stamp}.sql.gz"
   dump_live "$dump"
-  restore_to_stage "$dump"
+  restore_dump "$dump" "$STAGE_CONTAINER"
+  assert_has_data "$STAGE_CONTAINER" "staged after final restore" || exit 1
 
   echo "Stopping 5.7 and staging servers ..."
   docker stop "$LIVE_CONTAINER" "$STAGE_CONTAINER" >/dev/null
@@ -235,11 +335,16 @@ cmd_cutover() {
   set_prod_db_image "$MYSQL_CUTOVER_IMAGE"
   echo "PROD_DB_IMAGE=${MYSQL_CUTOVER_IMAGE} written to .env.prod"
 
-  echo "Starting cut-over db + web ..."
-  compose up -d db
+  echo "Starting cut-over db (force-recreate) ..."
+  compose up -d --force-recreate --no-deps db
   wait_for_mysql "$LIVE_CONTAINER"
   echo "Now running $(print_version "$LIVE_CONTAINER")"
-  compose up -d web
+  if ! assert_has_data "$LIVE_CONTAINER" "live after swap"; then
+    echo "Post-swap database is empty. Rolling back automatically." >&2
+    ROLLBACK=1 cmd_rollback
+    exit 1
+  fi
+  compose up -d --no-deps web
 
   echo
   echo "Cutover complete. 5.7 files are in ${backup} — keep them for a week."
@@ -266,14 +371,15 @@ cmd_rollback() {
   fi
   mv "$latest" "$LIVE_DATADIR"
   set_prod_db_image "mysql:5.7"
-  compose up -d db
+  compose up -d --force-recreate --no-deps db
   wait_for_mysql "$LIVE_CONTAINER"
   echo "Restored $(print_version "$LIVE_CONTAINER")"
-  compose up -d web
+  summarize_db "$LIVE_CONTAINER" || true
+  compose up -d --no-deps web
   echo "Rollback complete. Web is on mysql:5.7 + ./db again."
 }
 
-if [[ $# -ne 1 ]]; then
+if [[ $# -lt 1 ]]; then
   usage
 fi
 
@@ -283,5 +389,6 @@ case "$1" in
   status) cmd_status ;;
   cutover) cmd_cutover ;;
   rollback) cmd_rollback ;;
+  import-dump) shift; cmd_import_dump "${1:-}" ;;
   *) usage ;;
 esac
