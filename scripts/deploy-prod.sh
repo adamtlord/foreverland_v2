@@ -35,6 +35,7 @@ if [[ ! -f "$ENV_PROD" ]]; then
 fi
 
 has_root_password=0
+PROD_DB_IMAGE=""
 while IFS= read -r line || [[ -n "$line" ]]; do
   if [[ "$line" =~ ^[[:space:]]*# ]] || [[ -z "${line//[[:space:]]/}" ]]; then
     continue
@@ -49,6 +50,15 @@ while IFS= read -r line || [[ -n "$line" ]]; do
       has_root_password=1
     fi
   fi
+  if [[ "$line" =~ ^PROD_DB_IMAGE=(.+)$ ]]; then
+    value="${BASH_REMATCH[1]}"
+    value="${value%\"}"
+    value="${value#\"}"
+    value="${value%\'}"
+    value="${value#\'}"
+    PROD_DB_IMAGE="$value"
+    export PROD_DB_IMAGE
+  fi
 done < "$ENV_PROD"
 
 if [[ "$has_root_password" -ne 1 ]]; then
@@ -59,7 +69,7 @@ fi
 
 if docker inspect foreverland_db >/dev/null 2>&1; then
   image="$(docker inspect foreverland_db --format '{{.Config.Image}}')"
-  if [[ "$image" == mariadb* ]]; then
+  if [[ "$image" == mariadb* && -z "$PROD_DB_IMAGE" ]]; then
     echo "Warning: foreverland_db is currently ${image} (dev image), not mysql:5.7." >&2
     echo "Remove those containers before prod up. Do not delete ./db:" >&2
     echo "  docker stop foreverland foreverland_db && docker rm foreverland foreverland_db" >&2

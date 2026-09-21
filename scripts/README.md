@@ -31,7 +31,27 @@ scp user@prod-server:/path/to/foreverland_v2/data/dumps/foreverland-dump-*.sql.g
   ```
 - The script drops the existing dev database, recreates it, and loads the dump. Uncompressed `.sql` files work too.
 
-Make sure the scripts are executable: `chmod +x scripts/dump-prod-db.sh scripts/load-dump-into-dev.sh scripts/deploy-prod.sh`
+Make sure the scripts are executable: `chmod +x scripts/dump-prod-db.sh scripts/load-dump-into-dev.sh scripts/deploy-prod.sh scripts/cutover-mysql.sh`
+
+## MySQL 5.7 → 8 / MariaDB 10.11 cutover
+
+Do this on the Ubuntu prod host after Django 4.2 is already running against 5.7 via `foreverland.mysql57`. The script never deletes `./db`.
+
+```bash
+# 1. Copy 5.7 into a new ./db8 and start foreverland_db8 (site stays on 5.7)
+./scripts/cutover-mysql.sh stage
+./scripts/cutover-mysql.sh status
+
+# Optional: MYSQL_CUTOVER_IMAGE=mariadb:10.11 FORCE=1 ./scripts/cutover-mysql.sh stage
+
+# 2. After you have checked finance totals against the staged DB:
+CUTOVER=1 ./scripts/cutover-mysql.sh cutover
+
+# 3. If the new server is wrong:
+ROLLBACK=1 ./scripts/cutover-mysql.sh rollback
+```
+
+`cutover` stops web, takes a final dump, restores it, renames `./db` → `./db57-backup-TIMESTAMP`, promotes `./db8` → `./db`, sets `PROD_DB_IMAGE` in `.env.prod`, and starts db+web. Keep the backup directory for a week. Then switch `ENGINE` to `django.db.backends.mysql` and delete `web/foreverland/mysql57/`.
 
 ## Production deploy
 
@@ -59,7 +79,7 @@ Then confirm:
 docker inspect foreverland_db --format '{{.Config.Image}} {{json .Mounts}}'
 ```
 
-The db image must be `mysql:5.7`, and mounts must include host `./db` → `/var/lib/mysql`. `MYSQL_PASSWORD` (app user) is not enough; first-time init needs `MYSQL_ROOT_PASSWORD`.
+The db image must match `PROD_DB_IMAGE` in `.env.prod` (`mysql:5.7` until cutover; `mysql:8.0` or `mariadb:10.11` after). Mounts must include host `./db` → `/var/lib/mysql`. `MYSQL_PASSWORD` (app user) is not enough; first-time init needs `MYSQL_ROOT_PASSWORD`.
 
 ### Recover from a mistaken `docker compose up` (no `-f`)
 

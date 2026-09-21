@@ -11,4 +11,7 @@ dist
 .env*
 mediafiles/
 data/dumps/
+/db8
+/db57-backup-*
+/db8-failed-*
 /web/staticserve

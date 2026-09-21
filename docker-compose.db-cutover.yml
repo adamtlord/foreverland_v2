@@ -1,0 +1,25 @@
+# Staging MySQL 8 / MariaDB 10.11 alongside live mysql:5.7.
+# Never mounts ./db. Used only by scripts/cutover-mysql.sh.
+#
+#   docker compose -f docker-compose.prod.yml -f docker-compose.db-cutover.yml up -d db8
+
+services:
+  db8:
+    container_name: foreverland_db8
+    image: ${MYSQL_CUTOVER_IMAGE:-mysql:8.0}
+    restart: "no"
+    env_file:
+      - .env.prod
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MYSQL_DATABASE}
+      MARIADB_USER: ${MYSQL_USER}
+      MARIADB_PASSWORD: ${MYSQL_PASSWORD}
+    expose:
+      - "3306"
+    volumes:
+      - ./db8:/var/lib/mysql
