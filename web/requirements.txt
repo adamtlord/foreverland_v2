@@ -1,4 +1,4 @@
-# Soak on 4.2 LTS against MySQL 8 / MariaDB 10.11. Prod 5.7 uses foreverland.mysql57.
+# Django 4.2 LTS. Prod is MySQL 8 (PROD_DB_IMAGE=mysql:8.0).
 Django~=4.2.16
 django-compressor>=4.0
 django-ical>=1.9

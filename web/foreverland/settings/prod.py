@@ -40,8 +40,7 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 
 DATABASES = {
     "default": {
-        # Drop this after scripts/cutover-mysql.sh cutover (MySQL 8 / MariaDB 10.11).
-        "ENGINE": "foreverland.mysql57",
+        "ENGINE": "django.db.backends.mysql",
         "NAME": "%s" % os.getenv("MYSQL_DATABASE"),
         "HOST": "%s" % os.getenv("MYSQL_HOST"),
         "USER": "%s" % os.getenv("MYSQL_USER"),

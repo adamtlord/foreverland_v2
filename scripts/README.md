@@ -35,7 +35,7 @@ Make sure the scripts are executable: `chmod +x scripts/dump-prod-db.sh scripts/
 
 ## MySQL 5.7 → 8 / MariaDB 10.11 cutover
 
-Do this on the Ubuntu prod host after Django 4.2 is already running against 5.7 via `foreverland.mysql57`. The script never deletes `./db`.
+Prod is on MySQL 8. Keep this script for rollback to `./db57-backup-*` only. The script never deletes `./db`.
 
 ```bash
 # 1. Copy 5.7 into a new ./db8 and start foreverland_db8 (site stays on 5.7)
@@ -57,7 +57,7 @@ If live is empty after cutover, do not keep serving MySQL 8. The 5.7 files are i
 ./scripts/cutover-mysql.sh import-dump data/dumps/foreverland-cutover-final-YYYY-MM-DD-HHMMSS.sql.gz
 ```
 
-`cutover` stops web, takes a final dump, restores it, renames `./db` → `./db57-backup-TIMESTAMP`, promotes `./db8` → `./db`, sets `PROD_DB_IMAGE` in `.env.prod`, and starts db+web. Keep the backup directory for a week. Then switch `ENGINE` to `django.db.backends.mysql` and delete `web/foreverland/mysql57/`.
+`cutover` is done. `ENGINE` is `django.db.backends.mysql`. Keep `./db57-backup-*` until you are ready to delete it; `ROLLBACK=1` still works while those files exist.
 
 ## Production deploy
 
@@ -85,7 +85,7 @@ Then confirm:
 docker inspect foreverland_db --format '{{.Config.Image}} {{json .Mounts}}'
 ```
 
-The db image must match `PROD_DB_IMAGE` in `.env.prod` (`mysql:5.7` until cutover; `mysql:8.0` or `mariadb:10.11` after). Mounts must include host `./db` → `/var/lib/mysql`. `MYSQL_PASSWORD` (app user) is not enough; first-time init needs `MYSQL_ROOT_PASSWORD`.
+The db image must match `PROD_DB_IMAGE` in `.env.prod` (`mysql:8.0`). Mounts must include host `./db` → `/var/lib/mysql`. `MYSQL_PASSWORD` (app user) is not enough; first-time init needs `MYSQL_ROOT_PASSWORD`.
 
 ### Recover from a mistaken `docker compose up` (no `-f`)
 

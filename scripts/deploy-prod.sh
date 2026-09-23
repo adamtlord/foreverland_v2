@@ -70,7 +70,7 @@ fi
 if docker inspect foreverland_db >/dev/null 2>&1; then
   image="$(docker inspect foreverland_db --format '{{.Config.Image}}')"
   if [[ "$image" == mariadb* && -z "$PROD_DB_IMAGE" ]]; then
-    echo "Warning: foreverland_db is currently ${image} (dev image), not mysql:5.7." >&2
+    echo "Warning: foreverland_db is currently ${image} (dev image), not mysql:8.0." >&2
     echo "Remove those containers before prod up. Do not delete ./db:" >&2
     echo "  docker stop foreverland foreverland_db && docker rm foreverland foreverland_db" >&2
     for arg in "$@"; do

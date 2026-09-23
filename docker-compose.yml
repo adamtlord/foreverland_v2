@@ -5,8 +5,7 @@
 # This project is named foreverland-dev and uses *_dev container names so a
 # bare `docker compose up` cannot replace prod's foreverland / foreverland_db.
 #
-# Dev DB is MariaDB 10.11 LTS (10.6 LTS ended Jul 2026). Prod still uses
-# mysql:5.7 until that datadir is migrated (see docker-compose.prod.yml).
+# Dev DB is MariaDB 10.11 LTS. Prod is MySQL 8 (see docker-compose.prod.yml).
 
 name: foreverland-dev
 

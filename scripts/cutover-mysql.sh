@@ -388,7 +388,7 @@ cmd_cutover() {
 
   echo
   echo "Cutover complete. 5.7 files are in ${backup} — keep them for a week."
-  echo "foreverland.mysql57 still works on 8 / 10.11. After a soak, switch ENGINE to django.db.backends.mysql and delete web/foreverland/mysql57/."
+  echo "Cutover complete. Keep ${backup} until you are ready to delete it."
 }
 
 cmd_rollback() {

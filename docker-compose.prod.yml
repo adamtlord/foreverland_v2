@@ -1,6 +1,6 @@
-# Production stack (gunicorn + mysql:5.7 + nginx + certbot).
-# mysql:5.7 is EOL. Image is ${PROD_DB_IMAGE:-mysql:5.7}. Do not change the
-# default until scripts/cutover-mysql.sh has dump/restored into a new datadir.
+# Production stack (gunicorn + MySQL 8 + nginx + certbot).
+# Image is ${PROD_DB_IMAGE:-mysql:8.0}. Do not set this back to mysql:5.7;
+# the ./db datadir is MySQL 8. Rollback uses scripts/cutover-mysql.sh.
 # Always pass -f docker-compose.prod.yml. Bare `docker compose up` starts the
 # dev MariaDB stack instead and leaves nginx/certbot as orphans.
 #
@@ -35,7 +35,7 @@ services:
     command: /home/ubuntu/app/entrypoint.sh
   db:
     container_name: foreverland_db
-    image: ${PROD_DB_IMAGE:-mysql:5.7}
+    image: ${PROD_DB_IMAGE:-mysql:8.0}
     restart: always
     env_file:
       - .env.prod
